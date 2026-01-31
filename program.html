@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תוכנית הלימודים - VC Bezalel</title>
+    <script>
+        const transitionType = sessionStorage.getItem('pageTransition');
+        if (transitionType) {
+            document.documentElement.classList.add('page-transitioning');
+            // For inner-to-inner, don't hide rulers (they're identical)
+            if (transitionType === 'inner-to-inner') {
+                document.documentElement.classList.add('inner-to-inner-transition');
+            }
+        }
+    </script>
+    <style>
+        .page-transitioning .content,
+        .page-transitioning .plus-grid {
+            opacity: 0 !important;
+        }
+        /* Only hide rulers and border-frame for homepage transitions, not inner-to-inner */
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-top,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-left,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-right,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-bottom,
+        .page-transitioning:not(.inner-to-inner-transition) .border-frame {
+            opacity: 0 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="inner-page page-program">
+    <!-- SVG filter for gradient map effect - BLUE version for program page -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <!-- Blue gradient map: maps dark to #0946E1 (blue) and light to #FCFCFB -->
+            <!-- #0946E1 = RGB(9, 70, 225) normalized: R=0.035, G=0.275, B=0.882 -->
+            <filter id="gradient-map" color-interpolation-filters="linearRGB" x="0" y="0" width="100%" height="100%">
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer result="gradientMap">
+                    <feFuncR type="table" tableValues="0.035 0.988" />
+                    <feFuncG type="table" tableValues="0.275 0.988" />
+                    <feFuncB type="table" tableValues="0.882 0.984" />
+                </feComponentTransfer>
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noise" />
+                <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
+                <feBlend in="gradientMap" in2="monoNoise" mode="overlay" result="noisy" />
+                <feComponentTransfer in="noisy">
+                    <feFuncR type="linear" slope="1" intercept="0" />
+                    <feFuncG type="linear" slope="1" intercept="0" />
+                    <feFuncB type="linear" slope="1" intercept="0" />
+                    <feFuncA type="linear" slope="0.07" intercept="0.93" />
+                </feComponentTransfer>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Rulers (zoomed in version) -->
+    <div class="ruler ruler-top">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-bottom">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-left">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+    <div class="ruler ruler-right">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+
+    <!-- Border frame (outside grid-background for proper z-index) -->
+    <div class="border-frame"></div>
+
+    <!-- Mobile bottom nav carousel -->
+    <div class="mobile-nav-carousel" id="mobile-nav-carousel" data-current="1">
+        <div class="mobile-nav-track">
+            <a href="index.html" class="mobile-nav-item" data-index="0">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>בית</span>
+            </a>
+            <a href="program.html" class="mobile-nav-item" data-index="1">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>תוכנית הלימודים</span>
+            </a>
+            <a href="staff.html" class="mobile-nav-item" data-index="2">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>סגל ההוראה</span>
+            </a>
+            <a href="guidelines.html" class="mobile-nav-item" data-index="3">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>הוראות ונהלים</span>
+            </a>
+            <a href="courses.html" class="mobile-nav-item" data-index="4">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>קורסים</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid-background">
+        <!-- Plus grid (7 columns x 5 rows) -->
+        <div class="plus-grid">
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+        </div>
+    </div>
+
+    <!-- Page header on the ruler -->
+    <a href="index.html" class="page-header-link">
+        <h1 class="page-header-title">המחלקה לתקשורת חזותית</h1>
+    </a>
+
+    <div class="content page-content">
+        <!-- Page header row: title + intro -->
+        <div class="page-header-row">
+            <div class="page-title-group">
+                <h2 class="page-title">תוכנית<br>הלימודים</h2>
+                <div class="page-title-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="107" height="107" viewBox="0 0 107 107" fill="none" style="transform: rotate(0deg);">
+                        <path
+                            d="M1.64258 35.293L11.5918 35.293L11.5918 88.209L96.3154 3.48535L97.4766 2.32324L104.493 9.33984L103.331 10.501L18.6074 95.2246L71.5234 95.2246L71.5234 105.174L1.64258 105.174L1.64258 35.293Z"
+                            fill="#0946E1" stroke="#0946E1" stroke-width="3.28521" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="page-intro">
+                <div class="page-intro-background"></div>
+                <p><b><span class="intro-highlight">המחלקה לתקשורת חזותית בבצלאל</span> היא הוותיקה בישראל, ומהווה מרחב
+                        ייחודי ללמידה, יצירה, חקר וחדשנות. <a href="https://2025.bezalel.ac.il/" target="_blank">בוגרי ובוגרות</a> המחלקה נמנים עם המעצבים
+                        והמעצבות הבולטים בשדה המקומי והבינלאומי, ומהווים גורמי מפתח בעיצוב פני התרבות, התעשייה והחברה
+                        בישראל.</b><br>
+                    <a href="#program-details">תכנית הלימודים</a> במחלקה מעניקה תשתית מקצועית מעמיקה, ומשלבת מיומנויות
+                    מסורתיות עם
+                    טכניקות וטכנולוגיות חדשניות. במהלך הלימודים הסטודנטים.ות נחשפים למגוון רחב של תחומים, החל מעיצוב
+                    גרפי, טיפוגרפיה, מיתוג ועיצוב בתנועה ועד לעיצוב חווית משתמש (UX/UI), עיצוב מוצר, משחקים, איור,
+                    קומיקס ועוד.
+                    הלימודים במחלקה נחלקים לשניים. <span class="highlight">החלק הראשון (שנים א׳—ב׳)</span> כולל לימודי
+                    יסודות תקשורת חזותית, ובו נחשף העושר המרתק של דרכי המבע בתחום. <Br><span class="highlight">החלק השני
+                        (שנים ג׳—ד׳)</span> מאפשר לכל סטודנט.ית להרכיב מסלול לימודים אישי, המאפשר להתמחות ולהעמיק
+                    בתחומים ספציפיים ולהתאים את סוג ההכשרה לשאיפות ולמטרות המקצועיות. 
+                    המחלקה רואה בעיצוב חזותי כלי רב־עוצמה לשינוי חברתי ותרבותי ולחשיבה מחדש, ולכן הלמידה לא כוללת רק
+                    רכישת מיומנויות, אלא גם פיתוח שיח ביקורתי ומעמיק על תפקיד המעצב.ת ועל הכוח של חשיבה עיצובית (Design
+                    Thinking). הסטודנטים.ות לומדים לשאול שאלות, לחשוב מחוץ לקופסא ולהבין את ההקשרים הרחבים – התרבותיים,
+                    החברתיים והפוליטיים – של העשייה המקצועית ושל העולם המשתנה סביבם.
+                    המחלקה פועלת כקהילה תוססת המאופיינת בריבוי קולות והשקפות עולם מגוונות. <a href="staff.html">המרצים.ות</a>
+                    המובילים בתחום בתעשייה המקומית, יוצרים.ות יחד עם הסטודנטים.ות סביבת לימודים עשירה, מפרה ומאתגרת.
+                    הסגל מביא איתו פרקטיקות עבודה עדכניות, שיח מעמיק, מיומנויות ייחודיות ופתיחות מחשבתית לאקלים
+                    הסטודנטיאלי, אשר משכללים את תהליך הלמידה ומעודדים למצויינות.
+                    המחלקה לתקשורת חזותית אינה רק מקום לרכישת ידע מקצועי — היא חממה ייחודית ליצירה ולחשיבה, בה
+                    סטודנטים.ות מקבלים את המרחב וההזדמנות לגלות את עצמם, לשאול שאלות ולעצב את העולם שבו הם.ן רוצים.ות
+                    לחיות.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-image-container">
+            <div class="page-image-wrapper">
+                <img src="images/18.jpg" alt="" class="gradient-map-image">
+                <img src="images/18.jpg" alt="" class="original-image">
+                <div class="image-caption">עדי עובדיה, ׳פונט קונצ'רטו׳, פרויקט גמר, המחלקה לתקשורת חזותית, 2024.</div>
+            </div>
+            <div class="page-image-wrapper page-image-wrapper-2">
+                <img src="images/14.jpg" alt="" class="gradient-map-image">
+                <img src="images/14.jpg" alt="" class="original-image">
+                <div class="image-caption">בניה המר, וימפל: גופן גלותי חדש, פרויקט גמר, 2023</div>
+            </div>
+        </div>
+
+        <!-- Program details in title column -->
+        <div class="program-details-row">
+            <div class="program-details-title-column">
+                <p id="program-details"><b><span class="intro-highlight">תכנית הלימודים</span> יוצרת רצף למידה והתפתחות
+                        מקצועית ואישית של
+                        הסטודנט.ית על פני ארבע שנות לימוד.</b></p>
+            </div>
+            <div class="program-details-content-column">
+                <p class="program-details-body">שנות היסודות מוקדשות להיכרות עם העיצוב והתקשורת החזותית ולביסוס מיומנויות יצירה וחשיבה — קשר בין
+                    תוכן לצורה, בין אם בדימוי חזותי או בביטוי מילולי, הבנת מגוון המדיה והטכניקות, הבנת הֶקשרים ודרכי
+                    פעולה בתחומי התקשורת החזותית, ועוד.
+                    תלמידי.ות השנים ג׳ ו־ד׳ יבחרו אם להתמקד באחד מתחומי הידע במחלקה או לבנות לעצמם תכנית לימודים מגוונת.
+                    בקורסים בשנים אלה יוכלו הסטודנטים.ות לבחון תחומים שונים ונושאים הקרובים לליבם.ן, ולהמשיך לפתח
+                    מיומנויות חשיבה, עשייה וסטנדרטים של מקצוענות. הסטודנטים.ות ילמדו קורסי סטודיו מרכזיים, קורסי בחירה
+                    מגוונים, וקורסים קצרים של מיומנויות ומתודולוגיות. במהלך שנת הלימודים הרביעית, יבחרו כל סטודנט.ית
+                    נושא לפרויקט שאותו יגישו כעבודת גמר בסוף השנה (פרויקט הגמר).</p>
+            </div>
+        </div>
+
+        <!-- Years A-B Section -->
+        <div class="page-section-row page-section-row-ab">
+            <div class="page-section-image-wrapper page-section-image-wrapper-1">
+                <img src="images/4.jpg" alt="" class="gradient-map-image">
+                <img src="images/4.jpg" alt="" class="original-image">
+                <div class="image-caption">'Being', פרויקט הגמר של מתי קלטר, 2020</div>
+            </div>
+            <div class="page-section-image-wrapper page-section-image-wrapper-2">
+                <img src="images/8.jpg" alt="" class="gradient-map-image">
+                <img src="images/8.jpg" alt="" class="original-image">
+                <div class="image-caption">מתוך שבוע הגשות במחלקה.</div>
+            </div>
+            <div class="page-section-spacer"></div>
+            <div class="page-section-content">
+                <h3 class="page-subtitle">
+                    <span>שנים <br>א׳—ב׳</span>
+                    <div class="page-subtitle-arrow">
+                        <svg width="77" height="77" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M1.17725 25.2988L8.31006 25.2988L8.31006 63.2305L69.0425 2.49707L69.8755 1.66504L70.7085 2.49707L74.0728 5.86133L74.9048 6.69434L74.0728 7.52734L13.3394 68.2598L51.271 68.2598L51.271 75.3926L1.17725 75.3926L1.17725 25.2988Z"
+                                fill="#0946E1" stroke="#0946E1" stroke-width="2.35498" />
+                        </svg>
+                    </div>
+                </h3>
+                <p>
+                    סטודנטים.ות שממוצע הציונים בסיום שנה א׳ יימצא בעשירון התחתון, יזומנו להציג את עבודותיהם.ן
+                    בקורסים השונים בפני ועדת פורטפוליו מיוחדת שתבחן את המשך לימודיהם.ן במחלקה. בסמכות הוועדה להמליץ
+                    לוועדת הוראה על המשך לימודים מן המניין, המשך לימודים על תנאי, או הפסקת לימודים. <br>
+                    במקרה של המשך לימודים על תנאי, תיערך לסטודנט.ית ועדת פורטפוליו נוספת בסוף הסמסטר הראשון של שנה
+                    ב׳.
+                </p>
+                <div class="page-side-note">כל הלימודים הם חובה. על כל השיעורים חלה חובת נוכחות ומעבר בציון ״עובר״
+                    (55 ומעלה).</div>
+            </div>
+        </div>
+
+        <!-- Years C-D Section -->
+        <div class="page-section-row page-section-row-cd">
+            <div class="page-section-image-wrapper page-section-image-wrapper-3">
+                <img src="images/17.jpg" alt="" class="gradient-map-image">
+                <img src="images/17.jpg" alt="" class="original-image">
+                <div class="image-caption">שי פיגל, פרנקנשטיין; או, פרומתיאוס המודרני, פרויקט גמר, 2023</div>
+            </div>
+            <div class="page-section-image-wrapper page-section-image-wrapper-4">
+                <img src="images/16.jpg" alt="" class="gradient-map-image">
+                <img src="images/16.jpg" alt="" class="original-image">
+                <div class="image-caption">צילום: נעם דבל</div>
+            </div>
+            <div class="page-section-image-wrapper page-section-image-wrapper-5">
+                <img src="images/10.jpg" alt="" class="gradient-map-image">
+                <img src="images/10.jpg" alt="" class="original-image">
+                <div class="image-caption">מתוך שבוע הגשות במחלקה.</div>
+            </div>
+            <div class="page-section-spacer">
+                <div class="page-side-note side-note-1">ניתן להחליף קורס בחירה אחד בשנה בשני קורסים קצרים המתקיימים באותו סמסטר.
+                    הקורסים הקצרים מקיימים על פני חצי סמסטר (7 שיעורים), ומציעים לימוד מרוכז של מיומנויות
+                    ומתודולוגיות מגוונות.</div> <br><br><br><br><br><br>
+                <div class="page-side-note side-note-2">ניתן להחליף קורס בחירה אחד בשני קורסים קצרים.</div><br>
+                <div class="page-side-note side-note-3">סטודנט.ית המבקש.ת להירשם לקורסים מעל למכסה שלעיל, ת.יפנה לראש המחלקה.</div><br>
+                <div class="page-side-note side-note-4">הרכבת מערכת הקורסים לשנים ג׳ ו־ד׳ תיערך במסגרת מערכת התעדוף הממוחשב במהלך
+                    הקיץ.</div>
+            </div>
+            <div class="page-section-content">
+                <h3 class="page-subtitle">
+                    <span>שנים <br>ג׳—ד׳</span>
+                    <div class="page-subtitle-arrow">
+                        <svg width="77" height="77" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M1.17725 25.2988L8.31006 25.2988L8.31006 63.2305L69.0425 2.49707L69.8755 1.66504L70.7085 2.49707L74.0728 5.86133L74.9048 6.69434L74.0728 7.52734L13.3394 68.2598L51.271 68.2598L51.271 75.3926L1.17725 75.3926L1.17725 25.2988Z"
+                                fill="#0946E1" stroke="#0946E1" stroke-width="2.35498" />
+                        </svg>
+                    </div>
+                </h3>
+                <p>
+                    התכנית בשנים אלה מורכבת מקורסי סטודיו מרכזי, קורסי בחירה וקורסים קצרים. <br>
+                    קורסי הסטודיו המרכזי הינם מסגרות לימוד המאפשרות העמקה והרחבה בנושאי הלימוד על פני יום לימודים
+                    שלם. חלקם עוסקים בתחום ידע מסוים, חלקם רב־תחומיים, וחלקם תמטיים המאפשרים יצירה בכל אחד מתחומי
+                    הידע במחלקה. קורסי הסטודיו מתקיימים במתכונת סדנא ומשלבים עבודה מעשית בכיתה, ביקורת עבודות,
+                    הרצאות שוטפות, הרצאות אורחים.ות ותמיכה טכנולוגית. בכל סמסטר הסטודנט.ית יבחרו ויתמקדו בסטודיו
+                    מרכזי אחד בלבד. <br>
+                    לצד קורסי הסטודיו, הסטודנטים.ות יבחרו שני קורסי בחירה בכל אחד מהסמסטרים 5—7, וקורס בחירה אחד
+                    בסמסטר 8. בקורסי הבחירה הסטודנטים.ות יוכלו להעמיק ולהרחיב את ההיכרות עם הנושאים והמיומנוית
+                    שמעניינים אותם.ן.
+                </p>
+                <h4>בשנה ג׳ על כל סטודנט.ית להשתתף ב:</h4>
+                <div class="list-p">
+                    <li> 2 קורסי סטודיו מרכזי, אחד בכל סמסטר, מתוך מאגר קורסי הסטודיו המרכזי </li>
+                    <li>4 קורסי בחירה סמסטריאליים, שניים בכל סמסטר, מתוך מאגר קורסי הבחירה</li>
+                </div>
+                <h4>בשנה ד׳ על כל סטודנט.ית להשתתף ב:</h4>
+                <div class="list-p">
+                    <li> 1 קורס סטודיו מרכזי בסמסטר א׳, מתוך מאגר קורסי הסטודיו המרכזי</li>
+                    <li> 3 קורסי בחירה סמסטריאליים מתוך מאגר קורסי הבחירה, 2 בסמסטר א׳ ו־1 בסמסטר ב׳</li>
+                    <li> 1 הנחיה לפרויקט גמר והגשת פרויקט הגמר בסמסטר ב׳</li>
+                </div>
+                <p>
+                    במהלך הלימודים, סטודנט.ית יוכל להחליף קורס בחירה אחד במחלקה בקורס מהמקבץ הבין־מחלקתי או בקורס במחלקה
+                    אחרת, לאחר קבלת אישור מראש המחלקה. במידה וקורס הבחירה מחוץ למחלקה מקנה 2 נ״ז, יש להשלים את ה־1 נ״ז
+                    החסר באמצעות סדנה או כל מסגרת אחרת.
+                </p>
+                <!-- Mobile-only side notes (hidden in desktop) -->
+                <div class="mobile-side-notes">
+                    <div class="page-side-note">ניתן להחליף קורס בחירה אחד בשנה בשני קורסים קצרים המתקיימים באותו סמסטר.
+                        הקורסים הקצרים מקיימים על פני חצי סמסטר (7 שיעורים), ומציעים לימוד מרוכז של מיומנויות
+                        ומתודולוגיות מגוונות.</div>
+                    <div class="page-side-note">סטודנט.ית המבקש.ת להירשם לקורסים מעל למכסה שלעיל, ת.יפנה לראש המחלקה.</div>
+                    <div class="page-side-note">הרכבת מערכת הקורסים לשנים ג׳ ו־ד׳ תיערך במסגרת מערכת התעדוף הממוחשב במהלך
+                        הקיץ.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-contact-section">
+                        <a href="mailto:vc@bezalel.ac.il" class="footer-contact-link">צרו קשר</a>
+                        <a href="https://www.instagram.com/vc_bezalel/" target="_blank" class="footer-contact-link">עקבו אחרינו</a>
+                    </div>
+                    <div class="footer-copyright">© 2025 בצלאל אקדמיה לאמנות ועיצוב ירושלים</div>
+                </div>
+                <div class="footer-branding">
+                    <span class="footer-name-he">בצלאל אקדמיה לאמנות ועיצוב ירושלים</span>
+                    <span class="footer-name-ar">أكاديمية بتسلئيل للفنون والتصميم القدس</span>
+                    <span class="footer-name-en">Bezalel Academy of Arts and Design Jerusalem</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Crosshair guide lines -->
+    <div class="crosshair-line horizontal" id="crosshair-h"></div>
+    <div class="crosshair-line vertical" id="crosshair-v"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>קורסים - VC Bezalel</title>
+    <script>
+        const transitionType = sessionStorage.getItem('pageTransition');
+        if (transitionType) {
+            document.documentElement.classList.add('page-transitioning');
+            // For inner-to-inner, don't hide rulers (they're identical)
+            if (transitionType === 'inner-to-inner') {
+                document.documentElement.classList.add('inner-to-inner-transition');
+            }
+        }
+    </script>
+    <style>
+        .page-transitioning .content,
+        .page-transitioning .plus-grid {
+            opacity: 0 !important;
+        }
+        /* Only hide rulers and border-frame for homepage transitions, not inner-to-inner */
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-top,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-left,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-right,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-bottom,
+        .page-transitioning:not(.inner-to-inner-transition) .border-frame {
+            opacity: 0 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="inner-page page-courses">
+    <!-- SVG filter for gradient map effect - ORANGE version for courses page -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <!-- Orange gradient map: maps dark to darker orange and light to #FCFCFB -->
+            <!-- Using darker orange for shadows: R=0.4, G=0.22, B=0 for better contrast -->
+            <filter id="gradient-map" color-interpolation-filters="linearRGB" x="0" y="0" width="100%" height="100%">
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer result="gradientMap">
+                    <feFuncR type="table" tableValues="0.7 0.988" />
+                    <feFuncG type="table" tableValues="0.35 0.988" />
+                    <feFuncB type="table" tableValues="0 0.984" />
+                </feComponentTransfer>
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noise" />
+                <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
+                <feBlend in="gradientMap" in2="monoNoise" mode="overlay" result="noisy" />
+                <feComponentTransfer in="noisy">
+                    <feFuncR type="linear" slope="1" intercept="0" />
+                    <feFuncG type="linear" slope="1" intercept="0" />
+                    <feFuncB type="linear" slope="1" intercept="0" />
+                    <feFuncA type="linear" slope="0.07" intercept="0.93" />
+                </feComponentTransfer>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Rulers (zoomed in version) -->
+    <div class="ruler ruler-top">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-bottom">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-left">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+    <div class="ruler ruler-right">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+
+    <!-- Border frame (outside grid-background for proper z-index) -->
+    <div class="border-frame"></div>
+
+    <!-- Mobile bottom nav carousel -->
+    <div class="mobile-nav-carousel" id="mobile-nav-carousel" data-current="4">
+        <div class="mobile-nav-track">
+            <a href="index.html" class="mobile-nav-item" data-index="0">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>בית</span>
+            </a>
+            <a href="program.html" class="mobile-nav-item" data-index="1">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>תוכנית הלימודים</span>
+            </a>
+            <a href="staff.html" class="mobile-nav-item" data-index="2">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>סגל ההוראה</span>
+            </a>
+            <a href="guidelines.html" class="mobile-nav-item" data-index="3">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>הוראות ונהלים</span>
+            </a>
+            <a href="courses.html" class="mobile-nav-item" data-index="4">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>קורסים</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid-background">
+        <!-- Plus grid (7 columns x 5 rows) -->
+        <div class="plus-grid">
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+        </div>
+    </div>
+
+    <!-- Page header on the ruler -->
+    <a href="index.html" class="page-header-link">
+        <h1 class="page-header-title">המחלקה לתקשורת חזותית</h1>
+    </a>
+
+    <div class="content page-content">
+        <!-- Page header row: title + year + semester -->
+        <div class="page-header-row courses-header-row">
+            <div class="page-title-group">
+                <h2 class="page-title">קורסים</h2>
+                <div class="page-title-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="107" height="107" viewBox="0 0 107 107" fill="none" style="transform: rotate(0deg);">
+                        <path
+                            d="M1.64258 35.293L11.5918 35.293L11.5918 88.209L96.3154 3.48535L97.4766 2.32324L104.493 9.33984L103.331 10.501L18.6074 95.2246L71.5234 95.2246L71.5234 105.174L1.64258 105.174L1.64258 35.293Z"
+                            fill="#FFAA00" stroke="#FFAA00" stroke-width="3.28521" />
+                    </svg>
+                </div>
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה א׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר א׳</h3>
+                <span class="courses-semester-number">01</span>
+            </div>
+        </div>
+
+        <!-- Year Section: שנה א׳ -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column (appears on left in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="interaction">
+                        <div class="course-header">
+                        <h4 class="course-title">אינטראקציה</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">חובב אופנהיים, עומר זיו, אורן משה, אורי סוכרי, הראל שיניאק, גל שריר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מה מאפיין את הרגע שבו חוויה עיצובית הופכת לחוויה אינטראקטיבית? הקורס עוסק ביסודות הבסיס (Primitives) ובעקרונות החשיבה של תחום העיצוב האינטראקטיבי במובן הרחב ביותר שלו. בקורס נכיר ונפתח את היסודות והכלים לחשיבה, ניתוח ויצירה בתחום. בסדרת תרגילים והתנסויות נחווה את עקרונות הדיאלוג האינטראקטיבי במדיות שונות ומגוונות. נעסוק בחשיבה המצאתית, חדשנות וגילוי, תוך שימוש בכלים הבסיסיים של התחום, ביכולת ההפעלה של משתמש.ת, ובחוויה הנלווית להפעלה זו. נבחן ונפעיל את מרכיבי הבסיס של חוויה אינטראקטיבית באופנים שונים ונעמיק את התפיסה וההבנה של האינטראקטיביות בעיצוב.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/37.png" alt="סיפור כיפה אדומה אינטראקטיבי" class="course-image">
+                                <div class="course-image-caption">סיפור כיפה אדומה אינטראקטיבי. נעשה במסגרת הקורס בהנחיית רותם פיש</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="photography">
+                        <div class="course-header">
+                        <h4 class="course-title">צילום</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">גסטון איצקוביץ׳, קרן זלץ</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מפגיש את הסטודנט.ים במחלקה עם עולם הצילום והדימוי. בקורס יינתנו כלים טכניים ורעיוניים כדי לאפשר פיתוח של שפה צילומית ככלי לביטוי עצמי, וככלי שמעביר מסרים. במהלך הקורס יילמדו נושאים יסודיים בצילום כגון: חשיפה, צמצם, מהירות, רגישות, קומפוזיציה, שימוש בעדשות שונות, אור, שימוש בתאורה מלאכותית, ועוד. הקורס מורכב מהרצאות פרונטליות על צילום היסטורי ועכשווי, יציאות לצילומים, צילום סטודיו, תרגילים טכניים ורעיוניים, וביקורות עבודות.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/30.jpg" alt="צילום דיוקן מתוך קורס צילום" class="course-image">
+                                <div class="course-image-caption">צילום דיוקן מתוך קורס צילום בהנחיית גסטון איצקוביץ׳</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="letter-form">
+                        <div class="course-header">
+                        <h4 class="course-title">אות וצורה</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">דניאל גרומר, יגאל הרמן, עדה ורדי, יהודה חפשי, דני מירב</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס מבוא העוסק באבני הבניין של העבודה עם צורות טיפוגרפיות, אייקונים וסמלים: חלל, משקל, קונטרסט, כיוון קונטרסט, גודל, מבנה, סגנון, ועוד. נתנסה בציור אותיות באמצעות קליגרפיה, נכיר את ההיסטוריה של הטיפוגרפיה, נערוך תרגילי התבוננות, ונבין את אפשרויות המניפולציה על צורות קיימות. בהמשך נעסוק ביצירת מערכת סמלים, ונלמד שיטות עבודה של פיתוח צורה, הפשטה, צמצום, סגנון וסדרתיות.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/33.png" alt="פרויקט מקורס אות וצורה" class="course-image">
+                                <div class="course-image-caption">פרויקט הנעשה במסגרת הקורס בהנחיית דני מירב</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="illustration">
+                        <div class="course-header">
+                        <h4 class="course-title">המחשה</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">איתן אלוא, זאב אנגלמאיר, עמית טריינין, הילה נועם, עינת צרפתי, לימור שנורמכר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס מעשי המשמש כשער כניסה לתחום האיור בתקשורת חזותית. במסגרת הקורס נרכוש ארגז כלים יסודי המורכב מטכניקות ושפות המחשה ידניות בשחור־לבן וצבע, כדרך להעברת מסר בהקשר תרבותי ורגשי, כמדגיש, וכמספר סיפור. במהלך הקורס נכיר את עולם המושגים המקצועי של התחום כגון: צורה, מרקם, קו וכתם, קומפוזיציה, חלל, אור וצל, ויחסים בין דמות לרקע. נלמד על מקומו ותרומתו של האיור לתרבות לאורך ההיסטוריה, ניחשף למאיירים.ות ולאמנים.ות בתולדות האיור והאמנות, ונתוודע אל המגוון העצום של השדות בהם האיור פועל. הקורס מורכב מסדנאות מעשיות בכיתה ומתרגילי בית.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/28.jpg" alt="מתוך קורס המחשה" class="course-image">
+                                <div class="course-image-caption">מתוך קורס המחשה בהנחיית מיכל בוננו</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (appears on right in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="studio-01">
+                        <div class="course-header">
+                        <h4 class="course-title">סטודיו 01</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">טלי אילון, דנה גז, קובי לוי, דן עוזרי, גיא שגיא, נטי שמיע</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס סטודיו מבואי המציג את עקרונות הבסיס של התקשורת החזותית. במהלך הקורס נלמד את השפה של התחום — צורה, צבע, טיפוגרפיה, קומפוזיציה, דימוי — ונבין כיצד מרכיבים אלו פועלים יחד ליצירת משמעות. נתנסה בדרכים שונות לבטא רעיונות, מידע ורגש באופן חזותי, ונבחן כיצד עיצוב יוצר הקשר, מייצר חוויה ומעביר מסר. הקורס מדגיש את תהליך החשיבה העיצובית, את העבודה בתוך מגבלות, ואת השילוב בין חקירה, יצירתיות ותגובה להקשר. זהו מרחב לפיתוח יכולת התבוננות, ניסוח רעיוני ותרגום חזותי, תוך עידוד סקרנות, גמישות מחשבתית ודיוק ביצירה. כקורס סטודיו מרכזי בשנה א׳, הוא מהווה ציר מארגן ליתר הקורסים — מרחב שבו נפגשים תכנים, שפות, כלים וניסויים מעולמות הלמידה השונים לכדי גיבוש זהות עיצובית ראשונית.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Short courses section title row -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">מיומנויות (קורסים קצרים בני 7 שבועות):</h5>
+            </div>
+
+            <!-- Short Courses Grid - 3 independent columns -->
+            <div class="courses-grid short-courses-grid">
+                <!-- Left column -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="drawing-01">
+                        <div class="course-header">
+                        <h4 class="course-title">רישום 01</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">אריאל אסאו, שרון אתגר, מיכל ביבר, מתן בן־כנען, אלכס טוביס</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הרישום הוא כלי מחשבתי ומעשי הבוחן, באמצעות הקו, את היחסים בין האדם למה שמולו ומסביבו. הקורס נותן כלים בסיסיים לפיתוח תפיסה וחשיבה חזותית. נציץ אל עולמם של אמנים.ות ואל אופן הבנייה הייחודי של שפתם, שיעלה שאלות על האופן שבו אנו תופסים ומבינים את מה שמולנו. נערוך תרגילים קצרים וממוקדים במגוון טכניקות, באופן שיפתח את אופק התפיסה והחשיבה לגבי עולם הרישום.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/38.png" alt="רישום מקורס רישום 01" class="course-image">
+                                <div class="course-image-caption">רישום שנעשה במסגרת קורס רישום בהנחיית אלכס טוביס</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="drawing-02">
+                        <div class="course-header">
+                        <h4 class="course-title">רישום 02</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">שמרית אלקנתי, אריאל אסאו, מתן בן־כנען, אלכס טוביס</p>
+                        </div>
+                        <div class="course-description">
+                            <p>המשך לקורס רישום 01. ריבוי גישות לתרגול הרישום, העמקה בטכניקות והרחבה של אמצעי הביטוי. התנסות בסוגי עטים שונים, עפרונות, מכחולים, דיו ופחם, נושאים שונים, גדלים משתנים. הקורס עוסק בפיתוח יכולת הביטוי של הסטודנט.ית באמצעות כלי הרישום.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="print-skills">
+                        <div class="course-header">
+                        <h4 class="course-title">מיומנויות דפוס</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">שרון אתגר, יעל בורשטיין, חן וינר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה מעשית בבית הדפוס. נעסוק בתהליך הייצור והדפוס מא׳ עד ת׳ ונלמד להכיר את המכונות, החומרים ובעלי המקצוע. הקורס עוסק ביסודות הדפוס מנקודת מבט מעשית — חיתוך, קיפול, כריכה, הדבקה, הטבעה, פרפורציה וניקוב, בשיתוף פעולה ותקשורת עם גורמי ייצור שונים.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semester header row: שנה א׳ סמסטר ב׳ -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה א׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר ב׳</h3>
+                <span class="courses-semester-number">02</span>
+            </div>
+        </div>
+
+        <!-- Year Section: שנה א׳ סמסטר ב׳ -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="interface">
+                        <div class="course-header">
+                        <h4 class="course-title">ממשק</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">חובב אופנהיים, מיכל הר־גב, בן לב, עילי עובדיה, רותם פיש, הראל שיניאק</p>
+                        </div>
+                        <div class="course-description">
+                            <p>עם המצאת המחשב בשנות ה־40 של המאה הקודמת, הופיע גם הצורך בממשק אשר יתקשר לו את רצון האדם. הקורס מציע היכרות עם התחום המתפתח של עיצוב ממשקים דיגיטליים. נסקור את האבולוציה של ממשקי משתמש מראשית עידן המחשבים ושורת הפקודה, דרך לידת הממשק הגרפי (GUI) והמעבר לעולם הנייד ומסך המגע, ועד למגמות עיצוב עכשוויות בעידן הבינה המלאכותית. נבין כיצד החלטות עיצוביות משפיעות על התנהגות, נגישות ותחושת שליטה במערכות מורכבות. במהלך הקורס הסטודנטים.ות יפתחו הבנה בסיסית בשפה ובחשיבה של תחום ה־UI, כהכנה לעולם שבו עיצוב חזותי מתקיים יותר ויותר במרחבים אינטראקטיביים.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="motion-1">
+                        <div class="course-header">
+                        <h4 class="course-title">תנועה</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">גבריאל אייש, ארז גביש, ענת גוטברג, אמיתי גלעד, גיא דהאן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בעידן שבו המסך הוא זירת הפעולה המרכזית של התקשורת החזותית, עיצוב על ציר זמן הפך למרכיב יסוד בשפתו של המעצב. הקורס מקנה את הבסיס להבנה ויישום של תנועה כמרכיב עיצובי — כזה שנושא משמעות, מבנה, חומריות, אופי וקצב. לאורך הסמסטר נלמד את עקרונות האנימציה הבסיסיים. נחקור את הקסם הקורה בחיבור מדויק של סדרת פריימים סטטיים והגשתם לצופה במהירות קבועה. נתנסה בכלים ובטכניקות, וננסה להבין כיצד תנועה יוצרת חיבור בין צופה למסר, כיצד להוליך את העין, כיצד טיפוגרפיה ותנועה משתפים פעולה, ואת מהות הקשר ההדוק בין תנועה וסאונד. במסגרת הקורס נעשה שימוש בתוכנת אפטר־אפקטס, היכרות בסיסית עם התוכנה תיערך בחופשת הסמסטר.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="illustration-2">
+                        <div class="course-header">
+                        <h4 class="course-title">איור</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">זאב אנגלמאיר, ג׳ודית אשר, מיכל בוננו, הילה נועם, פרופ׳ מרב סלומון, גלעד סליקטר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מקנה כלי עבודה מעשיים ורעיוניים לפיתוח שפה חזותית באיור. במהלך הקורס נתנסה בתרגילים העוסקים באיור כאמצעי להעברת מסר ובפיתוח של שפה חזותית — סגנון. במסגרת השיעורים נלמד להבין את השפעתם של אמצעי ההבעה השונים, כמו הטכניקה הציורית, הצבע, והקומפוזיציה על התוכן והמשמעות באיור. נתנסה בטכניקות ציור מגוונות, בדגש על התבוננות, או המצאה ודמיון. לאורך הסמסטר נעמיק את ההיכרות עם הנעשה בזירת האיור בעבר ובהווה, בארץ ובעולם, ונשכלל את יכולת הדיון הביקורתי.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/36.png" alt="איור מקורס איור" class="course-image">
+                                <div class="course-image-caption">נעשה במסגרת קורס איור בהנחיית ג׳ודית אשר</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="typography-1">
+                        <div class="course-header">
+                        <h4 class="course-title">טיפוגרפיה</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">סוניה אוליטסקי, דנה גז, יגאל הרמן, מאיר סדן, דן עוזרי, נעם שכטר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס מבוא לטיפוגרפיה העוסק בסידור טקסט (Typesetting), בו נשים דגש על קריאוּת, ונלמד לאזן את היחסים בין האותיות, החללים שביניהן ובין השורות. נלמד לכייל טקסט על מנת לתת לו את המקצב הנכון לקריאה אופטימלית. נשלב מערכות כתב שונות (עברית, לטינית, ערבית) ונעמוד על השונה והמשותף ביניהן. נלמד לקחת החלטות טיפוגרפיות תוך בחירה מודעת בכל מרכיבי המערכת, על מנת לייצר הקשר רלוונטי ומסר בהיר.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/39.jpg" alt="עיצוב עטיפות ספרים מקורס טיפוגרפיה" class="course-image">
+                                <div class="course-image-caption">עיצוב עטיפות סדרת ספרים במסגרת קורס טיפוגרפיה בהנחיית דן עוזרי</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="studio-02">
+                        <div class="course-header">
+                        <h4 class="course-title">סטודיו 02</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">טלי אילון, שרון אתגר, יעל בורשטיין, קרן גפני, איל זקין, רוני לוית</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס זה מעמיק את ההיכרות עם השפה הגרפית ככלי חשיבה, ניסוח והבעה, ומחזק את הקשר בין רעיון לצורה. נתמקד בהמרת תכנים, קונספטים ומסרים לפורמטים חזותיים מגוונים — תוך בחינה של קומפוזיציה, היררכיה, טיפוגרפיה ודימוי ככלי מסר המעצבים חוויה. הקורס מרחיב את המיומנויות שנרכשו, ומזמין את הסטודנטים.ות להתנסות ביצירה המתמודדת עם אתגרים רעיוניים, תרבותיים וסביבתיים. נלמד לזהות מבנים נרטיביים, לעבוד עם הקשרים קונספטואליים, ולעצב תוך מודעות למרחבים תקשורתיים — ציבוריים, אישיים ודיגיטליים. דרך סדרת תרגילים, נבחן את גבולות השפה הגרפית, את הפוטנציאל הגלום בה לשיבוש, הפתעה או קריאה מחדש, ונעסוק באיזון שבין מקוריות לבין קונבנציה. הקורס מעודד חשיבה ביקורתית, רגישות תרבותית ופיתוח קול אישי, לקראת המשך הלמידה והעבודה בתחום.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Short courses section title row -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">מיומנויות (קורסים קצרים בני 7 שבועות):</h5>
+            </div>
+
+            <!-- Short Courses Grid -->
+            <div class="courses-grid short-courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="digital-skills">
+                        <div class="course-header">
+                        <h4 class="course-title">מיומנויות דיגיטליות</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">אסף ארד, מאיר סדן, יוליה סמילנסקי, יסמין רובינוביץ, ניר שקד</p>
+                        </div>
+                        <div class="course-description">
+                            <p>המחשב, האינטרנט וכלי הבינה המלאכותית הם חלק בלתי נפרד משדה התקשורת החזותית, וכל מעצב.ת חייב.ת לעבוד איתם היטב. בקורס זה נערוך היכרות עם כלים דיגיטליים שונים — החל ממושגים בסיסיים מעולם המחשב, דרך התנסות בכתיבת קוד ועד עבודה עם כלי בינה מלאכותית. מכיוון שמדובר בתחום מורכב ודינמי הקורס יתן תשתית ללמידה עצמאית עתידית — במהלך הקורס נשים דגש על התנסות עם הכלים, על אוריינות, ועל דרכים ומקורות ללמידה אישית המשכית.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column (visual middle) -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="drawing-03">
+                        <div class="course-header">
+                        <h4 class="course-title">רישום 03 — צבע</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">אריאל אסאו, מיכל ביבר, אלכס טוביס</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס מתגלגל המקנה יסודות של רישום אקדמי עבור מעצבים.ות. מטרת הקורס היא פיתוח יכולות ההתבוננות, קשר עין—מוח—יד, והעברה מנוסחת של אובייקטים וחללים מהמציאות התלת־ממדית אל המישור הדו־ממדי של הנייר. ברישום 03 נתמקד בעבודה בצבע, בדגש על צבעי שמן. נתעמק במהות של הצבע, ערבוב צבעים, פלטות צבעים, נוף, וצבע גוף דרך התבוננות באדם.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/35.png" alt="ציור בשמן מקורס רישום 03" class="course-image">
+                                <div class="course-image-caption">ציור בשמן. נעשה במסגרת הקורס בהנחיית אריאל אסאו</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL - empty) -->
+                <div class="courses-column courses-column-right">
+                </div>
+            </div>
+        </div>
+
+        <!-- Semester header row: שנה ב׳ סמסטר א׳ -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה ב׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר א׳</h3>
+                <span class="courses-semester-number">03</span>
+            </div>
+        </div>
+
+        <!-- Year Section: שנה ב׳ סמסטר א׳ -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="video-photography">
+                        <div class="course-header">
+                        <h4 class="course-title">צילום וידאו למעצב.ת</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">ארי עמית, תמיר צדוק</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס יעסוק ביצירת משמעות, שפה והעברת מסר על ידי שימוש בתמונה נעה (Moving image). כדי להגיע מרעיון ועד לרצף תמונות על ציר הזמן, נתחיל משלב התכנון הכולל תסריט, references, סטוריבורד, תכנון יום הצילום והצילומים עצמם, נעבור דרך עריכת האוף־ליין, וניגע באפשרויות השונות הקיימות ב־post production. הדגש בקורס איננו טכני. נעסוק אמנם בטכנולוגיה של הצילום והתאורה, אולם מירב תשומת הלב תופנה למקום בו אנו, כיוצרי ויוצרות דימויים, מחוייבים.ות להעברת מסר וחוויה באמצעות השפה והסגנון החזותי של הפריים.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="illustration-language-a">
+                        <div class="course-header">
+                        <h4 class="course-title">שפת האיור א׳</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">איתן אלוא, זאב אנגלמאיר, מיכל בוננו, אורית ברגמן, עמית טריינין, עינת צרפתי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס עוסק בהיכרות ותרגול של סגנון ורעיון, המהווים את שני היסודות המרכזיים בתחום האיור. נתמקד בפיתוח שפה חזותית אישית הכוללת התעמקות בסגנון, טכניקה ובניית קומפוזיציה כאמצעי להעברת מסר. כחלק מפיתוח של שפת איור עצמאית יושם דגש על איור ידני. במהלך הקורס נעמיק ונכיר את תחום האיור בעבר ובהווה, נלמד מושגי מפתח בתחום ונשכלל את יכולת הדיון הביקורתי.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/32.png" alt="איור סצנה במרחב" class="course-image">
+                                <div class="course-image-caption">איור סצנה במרחב בהנחיית עינת צרפתי</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="digital-products-intro">
+                        <div class="course-header">
+                        <h4 class="course-title">מבוא למוצרים דיגיטליים</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">טלי אילון, מיכל הר־גב, רונאל מור, אורי סוכרי, עילי עובדיה</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס נלמד את הבסיס של עיצוב כלים דיגיטליים תוך כדי התנסות בתפקידי המעצב.ת בשלבים שונים של תהליכים ושיטות עבודה מקובלות. תוך כדי עבודה על שני תרגילים מרכזיים נתנסה ונרכוש מיומנויות במחקר, אפיון ותכנון, דרך העיצוב החזותי ועד להדמיה של ממשקים אינטראקטיביים שמטרתם מתן מענה לצרכי משתמשים.ות. בקורס נשים דגש ונדון בעיצוב ממוקד משתמש.ת, עיצוב למסך והמאפיינים של חומריות דיגיטלית, דפוסים מוכרים ומרכיבי ממשק, והדרישות המיוחדות שכל אלו מציבים לעיצוב החזותי.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="graphic-design-02">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב גרפי 02</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">הלל אבט, רותם ביקסנשפנר, טל הרדה, סטס טוצ׳ינסקי, מעין לויצקי, עדלי סטוק</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס זה נלמד לגבש מהלך גרפי אינטגרטיבי ורחב המבטא עמדה. נלמד לבנות ולשכלל כלים להעברת מסר, תוך שימוש בטקטיקות דיסיפלינריות שונות באופן מושכל, חווייתי, מושך, קריא וקוהרנטי. במהלך הקורס נפתח ונעצב מערכת גרפית וסמל, נעסוק ביצירת דימוי אפקטיבי ועשיר, בעיצוב לייאאוט לפורמט גדול, ובאסטרטגיות שונות לערוך נרטיב ולספר אותו באופן חזותי.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="typography-02">
+                        <div class="course-header">
+                        <h4 class="course-title">טיפוגרפיה 02</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">סוניה אוליטסקי, טל הרדה, עדנה הררי, עידן ועקנין, נואל ערפאת, פרופ׳ ענת קציר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס שעניינו עיצוב טיפוגרפי ככלי להעברת מסר. נעסוק בכוח של טיפוגרפיה כמחוללת זהות, באפיון טיפוגרפי של תוכן, בעריכה וארגון אינפורמציה, בעיצוב טקסט לקריאה, ובקבלת החלטות עיצוביות המייצרות היגד שלם או סדרה. במהלך הקורס נעצב מערכת טיפוגרפית שלמה הכוללת יחידה טיפוגרפית מקורית מובילה (לוגוטייפ), סדרה של דימויים טיפוגרפיים נושאי מסר, עיצוב לייאאוט לספר קריאה והכרות עם עיצוב טיפוגרפי בסביבת מסך.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Short courses section title row -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">מיומנויות (קורסים קצרים בני 7 שבועות):</h5>
+            </div>
+
+            <!-- Short Courses Grid -->
+            <div class="courses-grid short-courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="drawing-04">
+                        <div class="course-header">
+                        <h4 class="course-title">רישום 04</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">אריאל אסאו, שרון אתגר, מיכל ביבר, מתן בן־כנען, אלכס טוביס</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס מתגלגל המקנה יסודות של רישום אקדמי עבור מעצבים.ות. מטרת הקורס היא פיתוח יכולות ההתבוננות, קשר עין—מוח—יד, והעברה מנוסחת של אובייקטים וחללים מהמציאות התלת־ממדית אל המישור הדו־ממדי של הנייר. ברישום 04 נתמקד במגוון טכניקות רישום. נתעמק באנטומיה, תנועה, סקיצות, פרספקטיבה אנושית, הקצרה ועוד.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column (visual middle - empty) -->
+                <div class="courses-column courses-column-middle">
+                </div>
+
+                <!-- Right column (visual left in RTL - empty) -->
+                <div class="courses-column courses-column-right">
+                </div>
+            </div>
+        </div>
+
+        <!-- Semester header row: שנה ב׳ סמסטר ב׳ -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה ב׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר ב׳</h3>
+                <span class="courses-semester-number">04</span>
+            </div>
+        </div>
+
+        <!-- Year Section: שנה ב׳ סמסטר ב׳ -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="branding-intro">
+                        <div class="course-header">
+                        <h4 class="course-title">מבוא למיתוג</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">ארנסטו ביכובסקי־רז, עדלי סטוק, עידן עם־שלם, שי ענבר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס זה נערוך היכרות ראשונה עם תחום המיתוג, בדגש על עיצוב בתלת־ממד. נלמד מושגי יסוד בתחום מיתוג המוצר, ונדון באספקטים קשורים כמו בידול, שיווק, סדרתיות, קהל יעד וכד׳. הקורס בנוי ממספר תרגילים היוצרים מעבר הדרגתי: החל ממחקר, דרך בניית קונספט ועד לעיצוב אריזה גרפית למוצר מדף קיים, תוך מציאת פתרונות חדשים ושימוש רענן בצורה ובחומר.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="motion-2">
+                        <div class="course-header">
+                        <h4 class="course-title">תנועה</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">גבריאל אייש, ארז גביש, גיא דהאן, ערן היללי, חן וינר, סיוון פיטרמן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בעידן שבו המסך הוא זירת הפעולה המרכזית של התקשורת החזותית, עיצוב על ציר זמן הפך למרכיב יסוד בשפתו של המעצב. הקורס מקנה את הבסיס להבנה ויישום של תנועה כמרכיב עיצובי — כזה שנושא משמעות, מבנה, חומריות, אופי וקצב. לאורך הסמסטר נלמד את עקרונות האנימציה הבסיסיים. נחקור את הקסם הקורה בחיבור מדויק של סדרת פריימים סטטיים והגשתם לצופה במהירות קבועה. נתנסה בכלים ובטכניקות, וננסה להבין כיצד תנועה יוצרת חיבור בין צופה למסר, כיצד להוליך את העין, כיצד טיפוגרפיה ותנועה משתפים פעולה, ואת מהות הקשר ההדוק בין תנועה וסאונד. במסגרת הקורס נעשה שימוש בתוכנת אפטר־אפקטס, היכרות בסיסית עם התוכנה תיערך בחופשת הסמסטר.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="playfulness">
+                        <div class="course-header">
+                        <h4 class="course-title">משחקיות</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">אלעד גולדשטיין, איתן מג׳אר, עידן רוזה, גדעון רימר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס זה נלמד את עקרונות היסוד של תכנון משחקיות ויצירת חוויות משחקיות, תוך רכישת כלי חשיבה אנליטית וביקורתית על מנגנונים משחקיים. הסטודנטים.ות ילמדו ויתנסו בפיתוח מספר משחקים אנלוגיים פיזיים (משחקי לוח, קלפים וכד׳) במהלך שמתחיל בהמצאה ורעיונאות, ממשיך לעיצוב ושכלול, ומסתיים בהפקת משחק אנלוגי שלם. בסיום הקורס יוכלו הסטודנטים ליישם את עקרונות היסוד בפיתוח משחקים בכל מדיום, תוכן ופורמט, בהם משחקים דיגיטליים, משחקים בעלי אג׳נדה, משחקים במרחב הפיזי ועוד.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/31.jpg" alt="משחק קופסה מקורס משחקיות" class="course-image">
+                                <div class="course-image-caption">משחק קופסה אשר נעשה במסגרת הקורס</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="illustration-language-b">
+                        <div class="course-header">
+                        <h4 class="course-title">שפת האיור ב׳</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">שמרית אלקנתי, מיכל בוננו, פרופ׳ רותו מודן, הילה נועם, גלעד סליקטר, דוד פולונסקי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מעמיק את התרגול של סגנון ורעיון באיור, תוך הקניית פרשנויות איוריות לטקסטים מגוונים. במהלך הקורס נעמיק ונכיר את תחום האיור בעבר ובהווה, נלמד מושגי מפתח בתחום ונשכלל את יכולת הדיון הביקורתי. בתחילת הסמסטר יעברו הסטודנטים.ות סדנה מרוכזת באיור דיגיטלי, ולאחריה יוכלו להשתמש במחשב ככלי איורי.</p>
+                            <div class="course-image-wrapper">
+                                <img src="images/34.png" alt="זמנים טובים, זמנים רעים" class="course-image">
+                                <div class="course-image-caption">זמנים טובים, זמנים רעים. נעשה במסגרת הקורס בהנחיית מיכל בוננו</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="graphic-typography-03">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב גרפי וטיפוגרפיה 03</h4>
+                        <span class="course-points">4 נ״ז</span>
+                        <p class="course-lecturers">נעמי גיגר, עדנה הררי, עידן ועקנין, מיכל סהר, נואל ערפאת, פרופ׳ ענת קציר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס זה נחבר בין ארסנל כלי העיצוב והטיפוגרפיה שנלמדו עד כה במסגרות מקבילות לכדי יצירת מערכת מורכבת אחת. הדגש הוא על אינטגרציה בין־תחומית אשר מייצרת מהלך עיצובי קוהרנטי בעל מספר יישומים, ואשר מאפיינת את השדה המקצועי. במהלך הקורס נעסוק הן בבניית שפה גרפית מובילה מבוססת אימג׳מייקינג/טיפוגרפיה, והן בעיצוב טיפוגרפי בשירות התוכן — במיפוי תכנים וקבלת החלטות עיצוביות רלוונטיות, בעיצוב כאמצעי להובלה והתמצאות, בהיכרות ועבודה עם פורמטים מודפסים ודיגיטליים, בתכנון גריד ולייאאוט, ובעיצוב ככלי פרשני.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Years 3+4 Studio Courses Header -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <!-- Course type column (right in RTL) -->
+            <div class="page-title-group">
+                <h2 class="courses-type-title">שנים ג׳+ד׳ —</h2>
+                <span class="courses-type-subtitle">קורסי סטודיו</span>
+            </div>
+            <!-- Year column (middle) -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה ג׳</h3>
+            </div>
+            <!-- Semester column (left in RTL) -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר א׳</h3>
+                <span class="courses-semester-number">05</span>
+            </div>
+        </div>
+
+        <!-- Year Section: שנה ג׳ סטודיו 05 -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="illustration-design">
+                        <div class="course-header">
+                        <h4 class="course-title">איור ועיצוב</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">ענת ורשבסקי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>יוצר.ת המסוגל.ת להציע פתרונות המשלבים איור ועיצוב יכול.ה להציע פתרון שלם וקוהרנטי לכל אתגר חזותי. הקורס יתמקד ביצירת שפה אישית שלמה ומגוונת המורכבת מאלמנטים מאויירים ומעוצבים בהיררכיות משתנות. הסטודנטים.ות ילמדו לזהות את החוזקות שלהם באיור או\ו בעיצוב, ולהשליך אותן על תחומים בהם יש להם.ן פחות שליטה, ביטחון או ניסיון. אימג׳מייקינג, סגנון, אנימציה, טכניקה איורית והקשר שלה ליצירת משמעות, לטרינג, טיפוגרפיה והיררכיות אינפורמציה יהיו אבני הבניין איתן נשחק כדי ליצור משמעות ושפה. בקורס נבחן את שיטות העבודה ותבניות החשיבה של הסטודנט.ית, ונציע, בעזרת סדנאות מעשיות בכיתה, דרכים להעשיר ולגוון אותן. נבחן דרכים ליצירת סקיצות מגוונות, ליצירת משמעות בעזרת צבע, לקריאות ובהירות בעזרת היררכיה, נבחן מה הגודל בו נוח לסטודנט.ית לעבוד, ועוד. הקורס בנוי מתרגילים בסדר מורכבות עולה, מאיור ועיצוב של אות או מילה ועד לתרגיל מסכם של סדרת פוסטרים.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="startup-product">
+                        <div class="course-header">
+                        <h4 class="course-title">זה סטארטאפ! — עיצוב מוצר</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">בן לב</p>
+                        </div>
+                        <div class="course-description">
+                            <p>המהפכה הטכנולוגית של זמננו יצרה תחום חדש ומרתק עבורנו המעצבים והמעצבות. חברות סטארטאפ טכנולוגיות הביאו ביקוש לדור חדש של מעצבים.ות עם סט מיומנויות רחב מאי פעם. מעצבי.ות מוצר דיגיטלי (UX/UI) בחברות סטארטאפ פועלים.ות בתחום החופף בין הבנת האדם, צרכי השוק והטכנולוגיות העדכניות ביותר. למעצבי.ות המוצר תפקיד מוביל בתהליכי קבלת ההחלטות בדרך ליצירת מוצרים משמעותיים ובעלי ערך עבור המשתמשים.ות. מעצבי.ות המוצר לוקחים.ות חלק משמעותי בשיח עם א.נשי המחקר, ניהול המוצר, הפיתוח, היזמות העסקית, וכמובן המשתמשים.ות עצמם.ן. במסגרת הקורס נלמד כיצד לפתח מיומנויות הנדרשות בעולם המהיר של עיצוב המוצר. נלמד לעומק כיצד לעצב חוויות משתמש.ת דיגיטליות שימושיות ומוצלחות באמצעות מחקר מונחה נתונים, מחקר משתמשים.ות והמון חשיבה יצירתית. נתנסה במתודולוגיות עיצוב הקיימות כיום בתעשייה, נפתח שפה עיצובית למוצר דיגיטלי ונעשה כל זאת תוך כדי מבט בלתי פוסק (וביקורתי כשצריך) אל עולם הסטארטאפים וההייטק המקיף אותנו. במהלך הקורס נארח מעצבים ומעצבות בולטים בתעשייה ונבקר בחברות סטארטאפ מובילות.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="typography-complex-reading">
+                        <div class="course-header">
+                        <h4 class="course-title">טיפוגרפיה: עיצוב לקריאה מורכבת</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">נעם שכטר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>עיצוב של פורמטים עתירי טקסט מציב בפנינו אתגר כפול: מצד אחד (1) תכנון מערכת רחבת היקף — הארכיטקטורה של העמוד — העוסקת בהכוונה של הקוראים.ות בין מקורות אינפורמציה שונים; ובמקביל (2) סידור דקדקני של הפונטים והגושים הטיפוגרפיים — האנטומיה של הטקסט — על מנת להשביח את מכניקת הקריאה. מטרת העל שלנו היא ליצור חווית קריאה מעניינת, מאתגרת ומשחקית, הניצבת על כתפי מוסכמות היסטוריות ועושה מהלך ביקורתי כדי להתאים להרגלים עכשוויים של קריאה ממסך (ניווט לא־ליניארי וריבוי שכבות מידע). נתנסה במגוון רחב של שיטות תסדיר (layout): מבנים פרשניים (עמוד תלמודי, מאמר אקדמי), רשתיים (אתרים, hyperlinks), מקביליים (עיתונות, juxtaposition) ומבנים היררכיים, כרונולוגיים, מודולריים או מרחביים. הסטודיו מוביל התמחות בעיצוב דברי דפוס טיפוגרפיים ומעניק ארגז כלים מקצועי, המאפשר התמודדות עם כל סוג של אתגר טיפוגרפי מורכב; מעודד העמקה בעולמות הקראפט של הנייר, הדפוס והכריכה כחלק בלתי נפרד מעבודת העיצוב; מתרגל טקטיקות לניהול הערוץ הטיפוגרפי, מקרו ומיקרו, תוך שמירה על קריאוּת מיטבית, בהירוּת (legibility) והתמצאות (readability).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="motion-design-intro">
+                        <div class="course-header">
+                        <h4 class="course-title">מבוא לעיצוב בתנועה</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">מעין צוריאל</p>
+                        </div>
+                        <div class="course-description">
+                            <p>עולם המדיה המשודרת (טלוויזיה, וידאו ברשת וחללי תצוגה) מציב למעצב.ת הגרפי.ת אתגרים חדשים ודרכים אפקטיביות במיוחד להעברת מסר. הקורס מציע היכרות עם האפשרויות והסגנונות הרבים בעולם התנועה, הרחבת מאגר הכלים הטכניים הדרושים ליצירה עדכנית וחדשנית והזדמנות למציאת קול ייחודי. קורס סטודיו המיועד למעצבים.ות ומאיירים.ות שמוכנים.ות לכבוש את ציר הזמן. העבודה בקורס היא על תוכנת אפטר־אפקטס, ומחייבת ידע קודם או למידה עצמאית טרם הקורס. הודעה על מסגרות רכישת הידע תימסר בהמשך.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="culture-branding">
+                        <div class="course-header">
+                        <h4 class="course-title">מיתוג תרבות</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">איל זקין</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הסטודיו יעסוק בפיתוח מערכות גרפיות מורכבות ורב־תחומיות עבור פסטיבלים גדולים ומשמעותיים במרחב התרבות המקומית. נעבוד על יצירת שפה חזותית חיה ועכשווית שתמתח את גבולות הפורמטים ותנוע בין מסך לדפוס, בין דימוי לטיפוגרפיה ובין שפה אישית לצרכים ציבוריים. נבנה ארגז כלים חזותי הכולל לוגו, צבעוניות, חומריות, אנרגיה, ווליום וקצב, תוך מתן דגש לזיהוי צרכים, הנגשת ידע, עוצמה וחיבור למציאות תרבותית דינמית. הסטודיו ישלב חקירה אישית עם תהליכי עבודה שיטתיים, ויבקש לבסס קול עיצובי עצמאי ויציב. נשאף לעיצוב מקורי, רלוונטי ובעל עומק — כאן ועכשיו — שיש לו פוטנציאל לשרוד, להתפתח ולהיות על־זמני.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="web-typography">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב ופיתוח טיפוגרפי ל־Web</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">מאיר סדן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס זה מתמקד בהבנת העקרונות המרכזיים בעיצוב תוכן לאתרי Web ובהכרת הטכנולוגיות והשפות המרכיבות אותה, לצד עבודה עם כלי פיתוח אמיתיים (כלים לעריכת קוד וכלי עריכה ויזואליים — webflow). באמצעות תרגילים קצרים נתנסה בפיתוח אתרי אינטרנט אמיתיים בקוד, ובתרגיל המרכזי נפתח מערכת עיצובית עבור אתר תוכן מרובה עמודים. נעסוק ביצירת קוד ובמתן פתרונות טיפוגרפיים לתוכן ב־Web — החל ממיקרו־טיפוגרפיה, דרך גריד ועימוד פורמט רספונסיבי, ועד אינטראקציות עם טקסטים ואלמנטים בתנועה. השיעורים יכללו הרצאות, עבודה בכיתה, ביקורת שוטפת ותרגול החומר הנלמד. הקורס אינו דורש ידע מקדים בכתיבת קוד, ולצד העבודה בכיתה יינתנו מקורות להמשך מחקר ולימוד עצמי.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="virtual-space">
+                        <div class="course-header">
+                        <h4 class="course-title">שיטוט במרחב וירטואלי</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">ערן היללי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>יחד ניצור חווית מסע ושיטוט במרחב וירטואלי תלת־ממדי הפועל בזמן אמת. נזמין את השחקנים.ות לשקוע בטיול ונחתור לזכות באמונם.ן, ליצור הזדהות, ולעורר סקרנות, ציפייה והפתעה. הקורס יתמקד בתהליך פיתוח קונספט ארט, פיתוח שפה חזותית תלת־מימדית אישית, עיצוב סביבה ויצירת סיפור מרחבי. נעסוק בנושאים כמו אוירה, תחושת זמן, נקודות מבט, מנעד, קצב, רמת פירוט, סאונד סביבתי ותכנון מהלכי ניווט לא־לינאריים. הסטודיו יכלול העמקה בתוכנת Unity מהזווית של תלת־ממד. נלמד טכניקות בסיסיות בהמחשה וירטואלית המכוונת למנועי משחק וסביבות זמן אמת, ונחשף לשלל דרכי עבודה שיאפשרו לנו להביע את עצמנו ולרקום חוויה מרחבית, אווירתית וסיפורית. אין צורך בידע מוקדם ביוניטי.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Studio 06 Header: שנה ג׳ סמסטר ב׳ -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה ג׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר ב׳</h3>
+                <span class="courses-semester-number">06</span>
+            </div>
+        </div>
+
+        <!-- Year Section: שנה ג׳ סטודיו 06 -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="children-book-illustration">
+                        <div class="course-header">
+                        <h4 class="course-title">איור ספרי ילדים</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">עינת צרפתי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>ספרי הילדים הם אחד המפגשים הראשונים שלנו עם תחום האיור, ולמרות הראשוניות של עולם ספרי הילדים, או אולי בזכותו, הוא אחד המופעים המדויקים והעסיסיים ביותר של איור. בסטודיו כל סטודנט.ית ת.יאייר ספר שלם על פי טקסט נתון תוך כדי למידה מובנית של כל התהליך הכרוך באיור, סטוריטלינג, עיצוב עמוד, והפקה של ספר ילדים. התהליך יכלול חיפוש ואיסוף מידע ורפרנסים, גיבוש קונספט, סטוריטלינג, סגנון וטכניקה, והפקה של מוצר מוגמר.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="interactive-index">
+                        <div class="course-header">
+                        <h4 class="course-title">אינדקס אינטראקטיבי</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">מעין לויצקי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בתהליכי עיצוב ל־Web טמון פוטנציאל ליצירת חוויות ייחודיות של צריכת תוכן, קריאה ושיטוט. עם זאת, במקרים רבים הם מושפעים מתבניות וקונבנציות שאינן מותאמות למורכבות וליופי של תוכן ספציפי. בסטודיו זה נעסוק בעיצוב אתרים עשירים ומורכבים — גרפית ותוכנית — תוך אתגור של מוסכמות עיצוביות. נלמד לפתח גישה ולדייק קונספט לאתר, לאפיין ולייצר מערכות גרפיות מורכבות ומקוריות עבור גופי תוכן ותרבות עתירי מידע. דרך ניסויים בפורמטים שונים, נתייחס אל אתר אינטרנט כאל קנבס דיגיטלי גדול שמאפשר לשאול דרכו שאלות עיצוביות הקשורות בשימושיות ובתועלת, בניווט והתמצאות, בהיררכיה, בתנועה, וביצירת חוויה ויזואלית אפקטיבית, זכירה ושלמה. נעסוק בסוגיות של תקשורת וקריאוּת אל מול תעוזה ומתיחת גבולות, ונשכלל יכולות גרפיות מתקדמות תוך התייחסות לעריכת תוכן ולארכיטקטורת מידע.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="place-identity">
+                        <div class="course-header">
+                        <h4 class="course-title">זהות מקום</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">קובי לוי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס עוסק ביצירה חזותית הקשורה למקומות קונקרטיים במרחב המקומי — מקומות טעונים וקונפליקטואליים מבחינה אדריכלית, קהילתית, היסטורית ותרבותית. בקורס יוצעו כמה מקומות לבחירה בקני־מידה שונים. כל סטודנט וסטודנטית ייצרו פעולה עיצובית מוגדרת למקום — כגון מיתוג קבוע ומיתוג אירוע, פרויקט ביקורתי, ספקולטיבי או מחקרי. הדיון והפרקטיקה ינועו על הספקטרום בין פיתוח צורה, טיפוגרפיה, אימג׳מייקינג ומיתוג. הפרויקטים ידרשו למגוון פלטפורמות ומדיות: פרינט, עיצוב אינטראקטיב, עיצוב בחלל פיזי, דימוי נע וכו׳.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="title-sequence-06">
+                        <div class="course-header">
+                        <h4 class="course-title">טייטל סיקוונס</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">אדם פיינברג</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הסטודיו עוסק במקומו של המעצב.ת במדיום הקולנועי וסדרות הטלוויזיה. עבודתו.ה דורשת מיומנות ושליטה בכלים רבים: עיצוב גרפי, צילום, איור, טיפוגרפיה, מושן דיזיין וארט־דיירקשן, והיא באה לידי ביטוי במגוון מוצרים כגון: פתיח לסרט או סדרה, מרכיבים מסוימים במהלך היצירה ומוצרים חוץ־מסכיים כגון אתר ברשת, פוסטר, טריילר ועוד. פתיח של סדרה או סרט הינו גוף עבודה עצמאי המעביר אווירה, רעיון, וסגנון המוביל את הצופה בצורה מדויקת ומעניינת ברגעים מכוננים של היצירה כולה. במהלך הסמסטר נלמד כיצד ליצור טייטל סיקוונס דרך כל שלבי היצירה — קונספט, עיצוב מסכים, עריכה, טיפוגרפיה ותנועה על ציר זמן בשילוב סאונד. העבודה בקורס היא על תוכנת אפטר־אפקטס, ומחייבת ידע קודם או למידה עצמאית טרם הקורס. הודעה על מסגרות רכישת הידע תימסר בהמשך.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="ux-lab">
+                        <div class="course-header">
+                        <h4 class="course-title">מעבדת UX — עיצוב מוצר מתקדם</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">אורן משה</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מעבדת עיצוב אינטראקטיבי — קורס בעל אופי מעבדתי־מחקרי, העוסק בעיצוב חוויות משתמש מתקדמות וממשק משתמש. בקורס נלמד את מתודות העבודה המקצועיות המאפיינות את העיצוב הרב־תחומי למדיום האינטראקטיבי, בדגש על עיצוב גרפי מתקדם וחווית ממשק איכותית — UX. נכיר לעומק את תהליכי התכנון והפיתוח — מרעיון למוצר דיגיטלי חוויתי ופונקציונאלי. נתרגל מתודולוגיות חדשנות ונכיר את הכלים המתקדמים ביותר, כולל כלי AI המשמשים מעצבים.ות כיום, וזאת באמצעות סדנאות, הרצאות ותרגילים מונחים. נפגוש מעצבים.ות מהתעשייה וחוקרי.ות מעבדות חדשנות אקדמיות, ונשתף פעולה עם חברות הייטק בקדמת הטכנולוגיה. נעסוק במקומו של המעצב.ת כסוכן.ת שינוי בעולם, המייצר.ת חוויות המשפיעות על התנהגות משתמשים.ות ומניעות לפעולה חדשה. נדון בצד האתי והערכי של מוצרים ונצטייד בכלי ניתוח וביקורת לעיצוב אינטראקטיבי. בסיום הקורס המשתתפים.ות ירכשו כלים בפיתוח חדשנות, רעיונאות, קונספטים, סיפור מוצר, אפיון חוויה, ניהול ספרינטים של עיצוב, פיתוח פרוטוטייפינג מהיר, ועיצוב חוויית ממשק מפורטת של מוצרים דיגיטליים. הקורס אינו דורש ידע טכני קודם.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="indie-games">
+                        <div class="course-header">
+                        <h4 class="course-title">משחקי אינדי</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">דני ביקון</p>
+                        </div>
+                        <div class="course-description">
+                            <p>משחק הוא יצירה אינטראקטיבית המורכבת מכל תחומי התקשורת החזותית השונים — פיתוח קונספט ונרטיב, עיצוב, טיפוגרפיה, איור, ממשק, אנימציה וחווית משתמש, וכן שימוש בשפת תכנות. לאורך הקורס כל סטודנט.ית ימציא, יעצב ויבנה משחק מינימליסטי מקורי. נעשה זאת תוך הכרות עם הפוטנציאל של קוד ככלי יצירה למעצבים.ות עם דגש על עיצוב אינטראקטיבי ומשחקיות. בקורס נבחן דוגמאות כמו משחקים קיימים, אמנות גנרטיבית וממשקי משתמש ונעבוד עם דוגמאות מוכנות מראש כדי ללמוד עקרונות וטכניקות. הקורס מיועד לא.נשים יוצרים.ות וסקרנים.ות, המעוניינים.ות לערוך היכרות עם כתיבת קוד, עם אפשרויות היצירה בחלל הווירטואלי ובהרחבת ארסנל כלי היצירה שברשותם. מדובר בתִּכנות בסיסי מאוד ויצירתי, אין צורך בידע מוקדם בקוד.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="critical-design">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב ביקורתי</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">גיא שגיא</p>
+                        </div>
+                        <div class="course-description">
+                            <p>עיצוב ביקורתי (או עיצוב כביקורת) יוצר ׳בדיות עיצוביות׳ — נרטיבים המאתגרים שימושיות, התנהגות וערכים. בדיות אלו משחררות את האובייקט העיצובי מאילוצים של פונקציונליות ושל יעילות, ונותנות לו ממד ביקורתי, חברתי ופוליטי; הן מזמינות אסטרטגיות של התנגדות ושל אחרוּת. עיצוב ביקורתי הוא צורת מחשבה שבאה לידי ביטוי ביצירה, במקום במילים, ואשר באמצעותה אנו מתווכים רעיונות. זו פעולה שמסיטה הצידה תפיסות על נראוּת, על הצלחה של מוצר, על ידידותיות למשתמש או על זהות תאגידית — תפיסות המצויות ביסודה של התקשורת החזותית — והיא מאפשרת למעצבים ולמעצבות לפתח אובייקטים שמזמינים שימושים לא מוכרים, התנהגויות ודרכי קריאה חדשות. בסטודיו נלמד לפתח רעיון ומהלך ביקורתי. נכיר מעצבים.ות ועבודות בולטות המגדירות את התחום של Critical Design. העבודה בסטודיו תתמקד בפיתוח פרויקט עיצוב נרחב — יצירה עיצובית אשר תפרוץ ותחדש דרכי ביטוי ופעולה. את הפרויקטים הביקורתיים החדשים ניצור באמצעות ארגז הכלים של העיצוב הגרפי ונפעיל במרחב של התקשורת החזותית. הסטודיו יאתגר הנחות יסוד שגורות בנוגע לעיצוב ולתפקידו בעולם צרכני, ובמסגרתו תוכלו להציע אפשרויות חדשות לגייס את הידע והפעולה העיצובית שלכם.ן להנעת מהלכים ביקורתיים בחברה ובתרבות. חומר למחשבה.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Studio 07 Header: שנה ד׳ סמסטר א׳ -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה ד׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר א׳</h3>
+                <span class="courses-semester-number">07</span>
+            </div>
+        </div>
+
+        <!-- Year Section: שנה ד׳ סטודיו 07 -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="title-sequence-07">
+                        <div class="course-header">
+                        <h4 class="course-title">טייטל סיקוונס</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">ארז גביש</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הסטודיו עוסק במקומו של המעצב.ת במדיום הקולנועי וסדרות הטלוויזיה. עבודתו.ה דורשת מיומנות ושליטה בכלים רבים: עיצוב גרפי, צילום, איור, טיפוגרפיה, מושן דיזיין וארט־דיירקשן, והיא באה לידי ביטוי במגוון מוצרים כגון: פתיח לסרט או סדרה, מרכיבים מסוימים במהלך היצירה ומוצרים חוץ־מסכיים כגון אתר ברשת, פוסטר, טריילר ועוד. פתיח של סדרה או סרט הינו גוף עבודה עצמאי המעביר אווירה, רעיון, וסגנון המוביל את הצופה בצורה מדויקת ומעניינת ברגעים מכוננים של היצירה כולה. במהלך הסמסטר נלמד כיצד ליצור טייטל סיקוונס דרך כל שלבי היצירה — קונספט, עיצוב מסכים, עריכה, טיפוגרפיה ותנועה על ציר זמן בשילוב סאונד. העבודה בקורס היא על תוכנת אפטר־אפקטס, ומחייבת ידע קודם או למידה עצמאית טרם הקורס. הודעה על מסגרות רכישת הידע תימסר בהמשך.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="advanced-branding">
+                        <div class="course-header">
+                        <h4 class="course-title">מיתוג מתקדם</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">ארנסטו ביכובסקי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס עוסק בפיתוח ובנייה של שפה ויזואלית ייחודית למותג, תוך הבנה מעמיקה של הקשר בין מחקר ולמידה, אסטרטגיה ועיצוב. הסטודנטים.ות יתנסו בתהליך מלא של יצירת זהות מותג, משלב המחקר ועד יישום והפקה במדיות ופורמטים שונים.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="lab">
+                        <div class="course-header">
+                        <h4 class="course-title">מעבדה</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">יעל בורשטיין</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הסטודיו מבקש לפרק מחיצות בין תחומי ידע ויצירה, לעשות רמיקס לתחומים באמנות חזותית, ולבדוק את אופן היצירה שלנו כמעצבים וכמעצבות. הקורס עוזר לפתח תהליך אלטרנטיבי, אישי, חקרני ומעמיק בכדי להצליח להכניס לתוצרי העבודה שלנו חומרים חדשים, ולהגיע לשפות גרפיות מקוריות ושונות. במהלך הקורס נפגוש יוצרים, אמניות, מעצבים וחוקרות ממגוון דיסציפלינות שיפתחו בפנינו צוהר לטכניקות, מתודולוגיות ותחומי עניין שונים. התרגילים בקורס יתייחסו ישירות למפגשים עם היוצרות והיוצרים ויעסקו בסאונד, וידאו, הדפס משי ותחריט, ובניית ספר אישי המבוסס על דימויים.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="serious-games">
+                        <div class="course-header">
+                        <h4 class="course-title">משחקים רציניים</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">גדעון רימר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מה הדרך האופטימלית לנהל דיקטטורה? איך מרגיש מהגר בארץ זרה שלא דובר את שפת המקום? האם אפשר להתאהב בדמות וירטואלית? למשחקים יש את הכוח לשאול את השאלות הללו, בכך שהם שמים את השחקן במרכז החוויה האינטראקטיבית והנרטיבית. בקורס נבחן את הנחות היסוד שלנו בנוגע למשחקים כמדיום ולתפקידם בעולם המודרני: מכניקה כאמצעי להעברת מסר, משחקים כאמנות, תפקיד השחקן ביצירת הסיפור, ועוד. ננתח, נתעמק, וניצור — כדי להבין כיצד ניתן לנצל כלים אינטראקטיביים ליצירת חוויה משמעותית ולבניית נרטיב. נכיר משחקים ייחודיים, חסרי ז׳אנר, אשר מותחים את גבולות ההגדרה של מה הוא משחק ומה זה כיף, משחקים שגורמים לנו לשאול שאלות, להרהר, להתעצבן, ולבכות. הסטודנטים.ות ייצרו משחקים משלב הרעיון והתכנון ועד למוצר גמור. תוצרי הקורס יהיו בחלקם דיגיטליים ובחלקם אנלוגים. הקורס יכלול הרצאות על נושאים תיאורטיים וטכניים יחד עם משחק משותף ועבודה בכיתה. אין צורך בידע מוקדם ביוניטי.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="visual-storytelling">
+                        <div class="course-header">
+                        <h4 class="course-title">סטוריטלינג חזותי</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">פרופ׳ מרב סלומון</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הסטודיו יעסוק בפיתוח של רעיון לכדי פרויקט מאויר שלם הכולל תוכן, שפה חזותית ופורמט, כהכנה לעבודה על פרויקט גמר ועל פרויקטים עצמאיים בקנה מידה גדול בעולם. הקורס יתמקד בשכלול ודיוק השפה חזותית, פיתוח הכלים והיכולות ביצירת סיפור חזותי, סדרה או היגד חזותי בעל נפח משמעותי. בסטודיו נכיר את השלבים השונים של פיתוח פרויקט, נתרגל מחקר תוכני וחזותי, כתיבה חזותית, עריכה, הפקה, ניהול פרויקט, ונחשף למהלכים יזמיים באיור שנעשו בארץ ובעולם. הפורמטים והמדיומים ליצירת הסיפור הוויזואלי בסטודיו יהיו פתוחים וחופשיים. הסטודיו מיועד לסטודנטים.יות המעוניינים.ות להעמיק ולשכלל את כישורי האיור והאימג׳מייקינג שלהם.ן, לרכוש ניסיון ביצירת תוכן, בפרשנות חזותית וביזמות יצירתית.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="book-design">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב ספרים</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">מיכל סהר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הסטודיו יוביל התמחות והתנסות ב״מלאכת הספר״ — המהלך הרחב של עריכה גרפית, ניהול אמנותי, עיצוב טיפוגרפי וערכי הפורמט. תוך ניהול דיאלוג מתמשך בין קונבנציות היסטוריות ושיטות ייצור, לבין שיטות עבודה דיגיטליות ותפישות עיצוב עכשוויות, תפתחו שליטה במערכת החלטות מורכבת. מהלך העבודה העיקרי בסטודיו הוא יצירת ספר מתוך מאגר נתון של טקסטים, עם חירות לפתוח עולם חזותי לפי בחירתכם.ן. בבסיס הפרטיקה ניצבת הקריאוּת על שני מובניה: בהירוּת (Legibility) והבנת הנקרא (Readability). לא מדובר רק בטיפוגרפיה מרובת היררכיות, אלא גם בבחינת קריאוּת של דימויים, שיטוט וניווט בתוך הספר. ובכל זאת, טיפוגרפיה וגריד הם כלי העבודה המובילים.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="advanced-web">
+                        <div class="course-header">
+                        <h4 class="course-title">www — עיצוב Web מתקדם</h4>
+                        <span class="course-points">6 נ״ז</span>
+                        <p class="course-lecturers">ניר שקד</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס נדחוף את גבולות המדיום האינטראקטיבי, ונחקור את הפוטנציאל האקספרימנטלי של הדפדפן ככלי לביטוי חזותי, חוויתי ונרטיבי. הקורס יתמקד ביצירה של חוויות אינטראקטיביות משמעותיות, מפתיעות ומעוררות רגש — באמצעות תנועה, עיצוב על ציר הזמן, טיפוגרפיה ודימוי. נחקור כיצד אינטראקטיביות יכולה לשמש כשפה עיצובית להעברת רעיון או סיפור, ונעודד גישה משחקית, ביקורתית וחקרנית למדיום. הקורס מזמין את הסטודנטים.ות לתכנן ממשקים שמעמידים את החוויה לפני התבנית, עם דגש על הפתעה, מעורבות ותגובה מהמשתמש.ת. אין צורך בידע מוקדם בקוד, אך פתיחות לעבודה עם כלים דיגיטליים, ניסוי וטעייה, ורוח של חקירה יצירתית הם חלק בלתי נפרד מהתהליך.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Elective Courses Header: סמסטר 05+07 -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+                <h2 class="courses-type-title">שנים ג׳+ד׳ —</h2>
+                <span class="courses-type-subtitle">קורסי בחירה</span>
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנים ג׳+ד׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר א׳</h3>
+                <span class="courses-semester-number">05+07</span>
+            </div>
+        </div>
+
+        <!-- Year Section: Elective Courses Semester 05+07 -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="letter-design-atelier">
+                        <div class="course-header">
+                        <h4 class="course-title">אָטֶלְיֶה לעיצוב אותיות</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">דניאל גרומר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>איך פונטים באים לעולם? ומה גורם לשני סימנים להרגיש כאילו נולדו לאותה משפחת אותיות? בקורס ניצור סביבת עבודה מחקרית, אקספרימנטלית ויצירתית, ונבחן כיצד אותיות יכולות להיוולד מתוך מערכת של פרמטרים צורניים — משקל, רוחב, קונטרסט, מבנה, ריווח ועוד. הקורס מלווה תהליך שלם שמתחיל ביד: עיפרון, מחק, עט וטיפקס — ומסתיים בפונט דיגיטלי ״אמיתי״, מתפקד, שניתן להקליד בו ולעצב לו ספסימן. לאורך הדרך נחקור את המשמעויות שמאחורי כל החלטה צורנית, נחדד את הרגישות לפרופורציה, לריווח ושמירה על קונסיסטנטיות. נלמד מה ההבדל בין font ל־typeface, נעמיק במושגי יסוד כמו Optical Sizes, ליגטורות ו־kerning, ונבין כיצד מגבלות טכנולוגיות בעבר הפכו לכלים עיצוביים. אם תהיה ראות טובה, אולי נראה גם את קצה הטכנולוגיות של היום — Variable Fonts.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="story-interaction">
+                        <div class="course-header">
+                        <h4 class="course-title">אינטראקציה סיפורית</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">דני ביקון, פרופ׳ רותו מודן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס נתנסה ביצירת חוויות דיגיטליות אינטראקטיביות, בדגש על רעיון ומבנה סיפורי (Storytelling), ופיתוח שפה חזותית למרחב פעולה דינמי. נבחן מתי אינטראקציה היא משמעותית ומה היחס שלה לסיפור ולעיצוב החזותי, מהו ממשק ואילו דרישות עיצוביות ותקשורתיות הוא מציב. את הפרויקטים ניצור באמצעות הכלי Unity, הכלי הפופולרי בעולם ליצירת מדיה אינטראקטיביות ומשחקים. במהלך הקורס נלמד להכיר את Unity ככלי עבודה למעצבים, ונערוך גם הכרות ראשונית עם חשיבה תכנותית על ידי עבודה עם מרכיבים מוכנים מראש. אין צורך בידע מוקדם.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="alt-control">
+                        <div class="course-header">
+                        <h4 class="course-title">אלט קונטרול</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">חובב אופנהיים</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס יעסוק בחוויות דיגיטליות שיוצאות מגבולות המסך אל העולם הפיזי — מייצבים וחפצים אינטראקטיביים, משחקי מחשב עם ממשקים פיזיים מקוריים, ועוד. בקורס נלמד להפעיל כלים ידידותיים וזמינים שבעזרתם ניתן להרחיב את היצירה האינטראקטיבית ולחבר אותה לאובייקטים ולחלל, כגון כפתורים וחיישנים שמספרים לנו מה קרה בעולם, מנועים, נורות ורכיבים אחרים שמשפיעים עליו בחזרה, ומחשבים זעירים שמחברים אותם יחד (ואל מחשבים אחרים) לכדי חוויה משמעותית. בתרגילי הקורס נבחן כיצד שאלות של עיצוב אינטראקציה מתקיימות בעולם שמחוץ למסך, ומהן האפשרויות שנפתחות בפנינו כיוצרי.ות תוכן דיגיטלי כאשר אנו משוחררים.ות מהתלות באביזרי הממשק המצויים והגנריים — המסך, העכבר, המקלדת ושלטי המשחקים. לא נדרש ידע טכנולוגי מוקדם.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="archiographics">
+                        <div class="course-header">
+                        <h4 class="course-title">ארכיוגרפיקה</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">עדה ורדי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>לכל ארכיון או אוסף יש מכנה משותף, אישי או נושאי (תמטי). אם הארכיון פתוח בפנינו, הוא תמיד עבר קודם רישום, קִטלוג ועריכה שהשפיעו על האופן בו אנחנו פוגשים.ות את החומרים. בקורס ננסה להסתכל על ארכיונים כגוף אורגני, וכחומר גלם לפעולת מחקר ועיצוב. נצלול לעולם הארכיונים והאוספים, נלמד איך לשוטט בהם ולחפש קצוות חוטים לפרויקט, נכיר את המגבלות והאפשרויות בארכוב דיגיטלי אל מול עבודה מול חומר ממשי, נלמד על סוגים שונים של מנגנוני עריכה ואיך עיצוב יכול להיוולד מתוך העריכה עצמה. ובעיקר, נתנסה במחקר ארכיוני מנקודת מבט של מעצבים.ות, ובאפשרות המרתקת ששמורה רק לנו — להתבונן, לחקור ולעצב גוף ידע חדש.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="product-design-jam">
+                        <div class="course-header">
+                        <h4 class="course-title">ג׳אם עיצוב מוצרים</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">עומר זיו, יונתן שמיר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>כולנו פוגשים.ות מוצרים דיגיטליים יום־יום: אנחנו עובדים.ות איתם, מביעים.ות את עצמנו בעזרתם, מתקשרים.ות דרכם עם אחרים ואחרות, ומוצאים.ות בהם מידע. הסטודנטים.ות בקורס יעבדו מול ארגונים חברתיים מ״העולם האמיתי״ — יחקרו את קהל המשתמשים.ות שלהם.ות, יזהו צרכים ובעיות, ויציעו פתרונות מוצריים. לאורך הסמסטר יתנסו הסטודנטים.ות בתהליך הקמת מוצר: החל באפיון ותכנון בעזרת תרשימי זרימה, דרך יצירת שפה עיצובית והטמעתה בקומפוננטות וממשקים, ועד לבניית מוצרים דיגיטליים עובדים. הסטודנטים.ות בצוותים משותפים עם מפתחים.ות מקורס בחירה מקביל של ביה״ס למדעי המחשב באוניברסיטה העברית.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="illustration-to-animation">
+                        <div class="course-header">
+                        <h4 class="course-title">מאיור לאנימציה</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">חן וינר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מתעמק בתהליכי עיצוב והפקה של פרשנות חזותית לטקסט קיים, דרך מדיום האנימציה המורכב והמופלא. יצירה באנימציה פותחת את האפשרות לטוות נרטיב הנע על ציר הזמן, תוך שימוש מרובד בתנועה, בקצב ובפסקול. במהלך הקורס נפתח חשיבה אנימטיבית, נלמד יסודות וכלים בסיסיים לעבודה בתנועה, ונכיר טכניקות שונות ומגוונות, אנלוגיות ודיגיטליות (ומה שביניהן), ליצירת אנימציה. כמו כן, נדון בתרגום והתאמה של סגנון חזותי לתנועה תוך הקפדה על איכות סגנונית וחומרית. במהלך הקורס נתנסה בפיתוח קונספט, בניית סטוריבורד, יצירת סטייל פריימז, עבודה עם אנימטיק ועיצוב פסקול שייושמו בקטע אנימציה קצר עם סיום הקורס. העבודה בקורס תתקיים גם על תוכנת אפטר־אפקטס, ומומלץ להגיע עם ידע קודם טרם הקורס.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="music-sound-design">
+                        <div class="course-header">
+                        <h4 class="course-title">מוזיקה ועיצוב פסקול</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">דידי ארז</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס הינו מעבדה בה נחקור את המפגש בין המוזיקה והסאונד לבין תחומי היצירה הוויזואלית והתקשורת החזותית במדיומים שונים — ביצירות אמנות, בווידאו, במדיום אינטראקטיבי, במשחקים, ולרוחב כל אפשרויות היצירה בתקשורת חזותית. הקורס הוא מקום מפגש יצירתי, חוקר ומשחקי ליצירה בסאונד ולשילוב סאונד על רבדיו השונים. נכיר דרכים מרתקות, מסורתיות ועדכניות, לשימוש בסאונד. נחפש דרכים חדשות לשלב סאונד ביצירה גם בתחומים בהם, אולי, עדיין לא נפוץ שילוב כזה. נלמד ונתנסה באופן מעשי בעריכות פסקול, נקליט ונייצר אפקטים, פוליז, דיאלוגים ומוזיקה, ונבין את תפקידו.ה של מעצב.ת הפסקול כמי שמשלב.ת את כל המרכיבים ליצירה אחת.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="motion-digital-product">
+                        <div class="course-header">
+                        <h4 class="course-title">מושן למוצר דיגיטלי</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">ענבל גרי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מה קורה כשציר הזמן הופך ללא ליניארי, ואנימציות מתנגנות כתגובה לפעולות של המשתמשים.ות, עוזרות להם להתמצא, ללמוד איך להשתמש במוצר, וחוגגות איתם.ן הצלחה או סיום של תהליכים? בקורס נייצר אריזת מושן שתכיל רגעים אנימטיבים מגוונים למוצר שאינו קיים. לדוגמא: אנימציית טעינה, אנימציה למצבים של שגיאה, אנימציה לאורך תהליך הרשמה, ועוד. הקורס מיועד לסטודנטים.יות שאוהבים עיצוב על ציר זמן ומוצרים דיגיטליים, עם תשומת לב לפרטים קטנים ולחוויות איכותיות.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="carnival-design">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב ואיור לקרנבל</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">אורית ברגמן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס נלמד לתרגם שפה ציורית וסיפורית דו־ממדית לעולם תיאטרלי של דמויות ענק בקרנבל. המרחב, הגודל, התיאטרליות והתנועה פותחים בפנינו כיוצרים.ות דרכים חדשות ומרתקות לספר סיפור. נתחיל בתרגילים קצרים הבוחנים את הדרך בה תנועה מובילה סיפור ונתנסה בחומרים ושיטות שונות ליצירת תלת־ממד. בפרויקט הסופי, שיעשה בצוותים הכוללים סטודנטים.ות מתקש״ח וסטודנטים.ות מעיצוב תעשייתי וילווה על ידי הצוות האמנותי של תיאטרון הקרון, נבנה מקבצי מייצגים המספרים סיפור בעיצוב באיור ובתנועה ומתקשרים לתמה של העדלאידע.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="cross-platform-design">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב חוצה פלטפורמות</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">קובי לוי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מיתוג של אירוע תרבות מהווה פעולה כמו־אוצרותית המשלבת בין חוויה מרחבית, גופנית, קהילתית ואקטואלית לבין התכנים והסוגה (ז׳אנר) שלו. הביטויים החזותיים של המיתוג נחשפים באופן מדורג ובפרק זמן נתון (ארעי) ונושאים אופי של קמפיין. העבודה בקורס תכיל תרגיל מרכזי שתוצריו יורכבו מביטויים משוכללים לשפה וזהות חזותית לאירוע רחב יריעה בתחומי התרבות במגוון פלטפורמות ומדיות — פרינט, עיצוב אינטראקטיבי, motion, עיצוב תלוי מקום ועוד. נבחן את התפקיד והייחוד של כל פלטפורמה ויישום ואת מיקומם בתחביר המיתוג והאירוע כמכלול.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="exhibition-design">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב תערוכה</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">סוניה אוליטסקי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס הבוחן את המושגים הבסיסיים והמיומנויות המעשיות של פעולת העיצוב המגיבה לתוכן אוצרותי. במסגרת הקורס נתנסה בגיבוש נרטיב עיצובי דרך פעולות של בחירה, סינון, ארגון ועריכה, ובמקביל נלמד לפתח, לעצב, לנהל ולהפיק מערכת גרפית התומכת בתוכן, בזמן ובחלל נתון. במהלך הסמסטר נעמיק בעקרונות העיצוב הגרפי ונלמד כיצד ניתן לבטא וליישם אותם באתגרים ובהזדמנויות הייחודיות של שדה עיצוב תערוכות. נלמד לתכנן מערך גרפי־טיפוגרפי המדלג בין דו ותלת־ממד, מערך אשר מדריך את המבקרים.ות במסע ויזואלי במרחב, ואשר מצליח לספר סיפור מורכב, מגובש ומרגש. תוצרי הקורס יבואו לידי ביטוי בפתיחה של תערוכה בסוף הסמסטר.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="posters">
+                        <div class="course-header">
+                        <h4 class="course-title">פוסטרים</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">עידן ועקנין</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס יוקדש לפורמט האייקוני ביותר בתקשורת החזותית — הפוסטר. הקורס מזמין להמיר רעיונות לדימויים חד־פעמיים, לבחון אפשרויות והקשרים עתידיים עבור כרזת הנייר המסורתית, ולעבוד בקנה מידה משתנה. נפרק ונרכיב מחדש את הפוסטר לכדי יצירת הכלאות מורכבות של דימוי וטיפוגרפיה בעלי אימפקט ויזואלי משמעותי. נעסוק במתחים סביב פוליטיקה, היסטוריה ותרבות פופולרית — ונעבור מסע דרך ההיסטוריה של הפורמט ועד עיצוב בן זמננו. מטרת הקורס היא לשכלל תפיסות עבודה חדשות ופיתוח יכולת עיצוב עכשווי בפורמטים דו־ממדיים.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="digital-game-project">
+                        <div class="course-header">
+                        <h4 class="course-title">פרויקט משחק דיגיטלי</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">אלי בבג׳נוב, דני ביקון, עידן רוזה</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס נצא למסע מעשי ליצירת משחק דיגיטלי מקורי משלב גיבוש הרעיון, דרך בניית אב־טיפוס ועד להפקת ״ורטיקל סלייס״ בתהליך המדמה עבודה בתעשייה. לאורך הסמסטר נעבוד על פרויקט משחק אחד ודרכו נתעמק בכלל ההיבטים של יצירת משחק דיגיטלי: פיתוח קונספט, ארט ועיצוב, סטוריטלינג, עיצוב משחקיות, ניהול תהליך הפקה וקבלת החלטות. בקורס יעבדו הסטודנטים/ות בצוותים משותפים עם מפתחים/ות מקורס מקביל מהחטיבה למשחקים בביה״ס להנדסה ולמדעי המחשב באוניברסיטה העברית. הקורס דורש היכרות קודמת עם יוניטי.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="comics-elective">
+                        <div class="course-header">
+                        <h4 class="course-title">קומיקס</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">פרופ׳ רותו מודן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מלווה תהליך של כתיבה/ציור קומיקס החל מחיפוש רעיון ועד להפקה של חוברת עצמאית. תהליך העבודה יעבור דרך כתיבת תסריט לקומיקס, עריכה שלו, תכנון סטוריבורד ובחירה ושכלול של שפה ויזואלית אישית. נלמד להמציא, לכתוב, לצייר ולחבר רצף ציורים (Sequential Art) ליצירה שלמה אחת, לא בהכרח נרטיבית, על ידי שימוש בכלים המיוחדים למדיום. הקורס ילווה בהרצאות ודוגמאות של זרמים ואמנים.ות מהסצנה העכשווית. אופי הקורס הוא סדנאי (workshop), רוב השיעורים מוקדשים לעבודה אישית בכיתה על הפרויקט. הקורס מתאים לכל מי שאוהב.ת או רוצה לספר ולצייר סיפורים — אין צורך בידע מוקדם בקומיקס, איור או כתיבה.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="graphic-language-imagemaking">
+                        <div class="course-header">
+                        <h4 class="course-title">שפה גרפית ואימג׳מייקינג</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">נעמי גיגר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס עוסק בפיתוח שפה גרפית מקורית המבוססת על דימוי חזותי כמנוע מרכזי לחשיבה ועיצוב. נעמיק באימג׳מייקינג כפרקטיקה, כטכניקה וכאמצעי לבניית זהות חזותית, ונבחן כיצד סדרות של דימויים מייצרות מערכות קוהרנטיות, מרובדות ועשירות במשמעות. נלמד כיצד ניתן לעבד רעיון מופשט או ערכים לכדי אסתטיקה מובחנת — שפועלת בשדה הציבורי, התרבותי והרגשי. במהלך הסמסטר נבנה מערכת חזותית שלמה: שפה של צורות, מרקמים, קומפוזיציות ודימויים, היוצרים יחד קול ויזואלי מגובש. לצד חקירה עיונית, נכיר טכניקות מגוונות ליצירת דימוי — ידניות ודיגיטליות, ונפתח את יכולת הבחירה, העריכה והעיבוד שלנו.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Short courses section title row - Cluster A -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">קורסי בחירה קצרים — אשכול א׳ (7 שבועות ראשונים):</h5>
+            </div>
+
+            <!-- Short Courses Grid - Cluster A -->
+            <div class="courses-grid short-courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="handwriting">
+                        <div class="course-header">
+                        <h4 class="course-title">כתב יד</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">ד״ר עדי שטרן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>תיאור הקורס יתעדכן בקרוב.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="lettering">
+                        <div class="course-header">
+                        <h4 class="course-title">לטרינג</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">מיכל סהר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>לטרינג הוא אמנות עיצוב אותיות ומילים באופן חד-פעמי, לא כגופן שלם אלא כיצירה בפני עצמה. בסדנה נלמד להבין את ההבדל בין לטרינג, קליגרפיה וטיפוגרפיה. נתנסה בטכניקות שונות של שרטוט וציור אותיות, נכיר סגנונות שונים ונפתח שפה אישית. הסדנה כוללת תרגול מעשי וביקורת קבוצתית ומתאימה למי שמתעניין בעיצוב אותיות ורוצה להעשיר את ארגז הכלים שלו.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="niche-branding">
+                        <div class="course-header">
+                        <h4 class="course-title">מיתוג לקהלי קצה</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">תומר ליכטש</p>
+                        </div>
+                        <div class="course-description">
+                            <p>עיצוב זהות חזותית לעסקים קטנים ולמותגים שפונים לקהל נישה, שבו הגדרת קהל היעד ופנייה ספציפית אליו מאפשרים עיצוב מדויק. נלמד לנהל את תהליך העיצוב — משיחת הבריף ועד לפרזנטציה ומסירה — ונפתח מותג אחד מא׳ עד ת׳. הסדנה מתאימה למי שרוצה להתמקד או להתמחות בתחום.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="print-workshop-a">
+                        <div class="course-header">
+                        <h4 class="course-title">סדנת הדפס</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">ירדן אופיר, שני אופנהיים</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה מעשית שמשלבת מגוון טכניקות הדפס: ריזוגרף, הדפס רשת ועוד. נלמד את עקרונות הטכניקות, נתנסה בעבודה בשכבות, בצבעים מוגבלים ובחומרים שונים. הסדנה מאפשרת עבודה חופשית על פרויקט אישי ומתאימה גם לעבודה על פרויקט גמר.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="motion-design-workshop">
+                        <div class="course-header">
+                        <h4 class="course-title">סדנת עיצוב בתנועה</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">שחר זיסמן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה קצרה ואינטנסיבית להכרות עם עיצוב בתנועה ועם תוכנת After Effects. נלמד את יסודות התוכנה ואת העקרונות הבסיסיים של אנימציה ומושן גרפיקס. הסדנה מתאימה למי שאין לו.ה ניסיון קודם או שרוצה לרענן את הידע.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="game-ui-design">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב ממשק למשחקים</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">שרון פוברינסקי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס עוסק בעיצוב ממשק משתמש למשחקים דיגיטליים — מהיבטים פונקציונליים ועד ליצירת חוויית משחק מעוצבת ומגובשת. נלמד את העקרונות הייחודיים לעיצוב ממשק במשחקים, נכיר דוגמאות ונעצב ממשק מלא.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Short courses section title row - Cluster B -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">קורסי בחירה קצרים — אשכול ב׳ (7 שבועות אחרונים):</h5>
+            </div>
+
+            <!-- Short Courses Grid - Cluster B -->
+            <div class="courses-grid short-courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="generative-interactive">
+                        <div class="course-header">
+                        <h4 class="course-title">גנרטיבי אינטראקטיבי</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">ניר שקד</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה ליצירת עבודות גרפיות אינטראקטיביות בקוד. נלמד לכתוב קוד שמייצר צורות, תנועה ותגובה לפעולות המשתמש. הסדנה מתאימה למי שרוצה להרחיב את הארסנל ולהכיר את עולם הקריאייטיב קודינג.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="portrait">
+                        <div class="course-header">
+                        <h4 class="course-title">דיוקן</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">תמר ברוקמן</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה לציור דיוקנאות. נצייר זה את זו, נכיר את ההיסטוריה של הדיוקן ואת מקומו באמנות ובעיצוב, ונפתח שפה אישית לייצוג אנשים. הסדנה מתאימה לכל מי שרוצה לחזק את יכולות הציור שלו.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="the-map">
+                        <div class="course-header">
+                        <h4 class="course-title">המפה</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">עמית טריינין</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה לעיצוב מפות. נכיר את ההיסטוריה של הקרטוגרפיה, נלמד את עקרונות עיצוב המפה ונעצב מפה אישית. הסדנה מתאימה למי שמתעניין בייצוג חזותי של מידע גיאוגרפי ובעיצוב אינפורמטיבי.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="print-workshop-b">
+                        <div class="course-header">
+                        <h4 class="course-title">סדנת הדפס</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">ירדן אופיר, שני אופנהיים</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה מעשית שמשלבת מגוון טכניקות הדפס: ריזוגרף, הדפס רשת ועוד. נלמד את עקרונות הטכניקות, נתנסה בעבודה בשכבות, בצבעים מוגבלים ובחומרים שונים. הסדנה מאפשרת עבודה חופשית על פרויקט אישי ומתאימה גם לעבודה על פרויקט גמר.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="animated-storytelling">
+                        <div class="course-header">
+                        <h4 class="course-title">סטוריטלינג אנימטיבי</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">מיכל רובנר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה ליצירת סרטון אנימציה קצר המבוסס על סיפור אישי. נלמד לפתח סיפור, לבנות סטוריבורד, וליצור אנימציה קצרה שמשלבת טקסט, דימוי ותנועה.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="drawing-and-color">
+                        <div class="course-header">
+                        <h4 class="course-title">ציור וצבע</h4>
+                        <span class="course-points">1.5 נ״ז</span>
+                        <p class="course-lecturers">מיכל בוננו</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה לפיתוח יכולות ציור ועבודה בצבע. נתרגל טכניקות שונות, נעבוד עם חומרים מגוונים ונפתח שפה ויזואלית אישית. הסדנה מתאימה לכל מי שרוצה להעמיק את יכולות הציור שלו.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Elective Courses Header: סמסטר 06+08 -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנים ג׳+ד׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר ב׳</h3>
+                <span class="courses-semester-number">06+08</span>
+            </div>
+        </div>
+
+        <!-- Year Section: Elective Courses Semester 06+08 -->
+        <div class="courses-year-section">
+
+            <!-- Courses Grid - 3 independent columns -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="design-and-technology-b">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב וטכנולוגיה: Web</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">ניר שקד</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הדפדפן הוא פלטפורמה עצומה המגיעה לכל אדם, לכל מכשיר, ללא צורך בהתקנה מראש. בקורס נכיר את הפוטנציאל של פיתוח Web ככלי יצירה עבור מעצבים.ות, ונלמד לייצר אתרים מקוריים, מפתיעים ואיכותיים. נשלוט ביסודות ה-HTML, נעצב בעזרת CSS ונהפוך את האתרים לאינטראקטיביים ב-JavaScript — לא כדי להיות מתכנתים.ות אלא כדי להיות מעצבים.ות שמדברים את שפת המדיום. בקורס תרגילים מונחים ופרויקט אישי. הקורס מיועד למי שאין לו.ה ניסיון קודם בקוד.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="illustration-studio">
+                        <div class="course-header">
+                        <h4 class="course-title">איור — סטודיו</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">מיכל בוננו</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מתמקד בפיתוח פרויקט איור בפורמט חופשי: סיפור מאויר (ילדים או מבוגרים), גרפיקה מאוירת, סדרה, זין, קומיקס, וכו׳. נעסוק בפיתוח הסיפור ושכלול השפה החזותית וטכניקת הציור, נלווה את התהליך ונשכלל אותו, נייצר פרויקט מאויר ברמה גבוהה. מיועד לסטודנטים.יות המעוניינים.ות להתמקד באיור ולהעמיק את כישוריהם.ן.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="design-writing">
+                        <div class="course-header">
+                        <h4 class="course-title">כתיבה עיצובית</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">ד״ר יעל מאירי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>עיצוב הוא כתיבה. מטקסטי ממשק, טקסטים שיווקיים, תוכן לרשתות חברתיות ועד להצעות עסקיות — הכתיבה היא כלי עבודה מרכזי של כל מעצב.ת. הקורס יעסוק במגוון סוגות כתיבה רלוונטיות לעיצוב. נלמד לכתוב כמעצבים.ות — בצורה שתשרת את העבודות שלנו ותשפר אותן. נלמד לזקק רעיונות ולהפוך אותם למשפטים. נתרגל כתיבה בסגנונות ולהקשרים שונים — מקצרים ומדויקים עד שובבים וחופשיים יותר. הקורס יכלול תרגילים מעשיים, קריאת טקסטים, כתיבה אישית ושיתופית ומשוב.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="font-design-b">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב גופנים</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">יובל שחם</p>
+                        </div>
+                        <div class="course-description">
+                            <p>פרויקט עיצוב גופנים הוא ארוך, דורש הרבה עבודה והתאמנות, ולפני שמתחילים אותו חשוב לדעת שזה מה שרוצים לעשות. בקורס קצר זה ניתן לטעום את התחום, ללמוד בסיס של עיצוב גופנים ועולם המושגים המקצועי שלו, ולהתנסות בעיצוב כמה אותיות שיוכלו להפוך בהמשך לפרויקט גמר או עבודה עצמאית. נלמד את יסודות הקליגרפיה הלטינית, התאוריה הטיפוגרפית, ונעצב כמה גליפים בעזרת תוכנת גלייפס. מיועד למתעניינות.ים בטיפוגרפיה ובעיצוב אותיות, לאלו ששוקלות.ים לעשות פרויקט גמר בתחום ורוצות.ים לדעת קודם מה מחכה להן.ם. אין צורך בידע מוקדם בעיצוב גופנים או בתוכנה.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="generative-design">
+                        <div class="course-header">
+                        <h4 class="course-title">עיצוב גנרטיבי</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">ניר שקד</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מהו עיצוב גנרטיבי? זו גישה שבה כללים ומערכות מחליפים החלטות ידניות, ובאמצעותה ניתן לייצר תוצאות ייחודיות בכל הפעלה — מפוסטרים ועד אנימציות, מאתרים ועד התקנות. בקורס נכיר את עולם העיצוב הגנרטיבי, נלמד לכתוב כללים, לעצב מערכות, ולהשתמש בכלים כמו קוד, בינה מלאכותית ואוטומציה ככלי יצירה. נראה דוגמאות ונעשה תרגילים קצרים ופרויקט אישי. מותאם למי שמתעניין לעבוד עם קוד, AI, ומערכות — גם ללא ניסיון קודם.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="speculative-typography">
+                        <div class="course-header">
+                        <h4 class="course-title">טיפוגרפיה ספקולטיבית</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">עדנה הררי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מה יכולה הטיפוגרפיה לעשות אם נחשוב עליה בצורה פחות שגרתית? אם נתייחס אליה כחומר, כמרחב, או כמשהו שקורה? הקורס מציע להשתמש בטיפוגרפיה כמשטח לספקולציה, להתנסות בחשיבה על אותיות כנקודת מוצא לפעולה חדשה, לאובייקט שאינו אובייקט קריאה, או לחוויה. נתנסה בסדרת תרגילים קצרים ושובבים, ננסה לייצר ולהרחיב, נתרחק ונתקרב, ובכל פעם נשאל את עצמנו: מה עוד טיפוגרפיה יכולה להיות?</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="motion-elective-b">
+                        <div class="course-header">
+                        <h4 class="course-title">תנועה</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">גבריאל אייש</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מיועד לסטודנטים.יות המעוניינים.ות להעמיק את הידע שלהם.ן באנימציה, ולפתח פרויקט אישי. במהלך הקורס נעבוד על פרויקט חופשי ונעמיק בנושאים מתקדמים של אנימציה באפטר אפקטס ובשילוב עם כלים נוספים. הקורס מיועד למי שיש לו.ה ניסיון קודם בתנועה ובתוכנת אפטר אפקטס.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Short courses section title row -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">קורסי בחירה קצרים (אשכול ג׳+ד׳):</h5>
+            </div>
+
+            <!-- Short Courses Grid - Cluster C+D -->
+            <div class="courses-grid short-courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="silk-print-b">
+                        <div class="course-header">
+                        <h4 class="course-title">הדפס משי</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">שני אופנהיים, מורן לביא</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנת הדפס רשת בגישת מעבדה. נתנסה בהדפסת רשת ידנית ונלמד את עקרונות הטכניקה מהיסוד: הכנת קלישאות בחשיפה לאור, עבודה בשכבות צבע, רישום על גבי הרשת, ושילוב טכניקות. לצד עבודה במסגרות קטנות על נייר נייסה גם הדפסה בפורמטים גדולים יותר ועל משטחים אחרים. הסדנה מאפשרת עבודה חופשית על פרויקט אישי ומתאימה גם לפרויקטי גמר, לצד משימות קצרות משותפות.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="bookbinding-b">
+                        <div class="course-header">
+                        <h4 class="course-title">כריכה</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">חן וינר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנת הכריכה עוסקת בכריכת נייר. לאורך הסמסטר נכיר מגוון כריכות ותפרים ונעמיק בכריכות שנבחר: כריכות חוברות, כריכות יפניות, מהודקות, וכריכות קשות. לצד הכריכות נלמד גם טכניקות משלימות ובסיסיות של עבודה עם נייר, כמו קיפולים וחיתוכים. מהלך הסדנה יכלול משימות קצרות ויאפשר גם עבודה על פרויקט אישי. רלוונטית גם לפרויקטי גמר.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="risograph-b">
+                        <div class="course-header">
+                        <h4 class="course-title">ריזוגרף</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">ירדן אופיר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הריזוגרף הוא שיטת הדפסה ייחודית בצבעים מוגבלים ומיוחדים. בסדנה נלמד להפיק בעצמנו — מקובץ מוכן ועד דפוס מוכן. ניסוי וטעייה, כל הצבעים. לצד משימות קצרות משותפות נאפשר פיתוח פרויקט אישי. רלוונטית גם לפרויקטי גמר.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="workshop-cd">
+                        <div class="course-header">
+                        <h4 class="course-title">בית מלאכה</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">לימור שנורמכר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>סדנה מעשית המשלבת התנסות בטכניקות ידניות ובחומרים מוחשיים. בסדנה נכיר חומרים ושיטות יצירה — נייר, בד, טקסטיל, צבע, הרכבה, תפירה, חיתוך — ונלמד דרכן לפתח שפה אישית ולייצר אובייקטים. העבודה בסדנה יכולה לשמש ככלי מחקר ופיתוח בעבודה על פרויקטים נוספים וגם לפרויקט גמר.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="3d-for-designers-b">
+                        <div class="course-header">
+                        <h4 class="course-title">תלת-ממד למעצבים.ות</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">גדעון רימר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בסדנה נלמד את התוכנה Cinema 4D שמאפשרת ליצור ולנפח תלת-ממד. התוכנה יכולה לשמש את המעצבים לצורך עיצוב ויצירה — קירות, מוצרים, חללים, פוסטרים ומצגות, ולנפח את המדיה שהם עובדים בה. הסדנה מתאימה למי שאין להם ניסיון קודם עם תוכנת תלת-ממד.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="letterpress">
+                        <div class="course-header">
+                        <h4 class="course-title">לטרפרס</h4>
+                        <span class="course-points">1 נ״ז</span>
+                        <p class="course-lecturers">דניאל גרומר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הדפסה בבית הדפוס של בצלאל. נחווה את התהליך היפה והכמעט נשכח של הדפסה באותיות עופרת על מכבש ידני. נעסוק ביסודות הטיפוגרפיה תוך למידה של ״שפת בית הדפוס״. נעבוד בשחור לבן וגם בצבעים, נשחק עם דיוקים ושגיאות, נתנסה בסידור אותיות ובמניפולציות על פני הנייר ועל דברים אחרים. בסדנה נעבוד על פרויקטים קצרים ונאפשר גם עבודה על פרויקט אישי.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Projects section title row -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">מקבץ פרויקטים מיוחדים:</h5>
+            </div>
+
+            <!-- Special Projects Grid -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="florence">
+                        <div class="course-header">
+                        <h4 class="course-title">פלורנס</h4>
+                        <span class="course-points">12 נ״ז</span>
+                        <p class="course-lecturers">רוני לוית</p>
+                        </div>
+                        <div class="course-description">
+                            <p>פרויקט פלורנס הוא פרויקט יחודי של "חילופי סטודנטים" בארץ, המתקיים בסמסטר א של שנת הלימודים תשפ"ד. הפרויקט מאפשר התנסות חד פעמית של שימוש בכלי עיצוב של עיצוב ואדריכלות לטובת שיפור החוויה האנושית של מטופלים, אנשי צוות ובני משפחה במערכת מורכבת כבית חולים. הלימודים מתקיימים לאורך סמסטר שלום בקבוצה מעורבת של סטודנטים ממחלקות שונות בבצלאל, בסטודיו עצמאי בלב המרכז הרפואי סורוקה בבאר שבע.</p>
+                            <p>השתתפות בסמסטר מקנה 12 נ"ז.</p>
+                            <p>אתר התוכנית: florence.bezalel.ac.il</p>
+                            <p>למידע נוסף ניתן לפנות ל: florence@bezalel.ac.il</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="time-place">
+                        <div class="course-header">
+                        <h4 class="course-title">מתי זה זמן איפה זה מקום</h4>
+                        <span class="course-points">2 נ״ז</span>
+                        <p class="course-lecturers">רותי קנטור, טל מור סיני</p>
+                        </div>
+                        <div class="course-description">
+                            <p>״מתי יוצא האוטובוס שלי? איפה נמצאת תחנת הרכבת החדשה? מחרתיים יש לי יום הולדת עוד כמה זמן זה? איך אני אדע מתי העוגה מוכנה? איך אדע להגיע למקום העבודה שלי? מתי מסתיים החג? איפה זה בכלל בצלאל?" איפה אני מרגישה בבית? שייכות זה בהקשר של מקום או אנשים?</p>
+                            <p>מתי זה זמן, איפה זה מקום? הינו קורס מעשי שמטרתו חיבור סטודנטיות וסטודנטים מבצלאל עם אנשים עם מוגבלות שכלית, פיזית וחושית על מנת לקיים דיון על מושגי זמן ומרחב ולאפשר הנגשתם לא.נשים אלו כמו גם דיון ברגשות, שייכות, שמחה ועצב. המפגשים והעבודה בקורס, יאפשרו למידה ושימוש בכלים חזותיים ומיומנויות מתחומי האמנות, העיצוב והאדריכלות להגברת יכולות העצמאות, הביטחון, הניידות ושיפור חיי היום יום של אנשים עם מוגבלות, ויצירת חוויה והעצמה משותפת ומשמעותית לכל המשתתפות.ים בקורס תוך כדי יישום שיטות עבודה ויצירה בדיאלוג מתמיד.</p>
+                            <p>זהו פרויקט חברתי בעל משמעות עמוקה והשפעה ישירה על קבוצה של אנשים בוגרים עם צרכים מיוחדים. השתתפות בקורס מחייבת נוכחות רציפה ופעילה.</p>
+                            <p>בנוסף, לאחר הקורס, תתאפשר תוספת של 2 נ״ז עבור מעורבות חברתית.</p>
+                            <p>הקורס פתוח לסטודנטיות וסטודנטים מכל המחלקות בשנים ג-ד.</p>
+                            <p>הקורס זוכה לתמיכה של ׳קרן שלם׳ וזו הזדמנות לקחת חלק בפרויקט ייחודי המעודד שילוב אנשים עם מוגבלות שכלית, פיזית וחושית במוסדות אקדמיים לאמנות ועיצוב, מתוך כך חלק ממהלך הקורס, תהליכי העבודה ותוצרי הקורס יוצגו בתערוכה/ אתר /סרט — כפי שיוחלט במשותף ע״י כל משתתפי הקורס ובמימון מיוחד.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                </div>
+            </div>
+        </div>
+
+        <!-- Year 4 Elective Courses Header: סמסטר 07 -->
+        <div class="page-header-row courses-header-row semester-header-row">
+            <div class="page-title-group">
+            </div>
+            <!-- Year column -->
+            <div class="courses-year-column">
+                <h3 class="courses-year-title">שנה ד׳</h3>
+            </div>
+            <!-- Semester column -->
+            <div class="courses-semester-column">
+                <h3 class="courses-semester-title">סמסטר א׳</h3>
+                <span class="courses-semester-number">07</span>
+            </div>
+        </div>
+
+        <!-- Year Section: Year 4 Elective Courses Semester 07 -->
+        <div class="courses-year-section">
+
+            <!-- MA Collaboration Courses section title row -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">מקבץ קורסי בחירה בשיתוף התכנית לתואר שני בתקשורת חזותית:</h5>
+            </div>
+
+            <!-- MA Collaboration Courses Grid -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="data-big-city">
+                        <div class="course-header">
+                        <h4 class="course-title">דאטה והעיר הגדולה</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">פרופ׳ ענת קציר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מה הופך את העיר למה שהיא? מה הוא אותו DNA של העיר שהופך את ירושלים לשונה מתל אביב, ניו יורק או אוסלו? האם אלו הבניינים, החללים שביניהם? מכסי הביוב ושפות המדרכה? קוד הלבוש? או אולי דווקא הזיכרונות, החלומות והשאיפות של תושביה?</p>
+                            <p>בקורס זה נצא למסע היכרות עם העיר — מרחב המציע חוויה עשירה, סוחפת ומרתקת — מתוך ניסיון ליצור קריאה אלטרנטיבית חדשה של העיר, נקודת מבט שלא הבחנו בה קודם. המסע יתחיל בבחירת המוטיב בעיר המעניין אתכן.ם במיוחד ובאיסוף דאטה מהמרחב האורבני. נבחן מתודולוגיות שונות לאיסוף הנתונים מהמרחב: קריאה, שוטטות כפרקטיקה להבנת המרחב, ראיונות עם תושבים, איסוף זיכרונות, דמיון, תצפית, סטטיסטיקה, צילום כמתודולוגיה למיפוי ועוד. כל אחד ואחת מכם.ן יבחר לא רק את הנושא בו ירצה לעסוק אלא גם את המתודולוגיה בה ירצה לאסוף את הנתונים.</p>
+                            <p>אחת השאלות המרכזיות שנעסוק בהן תהיה כיצד להפוך דאטה (נתונים גולמיים) > לאינפורמציה > ולסטוריטלינג המוצג בפורמט עיצובי מורכב, ומאפשר קריאה חווייתית של העיר מנקודת מבטכן.ם הייחודית. הפורמט והפלטפורמה (מודפסת או דיגיטלית) יהיו לבחירתכן.ם.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="docu-design">
+                        <div class="course-header">
+                        <h4 class="course-title">דוקו־עיצוב</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">אמיתי גלעד</p>
+                        </div>
+                        <div class="course-description">
+                            <p>מטרת הקורס היא לבחון ולתרגל גישת עשייה דוקומנטרית — עיסוק במציאות וטיפול יצירתי בה — באמצעות ארגז הכלים שלנו, המעצבים.ות. בקורס ניגש לנתח ולייצר גוף תוכן מורכב, ונפתח אותו לעבודה חזותית תפורה למידותיו. דרך תהליך מובנה, נזהה ערכים, קונפליקטים ומוטיבים, נתרגל גיבוש עמדה רעיונית, זיהוי מוקדי עניין והזדמנויות. נשאף לאתגר את תבניות הסיפור והתיעוד המוכרות מתקשורת המיינסטרים.</p>
+                            <p>הסטודנטים.יות בקורס יעבדו בפורמטים חזותיים מורכבים ומדיות מגוונות לבחירתם, תוך מחשבה וניתוח של יחסי הטקסט והמבע החזותי וחיפוש קשר עוצמתי והולם בין צורה לתוכן.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="arabic-typography">
+                        <div class="course-header">
+                        <h4 class="course-title">טיפוגרפיה ערבית</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">נואל ערפאת</p>
+                        </div>
+                        <div class="course-description">
+                            <p>קורס זה מקנה לסטודנטיות.ים את הכלים הנדרשים על מנת לעצב מערך טיפוגרפי נכון וראוי בשפה הערבית. תהליך הלמידה כולל תרגום של ידע טיפוגרפי קודם לסביבת השפה הערבית, על מאפייניה הייחודיים. נכיר את הבסיס הטיפוגרפי של השפה — מבנה האותיות, התחביר, החוקים והכללים, נכיר גופנים וסגנונות, ונלמד כיצד לעשות בעזרתם עיצוב טיפוגרפי המעביר מסר נכון בהקשרים תוכניים שונים.</p>
+                            <p>הקורס מלווה בהרצאות העשרה מבוססות מחקר אודות נוכחות השפה הערבית במרחב והשראות טיפוגרפיות עכשוויות מהעולם הערבי — פלסטין, מצרים, לבנון, איראן, ירדן, סוריה, עיראק ועוד. במהלך הקורס נלמד איך בתור מעצבות ומעצבים יש לנו את הכוח לשנות את מעמדה של השפה במרחב הציבורי ואיך ליצור ערוץ תקשורת עם קוראים וקוראות דוברי השפה.</p>
+                            <p>הקורס מיועד לכלל הסטודנטים והסטודנטיות ואין צורך בידע קודם.</p>
+                        </div>
+                    </div>
+                    <div class="course-item" data-course="post-moving-image">
+                        <div class="course-header">
+                        <h4 class="course-title">פוסט מובינג־אימג׳</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">יעל בורשטיין</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מבקש לפרק מחיצות בין תחומי ידע ויצירה, לעשות רמיקס לתחומי אמנות חזותית ולבדוק את אופן היצירה שלנו כמעצבים וכמעצבות. הקורס עוזר לפתח תהליך אלטרנטיבי, אישי, חקרני ומעמיק בכדי להצליח להכניס לתוצרי העבודה שלנו חומרים חדשים, ולהגיע לשפות גרפיות מקוריות ושונות.</p>
+                            <p>במהלך הקורס נפגוש יוצרים, אמניות, מעצבים וחוקרות ממגוון דיסציפלינות שיפתחו בפנינו צוהר לטכניקות, מתודולוגיות ותחומי עניין שונים. התרגילים בקורס יתייחסו ישירות למפגשים עם היוצרות והיוצרים ויעסקו בסאונד, וידאו, הדפס משי ותחריט, ובניית ספר אישי המבוסס על דימויים.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                    <div class="course-item" data-course="creative-coding">
+                        <div class="course-header">
+                        <h4 class="course-title">קריאייטיב קודינג</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">איתי ניב</p>
+                        </div>
+                        <div class="course-description">
+                            <p>בקורס נעסוק בקשרים המתהווים בין תקשורת חזותית, קוד, ותהליכי יצירה עכשוויים הנשענים על אוטומציה, גנרטיביות, ועבודה עם מערכות חישוביות. במהלך הקורס ירכשו הסטודנטים.ות הבנה של כתיבה וקריאת קוד בהקשר עיצובי, ויתנסו בכתיבת קוד בסיסי בשפת JavaScript — כחלק מתהליך מחקר ופיתוח שפה אישית.</p>
+                            <p>במהלך הסמסטר הסטודנטים.ות יתנסו בבניית מערכת עיצוב פתוחה אליה ייצקו תוכן משתנה. באמצעות יצירה גנרטיבית ועבודה עם נתונים חיים, ניצור כרזות אינטראקטיביות ודינמיות. באמצעות כך, נבחן את תפקיד המעצב.ת כמתכנן.ת של מערכת עיצוב חיה, פתוחה ומלאת אפשרויות לחיפוש, טעייה, חקירה ושיבוש.</p>
+                            <p>הקורס אינו דורש רקע קודם בתכנות ובא להציע נקודת מבט יצירתית וניסיונית על קוד ככלי ביטוי עיצובי עכשווי.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Year 4 Specialization Courses section title row -->
+            <div class="courses-section-title-row">
+                <h5 class="courses-section-title">מקבץ קורסי התמחות לשנה ד׳:</h5>
+            </div>
+
+            <!-- Year 4 Specialization Courses Grid -->
+            <div class="courses-grid">
+                <!-- Left column (visual right in RTL) -->
+                <div class="courses-column courses-column-left">
+                    <div class="course-item" data-course="applied-graphics">
+                        <div class="course-header">
+                        <h4 class="course-title">גרפיקה שימושית</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">נעמי גיגר</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס יוקדש לעבודה עם חומרי ארכיון נדירים ומגוונים מתוך ההיסטוריה של המחלקה לתקשורת חזותית בבצלאל — מימיה כגרפיקה שימושית, דרך עיצוב גרפי ועד זהותה הנוכחית. נעסוק בקריאה חזותית של חומרים מודפסים ודיגיטליים, ננתח תהליכי עיצוב מתקופות שונות, ונעקוב אחר השינויים בגישות, בתפיסות ובמומנטומים שעיצבו את הדיסציפלינה. מתוך חקירה היסטורית־עיצובית, נבחן כיצד פעלה המחלקה כגוף מוביל שתרם לעיצוב השפה החזותית בישראל והגדיר את אמות המידה של התחום המקצועי.</p>
+                            <p>במהלך הקורס הסטודנטים.ות יפתחו תוצרים עכשוויים המבוססים על תכנים ארכיוניים — בפורמטים של פרינט, מסך ומדיה היברידית — וילמדו כיצד לגבש שפה גרפית מורכבת, הנשענת על הבנה עמוקה של הקשר תרבותי והיסטורי. נתמקד בעקרונות היסוד של התחום: טיפוגרפיה, גריד, תפיסת דימוי, היררכיה וביטוי חזותי. התוצרים יתאגדו לפורמט מערכתי המספר את סיפור המחלקה והדיסציפלינה, תוך יצירת רצף נרטיבי, קונספטואלי ועיצובי.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle column -->
+                <div class="courses-column courses-column-middle">
+                    <div class="course-item" data-course="bezalel-studio">
+                        <div class="course-header">
+                        <h4 class="course-title">סטודיו בצלאל</h4>
+                        <span class="course-points">3 נ״ז</span>
+                        <p class="course-lecturers">דן עוזרי</p>
+                        </div>
+                        <div class="course-description">
+                            <p>הקורס מתקיים בפורמט של סטודיו פעיל בשדה המקצועי, ומיועד לסטודנטים.ות המעוניינים.ות להתנסות בעבודה על פרויקטים יישומיים ואמיתיים בתוך מרחב האקדמיה. במהלך הקורס הסטודנטים.יות ישתתפו בתהליכי פיתוח, עיצוב והפקה של פרויקטים מגוונים הנעשים בשיתוף פעולה עם גופים פנימיים בבצלאל — זהויות חזותיות, פרסומים, אתרים, אירועים ועוד.</p>
+                            <p>העבודה תתקיים בקבוצה קטנה, במתכונת המדמה סביבת עבודה מקצועית בסטודיו. הקורס מזמן התנסות מעשית, חידוד כישורים מקצועיים, ולמידה משמעותית מתוך התמודדות עם אילוצי זמן, תקציב, ותהליכי עבודה מורכבים.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column (visual left in RTL) -->
+                <div class="courses-column courses-column-right">
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-contact-section">
+                        <a href="mailto:vc@bezalel.ac.il" class="footer-contact-link">צרו קשר</a>
+                        <a href="https://www.instagram.com/vc.bezalel/" target="_blank" class="footer-contact-link">עקבו אחרינו</a>
+                    </div>
+                    <div class="footer-copyright">© 2025 בצלאל אקדמיה לאמנות ועיצוב ירושלים</div>
+                </div>
+                <div class="footer-branding">
+                    <span class="footer-name-he">בצלאל אקדמיה לאמנות ועיצוב ירושלים</span>
+                    <span class="footer-name-ar">أكاديمية بتسלئيل للفنون والתصميم القدس</span>
+                    <span class="footer-name-en">Bezalel Academy of Arts and Design Jerusalem</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Crosshair guide lines -->
+    <div class="crosshair-line horizontal" id="crosshair-h"></div>
+    <div class="crosshair-line vertical" id="crosshair-v"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

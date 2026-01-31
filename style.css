@@ -1,0 +1,6122 @@
+@font-face {
+    font-family: "Narkiss Block TRIAL";
+    src: url("fonts/NarkissBlock-Hairline-TRIAL.otf") format("opentype");
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Narkiss Block TRIAL";
+    src: url("fonts/NarkissBlock-Light-TRIAL.otf") format("opentype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Narkiss Yair TRIAL";
+    src: url("fonts/NarkissYair-Regular-TRIAL.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Narkiss Block TRIAL";
+    src: url("fonts/NarkissBlock-Medium-TRIAL.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Narkiss Block TRIAL";
+    src: url("fonts/NarkissBlock-Bold-TRIAL.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Narkiss Block TRIAL";
+    src: url("fonts/NarkissBlock-Heavy-TRIAL.otf") format("opentype");
+    font-weight: 800;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+#program-details {
+    scroll-margin-top: 80px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #FCFCFB;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Homepage infinite scroll container */
+.homepage-scroll-container {
+    position: fixed;
+    top: 35px;
+    left: 35px;
+    right: 35px;
+    bottom: 35px;
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.homepage-scroll-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Each screen holds 3 images in original positions */
+.homepage-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.homepage-screen .image-wrapper {
+    position: absolute;
+    top: -50px;
+    left: 45px;
+    width: clamp(26%, calc(26% + (1220px - 100vw) * 0.025), 45%);
+    pointer-events: auto;
+    z-index: 15;
+    cursor: pointer;
+    isolation: isolate;
+    display: block;
+    overflow: hidden;
+}
+
+.homepage-screen .image-wrapper .gradient-map-image,
+.homepage-screen .image-wrapper .original-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.homepage-screen .image-wrapper .gradient-map-image {
+    filter: url(#gradient-map);
+    transition: opacity 0.3s ease;
+}
+
+.homepage-screen .image-wrapper .original-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.homepage-screen .image-wrapper .image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #109955;
+    color: #fff;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-weight: 700;
+    --caption-scale: clamp(0.7, (100vw - 320px) / (1220px - 320px), 1);
+    font-size: calc(14px * var(--caption-scale));
+    padding: calc(8px * var(--caption-scale)) calc(12px * var(--caption-scale));
+    text-align: right;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.homepage-screen .image-wrapper-2 {
+    top: auto;
+    bottom: 1px;
+    left: auto;
+    right: 50px;
+    width: clamp(20%, calc(20% + (1220px - 100vw) * 0.024), 38%);
+}
+
+.homepage-screen .image-wrapper-2 .image-caption {
+    text-align: right;
+}
+
+.homepage-screen .image-wrapper-3 {
+    top: calc(70% - 35px);
+    left: calc(24% - 35px);
+    right: auto;
+    bottom: auto;
+    width: clamp(20%, calc(20% + (1220px - 100vw) * 0.024), 38%);
+}
+
+.homepage-screen .image-wrapper-3 .image-caption {
+    text-align: right;
+}
+
+/* Gradient map image effect */
+.gradient-map-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.image-wrapper {
+    position: absolute;
+    top: 85px;
+    left: 80px;
+    width: 26%;
+    pointer-events: auto;
+    z-index: 15;
+    cursor: pointer;
+    isolation: isolate;
+    display: block;
+    overflow: hidden;
+}
+
+.gradient-map-image,
+.original-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.gradient-map-image {
+    filter: url(#gradient-map);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.original-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+/* Hover handled by JavaScript */
+
+.image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #109955;
+    color: #fff;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 12px;
+    text-align: left;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Second image position */
+.image-wrapper-2 {
+    top: auto;
+    bottom: 36px;
+    left: auto;
+    right: 85px;
+    width: 20%;
+}
+
+.image-wrapper-2 .image-caption {
+    text-align: right;
+}
+
+/* Third image position */
+.image-wrapper-3 {
+    top: 60%;
+    left: 24%;
+    right: auto;
+    bottom: auto;
+    width: 20%;
+}
+
+.image-wrapper-3 .image-caption {
+    text-align: right;
+}
+
+.grid-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Rulers */
+.ruler {
+    position: fixed;
+    display: flex;
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Crosshair guide lines */
+.crosshair-line {
+    position: fixed;
+    background-color: #109955;
+    pointer-events: none;
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.crosshair-line.visible {
+    opacity: 0.4;
+}
+
+.crosshair-line.horizontal {
+    height: 1px;
+    left: 35px;
+    right: 35px;
+}
+
+.crosshair-line.vertical {
+    width: 1px;
+    top: 35px;
+    bottom: 35px;
+}
+
+.ruler-top,
+.ruler-bottom {
+    left: 60px;
+    right: 60px;
+    justify-content: space-between;
+    direction: ltr;
+}
+
+.ruler-top {
+    top: 0;
+    left: 0;
+    right: 0;
+    padding-top: 10px;
+    padding-bottom: 7px;
+    padding-left: 60px;
+    padding-right: 60px;
+    background-color: #FCFCFB;
+    z-index: 1001;
+}
+
+.ruler-bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-bottom: 10px;
+    padding-top: 7px;
+    padding-left: 60px;
+    padding-right: 60px;
+    background-color: #FCFCFB;
+    z-index: 1001;
+}
+
+.ruler-left,
+.ruler-right {
+    flex-direction: column;
+    top: 60px;
+    bottom: 60px;
+    justify-content: space-between;
+}
+
+.ruler-left {
+    left: 0;
+    padding-left: 10px;
+}
+
+.ruler-right {
+    right: 0;
+    padding-right: 10px;
+}
+
+.ruler span {
+    width: 20px;
+    text-align: center;
+}
+
+/* Right ruler navigation - first 5 numbers (0-4) */
+.ruler-right span.ruler-nav {
+    cursor: pointer;
+    transition: color 0.15s ease;
+    pointer-events: auto;
+    position: relative;
+    overflow: visible;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+}
+
+/* Arrow SVG to the left of nav numbers (using ::after for RTL) */
+.ruler-right span.ruler-nav::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+    vertical-align: 1px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23000' stroke='%23000' stroke-width='0.5'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.25s ease, background-image 0.15s ease;
+    transform-origin: center center;
+}
+
+/* Individual nav hover colors by position - each matches destination page color */
+/* 0 = Homepage (green) */
+.ruler-right span.ruler-nav:nth-child(1):hover,
+.ruler-right span.ruler-nav:nth-child(1).hover {
+    color: #109955;
+}
+/* Direct hover - just rotate 90deg counterclockwise */
+.ruler-right span.ruler-nav:nth-child(1):hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23109955'/%3E%3C/svg%3E");
+    transform: rotate(-90deg);
+}
+/* Main nav hover - scale, rotate, translate (thinner arrow) */
+.ruler-right span.ruler-nav:nth-child(1).hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0.75V1.5L2.5 1.5L7.75 6.75L7.5 7L7.25 7.25L7 7L1.75 2V5.75H1V0.75H6Z' fill='%23109955'/%3E%3C/svg%3E");
+    transform: scale(8) rotate(-180deg) translate(5px, 3px);
+}
+
+/* 1 = Program (blue) */
+.ruler-right span.ruler-nav:nth-child(2):hover,
+.ruler-right span.ruler-nav:nth-child(2).hover {
+    color: #0946E1;
+}
+.ruler-right span.ruler-nav:nth-child(2):hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%230946E1'/%3E%3C/svg%3E");
+    transform: rotate(-90deg);
+}
+.ruler-right span.ruler-nav:nth-child(2).hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0.75V1.5L2.5 1.5L7.75 6.75L7.5 7L7.25 7.25L7 7L1.75 2V5.75H1V0.75H6Z' fill='%230946E1'/%3E%3C/svg%3E");
+    transform: scale(8) rotate(-180deg) translate(5px, 3px);
+}
+
+/* 2 = Staff (pink) */
+.ruler-right span.ruler-nav:nth-child(3):hover,
+.ruler-right span.ruler-nav:nth-child(3).hover {
+    color: #F200BA;
+}
+.ruler-right span.ruler-nav:nth-child(3):hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23F200BA'/%3E%3C/svg%3E");
+    transform: rotate(-90deg);
+}
+.ruler-right span.ruler-nav:nth-child(3).hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0.75V1.5L2.5 1.5L7.75 6.75L7.5 7L7.25 7.25L7 7L1.75 2V5.75H1V0.75H6Z' fill='%23F200BA'/%3E%3C/svg%3E");
+    transform: scale(8) rotate(-180deg) translate(5px, 3px);
+}
+
+/* 3 = Guidelines (red) */
+.ruler-right span.ruler-nav:nth-child(4):hover,
+.ruler-right span.ruler-nav:nth-child(4).hover {
+    color: #EF0004;
+}
+.ruler-right span.ruler-nav:nth-child(4):hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23EF0004'/%3E%3C/svg%3E");
+    transform: rotate(-90deg);
+}
+.ruler-right span.ruler-nav:nth-child(4).hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0.75V1.5L2.5 1.5L7.75 6.75L7.5 7L7.25 7.25L7 7L1.75 2V5.75H1V0.75H6Z' fill='%23EF0004'/%3E%3C/svg%3E");
+    transform: scale(8) rotate(-180deg) translate(5px, 3px);
+}
+
+/* 4 = Courses (orange) */
+.ruler-right span.ruler-nav:nth-child(5):hover,
+.ruler-right span.ruler-nav:nth-child(5).hover {
+    color: #FFAA00;
+}
+.ruler-right span.ruler-nav:nth-child(5):hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23FFAA00'/%3E%3C/svg%3E");
+    transform: rotate(-90deg);
+}
+.ruler-right span.ruler-nav:nth-child(5).hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0.75V1.5L2.5 1.5L7.75 6.75L7.5 7L7.25 7.25L7 7L1.75 2V5.75H1V0.75H6Z' fill='%23FFAA00'/%3E%3C/svg%3E");
+    transform: scale(8) rotate(-180deg) translate(5px, 3px);
+}
+
+/* Tooltip for ruler navigation */
+.ruler-nav-tooltip {
+    position: fixed;
+    background: #109955;
+    color: #FCFCFB;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 12px;
+    height: 24px;
+    line-height: 24px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Plus grid */
+.plus-grid {
+    position: absolute;
+    top: 65px;
+    left: 60px;
+    right: 60px;
+    bottom: 65px;
+}
+
+.plus-row {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+/* Row positioning to align with ruler numbers 0, 2.5, 5, 7.5, 10, 12.5, 15 */
+.plus-row:nth-child(1) { top: 0; }
+.plus-row:nth-child(2) { top: 16.667%; }
+.plus-row:nth-child(3) { top: 33.333%; }
+.plus-row:nth-child(4) { top: 50%; }
+.plus-row:nth-child(5) { top: 66.667%; }
+.plus-row:nth-child(6) { top: 83.333%; }
+.plus-row:nth-child(7) { bottom: 0; }
+
+.plus {
+    color: #000;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 100;
+    line-height: 18px;
+    opacity: 0.3;
+    text-align: center;
+    width: 14px;
+}
+
+/* Border frame */
+.border-frame {
+    position: fixed;
+    top: 35px;
+    left: 35px;
+    right: 35px;
+    bottom: 35px;
+    border: 1px solid #000;
+    pointer-events: none;
+    z-index: 1002;
+    background: transparent;
+}
+
+/* Main content area */
+.content {
+    position: relative;
+    z-index: 10;
+    padding: 60px;
+    pointer-events: none;
+}
+
+/* Title */
+.title {
+    color: #1B1B1B;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 197.364px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 209.699px;
+    margin: 0;
+    position: absolute;
+    top: 12px;
+    right: -10px;
+    pointer-events: none;
+    transform-origin: top right;
+    /* Scale smoothly from 100% at 1220px to 25% at 320px */
+    --scale: clamp(0.25, (100vw - 320px) / (1220px - 320px), 1);
+    transform: scale(var(--scale));
+    z-index: 12;
+}
+
+.title span {
+    position: absolute;
+    text-align: right;
+    pointer-events: auto;
+}
+
+/* המחלקה - first word */
+.title span:nth-child(1) {
+    right: 79px;
+    top: 81px;
+}
+
+/* לתקשורת - second word */
+.title span:nth-child(2) {
+    right: 341px;
+    top: 226px;
+}
+
+/* חזותית - third word */
+.title span:nth-child(3) {
+    right: 210px;
+    top: 362px;
+}
+
+/* Navigation links */
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    z-index: 12;
+    pointer-events: none;
+}
+
+.nav-link {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 8px;
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 51px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    pointer-events: auto;
+}
+
+.nav-link span {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    pointer-events: auto;
+}
+
+.nav-link svg {
+    flex-shrink: 0;
+}
+
+.nav-link:hover,
+.nav-link:hover span {
+    color: #045B30;
+    text-decoration-color: #045B30;
+}
+
+/* Page transition */
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.transition-overlay .ruler {
+    position: fixed;
+}
+
+.transition-overlay span {
+    transition: transform 0.4s ease-out, opacity 0.35s ease-in-out;
+}
+
+.page-content-fade {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.page-content-fade.fade-out {
+    opacity: 0;
+}
+
+/* Inner page styles - zoomed in grid */
+.inner-page {
+    overflow-y: auto;
+}
+
+.inner-page .ruler-bottom {
+    display: none;
+}
+
+.inner-page .border-frame {
+    border-bottom: none;
+    bottom: 0;
+    z-index: 1000;
+}
+
+/* Inner page plus grid - 5 rows distributed evenly */
+.inner-page .plus-row:nth-child(1) { top: -5px; }
+.inner-page .plus-row:nth-child(2) { top: 25%; }
+.inner-page .plus-row:nth-child(3) { top: 50%; }
+.inner-page .plus-row:nth-child(4) { top: 75%; }
+.inner-page .plus-row:nth-child(5) { top: auto; bottom: -5px; }
+
+.page-content {
+    padding-top: 20px;
+    padding-bottom: 0;
+    pointer-events: auto;
+}
+
+.page-header-link {
+    text-decoration: none;
+    display: block;
+    position: fixed;
+    top: 10px;
+    right: 35px;
+    z-index: 1002;
+}
+
+.page-header-title {
+    color: #1B1B1B;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 17.367px;
+    font-weight: 800;
+    line-height: 21.708px;
+    margin: 0;
+    transition: color 0.2s ease;
+    background: #FCFCFB;
+    padding: 0 12px;
+    letter-spacing: 0.5px;
+}
+
+.page-header-link:hover .page-header-title {
+    color: #109955;
+}
+
+/* Hide the last number (7) on inner page top ruler */
+.inner-page .ruler-top span:last-child {
+    opacity: 0;
+}
+
+.page-header-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 60px;
+    margin-top: 60px;
+}
+
+.page-intro {
+    color: #000;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+    text-align: right;
+    flex: 5;
+    padding: 20px 102px;
+    position: relative;
+    z-index: 20;
+}
+
+.page-intro p {
+    margin: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.page-intro-background {
+    position: absolute;
+    bottom: -1%;
+    right: 4%;
+    width: 30%;
+    height: 30%;
+    background: #FCFCFB;
+    z-index: 1;
+}
+
+.page-image-container {
+    position: relative;
+    height: 450px;
+    margin-bottom: 40px;
+}
+
+.page-image-wrapper {
+    position: absolute;
+    top: -60px;
+    right: 30px;
+    width: 40%;
+    cursor: pointer;
+    isolation: isolate;
+    z-index: 15;
+}
+
+.page-image-wrapper .gradient-map-image,
+.page-image-wrapper .original-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.page-image-wrapper .gradient-map-image {
+    filter: url(#gradient-map);
+    transition: opacity 0.3s ease;
+}
+
+.page-image-wrapper .original-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.page-image-wrapper .image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #109955;
+    color: #fff;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 12px;
+    text-align: right;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.page-image-wrapper.page-image-wrapper-2 {
+    right: auto;
+    left: 6rem;
+    width: 30%;
+    top: 2rem;
+    z-index: 1;
+    isolation: isolate;
+}
+
+/* Caption on bottom edge for page-image-wrapper-2 */
+.page-image-wrapper.page-image-wrapper-2 .image-caption {
+    top: auto;
+    bottom: 0;
+}
+
+.page-body-single {
+    color: #000;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+    text-align: right;
+    margin-top: 40px;
+}
+
+.program-details-row {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    z-index: 10;
+    gap: 60px;
+}
+
+.program-details-title-column {
+    flex: 2;
+    text-align: right;
+    margin-right: 1rem;
+}
+
+.program-details-content-column {
+    flex: 5;
+    text-align: right;
+}
+
+.program-details-row #program-details {
+    margin: -6rem 0 0 0;
+    padding: 20px 0;
+    text-align: right;
+    color: #000;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+}
+
+.program-details-body {
+    margin: -6rem 0 0 0;
+    padding: 20px 80px;
+    text-align: right;
+    color: #000;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+}
+
+/* Page section row - 2:5 flex layout like page-header-row */
+.page-section-row {
+    display: flex;
+    flex: 5;
+    padding: 20px 90px;
+    gap: 60px;
+    margin-top: 0px;
+    margin-bottom: 14rem;
+    position: relative;
+}
+
+.page-section-image-wrapper {
+    position: absolute;
+    top: 20rem;
+    right: 9rem;
+    width: 30%;
+    cursor: pointer;
+    isolation: isolate;
+    z-index: 1;
+}
+
+.page-section-image-wrapper-1 {
+    top: 0rem;
+    width: 19%;
+    right: 2rem;
+}
+
+.page-section-image-wrapper-2 {
+    top: 20rem;
+}
+
+.page-section-image-wrapper-3 {
+    /* Smoothly moves down as viewport narrows to avoid overlapping text */
+    top: clamp(55rem, calc(55rem + (1500px - 100vw) * 1.2), 130rem);
+    width: 40%;
+    right: 2rem;
+    z-index: 1;
+}
+
+.page-section-image-wrapper-4 {
+    /* Smoothly moves down as viewport narrows */
+    top: clamp(69rem, calc(69rem + (1500px - 100vw) * 1.3), 150rem);
+    width: 35%;
+    right: 37%;
+    z-index: 2;
+}
+
+.page-section-row-cd {
+    margin-bottom: 35rem;
+}
+
+.page-section-image-wrapper-5 {
+    /* Smoothly moves down and inward as viewport narrows to stay within ruler */
+    top: clamp(53rem, calc(53rem + (1500px - 100vw) * 1.2), 125rem);
+    width: 25%;
+    right: clamp(20rem, calc(59rem - (1500px - 100vw) * 0.7), 59rem);
+    z-index: 4;
+}
+
+/* Background rectangle between image-wrapper-4 and image-wrapper-5 */
+.page-section-row-cd .page-section-image-wrapper-5::before {
+    content: '';
+    position: absolute;
+    bottom: -1.8rem;
+    /* Moves in sync with image-wrapper-5's right position (factor 0.7) */
+    left: clamp(0rem, calc(15.3rem - (1500px - 100vw) * 0.7), 15.3rem);
+    width: 8rem;
+    height: 16rem;
+    background: #FCFCFB;
+    z-index: -1;
+}
+
+/* Background rectangle between image-wrapper-3 and image-wrapper-4 */
+.page-section-row-cd::before {
+    content: '';
+    position: absolute;
+    /* Moves in sync with image-wrapper-4 (factor 1.3) */
+    top: clamp(67.3rem, calc(67.3rem + (1500px - 100vw) * 1.3), 148rem);
+    right: 35%;
+    width: 10rem;
+    height: 19rem;
+    background: #FCFCFB;
+    z-index: 2;
+}
+
+.page-section-image-wrapper-2::before {
+    content: '';
+    position: absolute;
+    top: -2rem;
+    left: -2rem;
+    right: -2rem;
+    bottom: 50%;
+    background: #FCFCFB;
+    z-index: -1;
+}
+
+.page-section-image-wrapper .gradient-map-image,
+.page-section-image-wrapper .original-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.page-section-image-wrapper .gradient-map-image {
+    filter: url(#gradient-map);
+    transition: opacity 0.3s ease;
+}
+
+.page-section-image-wrapper .original-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.page-section-image-wrapper .image-caption {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 10px;
+    color: #FCFCFB;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-align: right;
+}
+
+.page-section-image-wrapper.page-section-image-wrapper-1 .image-caption {
+    top: 0;
+    bottom: auto;
+}
+
+.page-section-spacer {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.page-section-spacer .page-side-note {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 5;
+}
+
+.page-section-spacer .page-side-note:last-child {
+    margin-bottom: 0;
+}
+
+.page-section-content {
+    flex: 5;
+    padding: 20px 110px 0 90px;
+    color: #000;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+    text-align: right;
+    position: relative;
+    z-index: 10;
+}
+
+/* Background for Years A-B section */
+.page-section-row-ab .page-section-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 4rem;
+    bottom: -1rem;
+    background: #FCFCFB;
+    z-index: -1;
+}
+
+/* Background for Years C-D section */
+.page-section-row-cd .page-section-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 4rem;
+    bottom: -1rem;
+    background: #FCFCFB;
+    z-index: -1;
+}
+
+/* Additional background for Years C-D section to cover image */
+.page-section-row-cd .page-section-content::after {
+    content: '';
+    position: absolute;
+    top: 45rem;
+    right: -23rem;
+    background: #FCFCFB;
+    z-index: 1;
+    width: 34rem;
+    height: 7rem;
+}
+
+.page-section-content p {
+    margin: 0 0 1.5rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.page-section-content p:last-child {
+    margin-bottom: 0;
+}
+
+.page-section-content .page-side-note {
+    position: absolute;
+    right: 11rem;
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    width: calc((2 / 5) * 100% - 60px);
+}
+
+/* Mobile-only side notes - hidden in desktop */
+.mobile-side-notes {
+    display: none;
+}
+
+.page-section-content h4 {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 20px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+}
+
+.page-section-content .list-p {
+    margin-bottom: 1rem;
+}
+
+.page-section-content .list-p:last-child {
+    margin-bottom: 0;
+}
+
+.page-section-content li {
+    list-style: none;
+    position: relative;
+    padding-right: 20px;
+}
+
+.page-section-content li::before {
+    content: '+';
+    position: absolute;
+    right: 0;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #109955;
+}
+
+.page-title-group {
+    margin-right: 1rem;
+    text-align: right;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.page-title {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: clamp(4.5rem, calc(4.5rem + (100vw - 1024px) * 0.12), 6rem);
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1;
+    text-align: right;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 8%;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    margin: 0;
+}
+
+.page-title-arrow {
+    display: inline-flex;
+    align-items: flex-end;
+    font-size: clamp(4.5rem, calc(4.5rem + (100vw - 1024px) * 0.12), 6rem);
+    line-height: 1;
+    margin-bottom: 0.2em;
+    margin-top: 0.5rem;
+}
+
+.page-title-arrow svg {
+    width: 0.68em;
+    height: 0.68em;
+    display: block;
+}
+
+
+
+.page-body {
+    color: #000;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+    flex: 2;
+    text-align: right;
+    padding: 2rem 5rem 5rem 5rem;
+}
+
+.page-body p {
+    margin-bottom: 3rem;
+}
+
+.page-subtitle {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 72.804px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 76px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.page-subtitle-arrow {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: flex-end;
+    font-size: 72.804px;
+    line-height: 76px;
+    margin-bottom: 1.1rem;
+}
+
+.page-subtitle-arrow svg {
+    width: 0.68em;
+    height: 0.68em;
+    display: block;
+}
+
+.paragraph-with-note {
+    position: relative;
+}
+
+.paragraph-with-note .page-side-note {
+    position: absolute;
+    left: calc(100% + 60px);
+    bottom: 0;
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    width: 201px;
+    margin-left: 5rem;
+}
+
+.page-body h4 {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 20px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+}
+
+.page-body li {
+    list-style: none;
+    position: relative;
+    padding-right: 20px;
+    
+}
+
+.page-body li::before {
+    content: '+';
+    position: absolute;
+    right: 0;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #109955;
+}
+
+.paragraph-with-stacked-notes {
+    position: relative;
+}
+
+.paragraph-with-stacked-notes .stacked-notes {
+    position: absolute;
+    left: calc(100% + 60px);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-left: 5rem;
+}
+
+.paragraph-with-stacked-notes .stacked-notes .page-side-note {
+    position: static;
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    width: 201px;
+}
+
+.page-body b .intro-highlight,
+.page-intro b .intro-highlight,
+.page-body-single b .intro-highlight,
+#program-details b .intro-highlight {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.page-body b a,
+.page-intro b a,
+.page-body-single b a,
+#program-details b a {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-style: normal;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-body b a:hover,
+.page-intro b a:hover,
+.page-body-single b a:hover,
+#program-details b a:hover {
+    color: #045B30;
+    text-decoration-color: #045B30;
+}
+
+.page-body b a:hover::after,
+.page-intro b a:hover::after,
+.page-body-single b a:hover::after,
+#program-details b a:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23045B30' stroke='%23045B30' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+.page-body b a::after,
+.page-intro b a::after,
+.page-body-single b a::after,
+#program-details b a::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23109955' stroke='%23109955' stroke-width='0.7'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+
+.page-body b,
+.page-intro b,
+.page-body-single b,
+#program-details b {
+    display: inline-block;
+    color: #000;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 29px;
+    margin-bottom: 0.5rem;
+}
+
+.page-body .highlight,
+.page-intro .highlight,
+.page-body-single .highlight {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.page-body a,
+.page-intro a,
+.page-body-single a {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-style: normal;
+    line-height: 24px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-body a:hover,
+.page-intro a:hover,
+.page-body-single a:hover {
+    color: #045B30;
+    text-decoration-color: #045B30;
+}
+
+.page-body a:hover::after,
+.page-intro a:hover::after,
+.page-body-single a:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.78491 0.349609V1.72363L2.69409 1.72363L10.947 9.97754L11.1951 10.2246L10.947 10.4717L10.4724 10.9463L10.2253 11.1943L9.97827 10.9463L1.72437 2.69238L1.72437 7.78418H0.350342L0.350342 0.349609L7.78491 0.349609Z' fill='%23045B30' stroke='%23045B30' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+.page-body a::after,
+.page-intro a::after,
+.page-body-single a::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.78491 0.349609V1.72363L2.69409 1.72363L10.947 9.97754L11.1951 10.2246L10.947 10.4717L10.4724 10.9463L10.2253 11.1943L9.97827 10.9463L1.72437 2.69238L1.72437 7.78418H0.350342L0.350342 0.349609L7.78491 0.349609Z' fill='%23109955' stroke='%23109955' stroke-width='0.7'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+
+/* Link positions - each link independently controlled */
+/* תוכנית הלימודים */
+.nav-link-1 {
+    margin-top: 1.4rem;
+    margin-right: 32.6rem;
+}
+
+/* סגל ההוראה */
+.nav-link-2 {
+    margin-top: 6.5rem;
+    margin-right: 58.1rem;
+}
+
+/* הוראות ונהלים */
+.nav-link-3 {
+    margin-top: 8rem;
+    margin-right: 47rem;
+}
+
+/* קורסים */
+.nav-link-4 {
+    margin-top: 4.5rem;
+    margin-right: 40.2rem;
+}
+
+/* Responsive - smoothly scale title and nav together */
+@media (max-width: 1220px) {
+    .title {
+        right: clamp(20px, calc(-10px + (1220px - 100vw) * 0.08), 40px);
+        top: calc(12px + (1220px - 100vw) * 0.05);
+        --scale: clamp(0.35, (100vw - 320px) / (1220px - 320px), 1);
+    }
+
+    /* Scale nav-links together with title */
+    .nav-links {
+        --scale: clamp(0.35, (100vw - 320px) / (1220px - 320px), 1);
+        transform: scale(var(--scale));
+        transform-origin: top right;
+    }
+
+    /* Keep nav links on single line */
+    .nav-link {
+        white-space: nowrap;
+    }
+}
+
+/* At 768px: reposition nav links under the title */
+@media (max-width: 768px) {
+    .nav-links {
+        transform: none;
+        position: absolute;
+        top: 320px;
+        right: calc(80px + (100vw - 480px) * 0.15);
+        margin: 0;
+        align-items: flex-start;
+    }
+
+    .nav-link {
+        font-size: 20px;
+        line-height: 30px;
+        white-space: nowrap;
+    }
+
+    .nav-link svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Staggered right margins for offset effect */
+    .nav-link-1 {
+        margin-top: 0;
+        margin-right: 0;
+    }
+    .nav-link-2 {
+        margin-top: 1.2rem;
+        margin-right: 80px;
+    }
+    .nav-link-3 {
+        margin-top: 1.2rem;
+        margin-right: 40px;
+    }
+    .nav-link-4 {
+        margin-top: 1.2rem;
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Title styling for mobile */
+    .title {
+        --scale: clamp(0.22, (100vw - 320px) / (480px - 320px) * 0.08 + 0.22, 0.30);
+        top: 100px;
+        right: 15px !important;
+    }
+
+    /* Nav links for mobile */
+    .nav-links {
+        top: 340px !important;
+        right: 15px !important;
+        margin: 0 !important;
+    }
+
+    .nav-link {
+        font-size: 22px;
+        line-height: 1.3;
+        padding: 10px 14px;
+    }
+
+    .nav-link svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Staggered layout for mobile */
+    .nav-link-1 {
+        margin-top: 0;
+        margin-right: 5%;
+    }
+
+    .nav-link-2 {
+        margin-top: 0.8rem;
+        margin-right: 25%;
+    }
+
+    .nav-link-3 {
+        margin-top: 0.8rem;
+        margin-right: 12%;
+    }
+
+    .nav-link-4 {
+        margin-top: 0.8rem;
+        margin-right: 0%;
+    }
+}
+
+/* Responsive: 1050px and below - show every 2nd number, hide some + */
+@media (max-width: 1050px) {
+    /* Hide odd numbers in horizontal rulers (keep 0, 2, 4, 6... and 25) */
+    .ruler-top span:nth-child(2n):not(:last-child),
+    .ruler-bottom span:nth-child(2n):not(:last-child) {
+        visibility: hidden;
+    }
+
+    /* Hide odd numbers in vertical rulers */
+    .ruler-left span:nth-child(2n),
+    .ruler-right span:nth-child(2n) {
+        visibility: hidden;
+    }
+
+    /* Keep ruler nav links visible */
+    .ruler-right span.ruler-nav {
+        visibility: visible;
+    }
+
+    /* Hide every other + in rows, but keep first and last */
+    .plus-row .plus:nth-child(2n):not(:last-child) {
+        visibility: hidden;
+    }
+}
+
+/* Responsive: Intermediate widths - align page-intro with program-details-body */
+@media (max-width: 1455px) and (min-width: 1025px) {
+    .inner-page .page-intro {
+        padding-right: 80px;
+    }
+}
+
+/* Responsive: Staff page - stack sections below 840px */
+@media (max-width: 840px) and (min-width: 481px) {
+    .page-staff .staff-head-section {
+        flex: none;
+        width: 100%;
+    }
+
+    .page-staff .staff-head-text {
+        position: relative;
+        top: auto;
+        margin: 0;
+        padding: 0 0 1rem 0;
+    }
+
+    .page-staff .staff-head-image-wrapper {
+        display: none;
+    }
+
+    .page-staff .staff-admin-section {
+        position: relative;
+        top: auto;
+        left: auto;
+        padding: 1rem 0 0 0;
+    }
+}
+
+/* Responsive: Staff page - senior grid flex-wrap at 576px-840px */
+@media (max-width: 840px) and (min-width: 576px) {
+    .page-staff .staff-senior-grid {
+        margin-top: 3rem;
+    }
+
+    .page-staff .staff-senior-row {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+        padding: 1rem 2rem;
+    }
+
+    .page-staff .staff-senior-row:nth-child(2) {
+        padding: 1rem 2rem;
+    }
+}
+
+/* Responsive: Staff page - senior grid mobile layout at 575px */
+@media (max-width: 575px) and (min-width: 481px) {
+    .page-staff .staff-senior-grid {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 30px 30px;
+        padding: 10px 0.5rem 0 0.5rem;
+        justify-content: center;
+        justify-items: start;
+        margin-top: 3rem;
+    }
+
+    .page-staff .staff-senior-row {
+        display: contents;
+    }
+}
+
+/* Responsive: Staff page - lecturers 5-4 pattern at 1350px */
+@media (max-width: 1350px) and (min-width: 1151px) {
+    .page-staff .staff-lecturers-row:nth-child(odd) .staff-lecturer-name:nth-child(n+6) {
+        display: none;
+    }
+    .page-staff .staff-lecturers-row:nth-child(even) .staff-lecturer-name:nth-child(n+5) {
+        display: none;
+    }
+}
+
+/* Responsive: Staff page - lecturers 4-3 pattern at 1150px */
+@media (max-width: 1150px) and (min-width: 951px) {
+    .page-staff .staff-lecturers-row:nth-child(odd) .staff-lecturer-name:nth-child(n+5) {
+        display: none;
+    }
+    .page-staff .staff-lecturers-row:nth-child(even) .staff-lecturer-name:nth-child(n+4) {
+        display: none;
+    }
+}
+
+/* Responsive: Staff page - lecturers 3-2 pattern at 950px */
+@media (max-width: 950px) and (min-width: 701px) {
+    .page-staff .staff-lecturers-row:nth-child(odd) .staff-lecturer-name:nth-child(n+4) {
+        display: none;
+    }
+    .page-staff .staff-lecturers-row:nth-child(even) .staff-lecturer-name:nth-child(n+3) {
+        display: none;
+    }
+}
+
+/* Responsive: Staff page - lecturers 2-1 pattern at 700px */
+@media (max-width: 700px) and (min-width: 481px) {
+    .page-staff .staff-lecturers-row {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        width: 70%;
+    }
+
+    .page-staff .staff-lecturers-row:nth-child(odd) .staff-lecturer-name:nth-child(n+3) {
+        display: none;
+    }
+
+    .page-staff .staff-lecturers-row:nth-child(even) .staff-lecturer-name:nth-child(n+2) {
+        display: none;
+    }
+
+    .page-staff .staff-lecturers-row:nth-child(even) {
+        justify-content: center;
+        width: auto;
+    }
+}
+
+/* ========== Guidelines Page Responsive Styles ========== */
+
+/* Responsive: Guidelines page - switch to column layout earlier */
+@media (max-width: 1350px) and (min-width: 481px) {
+    .page-guidelines .page-header-row {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .page-guidelines .page-title-group {
+        flex: none;
+        width: 100%;
+        padding: 0 40px;
+    }
+
+    .page-guidelines .page-intro {
+        padding: 20px 40px 0 40px !important;
+        max-width: 600px;
+    }
+}
+
+/* Responsive: Guidelines page at 1350px */
+@media (max-width: 1350px) and (min-width: 1025px) {
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n+2) {
+        padding-right: 10rem;
+    }
+
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n) {
+        padding-right: 20rem;
+    }
+
+    .page-guidelines .guidelines-transition-row {
+        padding: 2rem 3rem;
+    }
+
+    /* Reset staggered row padding */
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+2),
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+3),
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+1):not(:first-child) {
+        padding-right: 3rem;
+    }
+
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row.row-padding-2,
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row.row-padding-3 {
+        padding-right: 3rem;
+    }
+}
+
+/* Responsive: Guidelines page at 1024px */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n+1),
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n+2),
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n) {
+        padding-right: 2rem;
+    }
+
+    .page-guidelines .grade-row {
+        padding: 2rem 2rem;
+    }
+
+    .page-guidelines .guidelines-image-1 {
+        width: 45%;
+        left: 2%;
+    }
+
+    .page-guidelines .guidelines-image-2 {
+        width: 40%;
+        left: 30%;
+    }
+
+    .page-guidelines .guidelines-transition-row {
+        padding: 2rem 2rem;
+    }
+
+    /* Reset staggered row padding */
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+2),
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+3),
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+1):not(:first-child) {
+        padding-right: 2rem;
+    }
+
+    .page-guidelines .guidelines-transition-item {
+        max-width: 100%;
+    }
+
+    .page-guidelines .guidelines-transition-section {
+        padding: 0 2rem;
+    }
+
+    .page-guidelines .guidelines-section {
+        padding: 2rem 2rem;
+    }
+
+    .page-guidelines .guidelines-side-note {
+        padding: 2rem 2rem;
+    }
+
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row.row-padding-2,
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row.row-padding-3 {
+        padding-right: 2rem;
+    }
+
+    .page-guidelines .image-carousel {
+        padding: 0 2rem;
+    }
+
+    .page-guidelines .parallax-content .guidelines-transition-row {
+        padding: 2rem 2rem;
+    }
+}
+
+/* Responsive: Guidelines page at 768px */
+@media (max-width: 768px) and (min-width: 481px) {
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n+1),
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n+2),
+    .page-guidelines .grade-scale > .grade-row:nth-child(3n) {
+        padding-right: 1rem;
+    }
+
+    .page-guidelines .grade-row {
+        padding: 1.5rem 1rem;
+    }
+
+    .page-guidelines .guidelines-images-section {
+        min-height: 20rem;
+    }
+
+    .page-guidelines .guidelines-image-1 {
+        width: 50%;
+        left: 0;
+        bottom: 5rem;
+    }
+
+    .page-guidelines .guidelines-image-2 {
+        width: 45%;
+        left: 25%;
+        bottom: 0;
+    }
+
+    .page-guidelines .guidelines-transition-row {
+        padding: 1.5rem 1rem;
+    }
+
+    /* Reset staggered row padding */
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+2),
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+3),
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+1):not(:first-child) {
+        padding-right: 1rem;
+    }
+
+    .page-guidelines .guidelines-transition-item {
+        max-width: 100%;
+    }
+
+    .page-guidelines .guidelines-transition-section {
+        padding: 0 1rem;
+    }
+
+    .page-guidelines .guidelines-section {
+        padding: 1.5rem 1rem;
+    }
+
+    .page-guidelines .guidelines-side-note {
+        padding: 1.5rem 1rem;
+    }
+
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row.row-padding-2,
+    .page-guidelines .guidelines-transition-section > .guidelines-transition-row.row-padding-3 {
+        padding-right: 1rem;
+    }
+
+    .page-guidelines .image-carousel {
+        padding: 0 1rem;
+    }
+
+    .page-guidelines .parallax-content .guidelines-transition-row {
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* Responsive: Inner pages at 1024px - switch to single column layout */
+@media (max-width: 1024px) {
+    .inner-page .page-header-row {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .inner-page .page-title-group {
+        flex: none;
+        width: 100%;
+        padding: 0 40px;
+    }
+
+    .inner-page .page-title {
+        font-size: 4.5rem;
+        line-height: 4.5rem;
+    }
+
+    .inner-page .page-title-arrow {
+        font-size: 4.5rem;
+        line-height: 4.5rem;
+    }
+
+    .inner-page .page-intro {
+        flex: none;
+        width: 100%;
+        padding: 20px 40px;
+    }
+
+    .inner-page .program-details-row {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 40px;
+    }
+
+    .inner-page .program-details-title-column,
+    .inner-page .program-details-content-column {
+        width: 100%;
+        padding: 0;
+    }
+
+    /* Reset negative margins that cause overlap in single-column layout */
+    .inner-page .program-details-row #program-details,
+    .inner-page .program-details-body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .inner-page .page-section-row {
+        flex-direction: column;
+        padding: 0 40px;
+    }
+
+    .inner-page .page-section-content {
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    .inner-page .page-section-spacer {
+        display: none;
+    }
+
+    .inner-page .page-subtitle {
+        font-size: 3.5rem;
+        line-height: 3.5rem;
+    }
+
+    /* Images - switch to single column flow */
+    .inner-page .page-image-container {
+        position: relative;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 40px;
+        margin: 20px 0;
+    }
+
+    .inner-page .page-image-wrapper {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        width: 100%;
+        margin: 0;
+        overflow: visible;
+        cursor: pointer;
+    }
+
+    .inner-page .page-image-wrapper.page-image-wrapper-2 {
+        left: auto;
+        width: 100%;
+    }
+
+    /* Section images - flow in column */
+    .inner-page .page-section-image-wrapper {
+        position: relative;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        margin: 20px 0;
+        overflow: visible;
+        cursor: pointer;
+    }
+
+    .inner-page .page-section-image-wrapper::before,
+    .inner-page .page-section-image-wrapper::after {
+        display: none !important;
+    }
+
+    /* Ensure captions show on hover with CSS as backup */
+    .inner-page .page-image-wrapper:hover .image-caption,
+    .inner-page .page-section-image-wrapper:hover .image-caption {
+        opacity: 1;
+    }
+
+    /* Hide section content decorative elements */
+    .inner-page .page-section-content::after {
+        opacity: 0;
+    }
+
+    /* Side notes - reset absolute positioning to flow in single column */
+    .inner-page .page-section-content .page-side-note {
+        position: relative;
+        right: auto;
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    /* Reduce large margins on section rows */
+    .inner-page .page-section-row-ab {
+        margin-bottom: 3rem;
+    }
+
+    .inner-page .page-section-row-cd {
+        margin-bottom: 3rem;
+    }
+}
+
+/* Responsive: Staff page - sections in one row at 841px-1024px */
+@media (max-width: 1024px) and (min-width: 841px) {
+    .page-staff.inner-page .page-header-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 3rem;
+    }
+
+    .page-staff .page-title-group {
+        width: 100%;
+        flex: none;
+    }
+
+    .page-staff .staff-head-section {
+        flex: none;
+        width: auto;
+    }
+
+    .page-staff .staff-head-text {
+        position: relative;
+        top: auto;
+        margin: 0;
+        padding: 0 1rem;
+        background: transparent;
+    }
+
+    .page-staff .staff-head-image-wrapper {
+        display: none;
+    }
+
+    .page-staff .staff-admin-section {
+        position: relative;
+        top: auto;
+        left: auto;
+        padding: 0 1rem;
+    }
+
+    .page-staff .staff-senior-grid {
+        margin-top: 5rem;
+    }
+}
+
+/* Responsive: Staff page - senior grid at 1224px */
+@media (max-width: 1224px) and (min-width: 841px) {
+    .page-staff .staff-senior-row {
+        padding: 2rem 4rem;
+    }
+
+    .page-staff .staff-senior-row:nth-child(2) {
+        padding: 1rem 8rem;
+    }
+}
+
+/* Responsive: 768px and below - show every 5th number */
+@media (max-width: 768px) {
+    /* Hide all except 0, 5, 10, 15, 20, 25 */
+    .ruler-top span,
+    .ruler-bottom span {
+        visibility: hidden;
+    }
+    .ruler-top span:nth-child(5n+1),
+    .ruler-bottom span:nth-child(5n+1),
+    .ruler-top span:last-child,
+    .ruler-bottom span:last-child {
+        visibility: visible;
+    }
+
+    /* Hide all except 0, 5, 10, 15 in vertical rulers */
+    .ruler-left span,
+    .ruler-right span {
+        visibility: hidden;
+    }
+    .ruler-left span:nth-child(5n+1),
+    .ruler-right span:nth-child(5n+1) {
+        visibility: visible;
+    }
+
+    /* Keep ruler nav links visible */
+    .ruler-right span.ruler-nav {
+        visibility: visible;
+    }
+
+    /* Show + at positions aligned with 0, 5, 10, 15, 20, 25 (positions 1, 3, 5, 7, 9, 11) */
+    .plus-row .plus {
+        visibility: hidden;
+    }
+    .plus-row .plus:nth-child(1),
+    .plus-row .plus:nth-child(3),
+    .plus-row .plus:nth-child(5),
+    .plus-row .plus:nth-child(7),
+    .plus-row .plus:nth-child(9),
+    .plus-row .plus:nth-child(11) {
+        visibility: visible;
+    }
+
+    /* Hide parallax images on mobile and remove extra space */
+    .parallax-images {
+        display: none !important;
+        height: 0 !important;
+    }
+
+    .parallax-content {
+        padding-bottom: 0 !important;
+    }
+
+    .parallax-container {
+        overflow: visible;
+    }
+
+    .parallax-spacer {
+        display: none;
+    }
+
+    /* Show image carousel when parallax is hidden - same as mobile */
+    .page-guidelines .image-carousel {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding: 0 2rem;
+    }
+
+    .page-guidelines .carousel-arrow {
+        display: none;
+    }
+
+    .page-guidelines .carousel-main {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .page-guidelines .carousel-main-image {
+        height: auto;
+        aspect-ratio: 16/10;
+    }
+
+    .page-guidelines .carousel-main-image > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .page-guidelines .carousel-caption {
+        position: relative;
+        font-size: 14px;
+        padding: 0.5rem 0;
+        background: none;
+        color: #EF0004;
+        text-align: right;
+    }
+
+    .page-guidelines .carousel-thumbnails-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .page-guidelines .carousel-thumbnails-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+    .page-guidelines .carousel-thumbnails {
+        gap: 0.5rem;
+    }
+
+    .page-guidelines .carousel-thumb {
+        width: 60px;
+        height: 42px;
+    }
+
+    .page-guidelines .carousel-thumb.active {
+        width: 80px;
+        height: 56px;
+    }
+
+    /* Ensure image captions show on hover at 768px */
+    .inner-page .page-image-wrapper,
+    .inner-page .page-section-image-wrapper {
+        overflow: visible;
+        cursor: pointer;
+    }
+
+    .inner-page .page-image-wrapper:hover .image-caption,
+    .inner-page .page-section-image-wrapper:hover .image-caption {
+        opacity: 1;
+    }
+}
+
+/* Responsive: 480px and below - mobile view */
+@media (max-width: 480px) {
+    /* Show images on mobile - reposition to avoid overlap */
+    .homepage-scroll-container {
+        display: block;
+        left: 15px !important;
+        right: 15px !important;
+    }
+
+    /* Images on mobile - bigger sizes, staggered vertically to prevent overlap */
+    .homepage-screen .image-wrapper {
+        width: 50% !important;
+        top: -6% !important;
+        left: auto !important;
+        right: 3% !important;
+        bottom: auto !important;
+    }
+    .homepage-screen .image-wrapper-2 {
+        width: 46% !important;
+        top: 38% !important;
+        bottom: auto !important;
+        left: -5% !important;
+        right: auto !important;
+    }
+    .homepage-screen .image-wrapper-3 {
+        width: 42% !important;
+        top: 72% !important;
+        bottom: auto !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+    }
+
+    /* Hide side rulers completely */
+    .ruler-left,
+    .ruler-right {
+        display: none !important;
+    }
+
+    /* Rulers: position container and use absolute positioning for visible numbers */
+    .ruler-top,
+    .ruler-bottom {
+        left: 15px !important;
+        right: 15px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        display: block !important;
+        position: fixed;
+        height: 25px !important;
+        z-index: 1000 !important;
+    }
+
+    /* Background rectangles for rulers to cover content */
+    .ruler-top::before,
+    .ruler-bottom::before {
+        content: '' !important;
+        display: block !important;
+        position: absolute !important;
+        left: -15px !important;
+        right: -15px !important;
+        background: #FCFCFB !important;
+        z-index: 1 !important;
+    }
+
+    /* Ruler text needs to be above background */
+    .ruler-top span,
+    .ruler-bottom span {
+        z-index: 2 !important;
+    }
+
+    .ruler-top::before {
+        top: -10px !important;
+        bottom: -5px !important;
+        height: auto !important;
+    }
+
+    .ruler-bottom::before {
+        top: -5px !important;
+        bottom: -10px !important;
+        height: auto !important;
+    }
+
+    /* Lines below rulers (highest z-index to appear above content) */
+    .ruler-top::after,
+    .ruler-bottom::after {
+        content: '' !important;
+        display: block !important;
+        position: absolute !important;
+        left: -15px !important;
+        right: -15px !important;
+        height: 1px !important;
+        background: #000 !important;
+        z-index: 1001 !important;
+    }
+
+    .ruler-top::after {
+        bottom: -5px !important;
+    }
+
+    .ruler-bottom::after {
+        top: -5px !important;
+    }
+
+    .ruler-top {
+        top: 5px !important;
+    }
+
+    .ruler-bottom {
+        display: block !important;
+        bottom: 5px !important;
+    }
+
+    /* Hide all ruler spans first */
+    .ruler-top span,
+    .ruler-bottom span {
+        display: none !important;
+        visibility: hidden !important;
+        position: absolute !important;
+    }
+
+    /* Show and position 0, 5, 10, 15, 20 - using absolute positioning (LTR order) */
+    .ruler-top span:nth-child(1),
+    .ruler-bottom span:nth-child(1) {
+        display: block !important;
+        visibility: visible !important;
+        left: 0 !important;
+        right: auto !important;
+    }
+
+    .ruler-top span:nth-child(6),
+    .ruler-bottom span:nth-child(6) {
+        display: block !important;
+        visibility: visible !important;
+        left: 25% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .ruler-top span:nth-child(11),
+    .ruler-bottom span:nth-child(11) {
+        display: block !important;
+        visibility: visible !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .ruler-top span:nth-child(16),
+    .ruler-bottom span:nth-child(16) {
+        display: block !important;
+        visibility: visible !important;
+        left: 75% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .ruler-top span:nth-child(21),
+    .ruler-bottom span:nth-child(21) {
+        display: block !important;
+        visibility: visible !important;
+        left: auto !important;
+        right: 0 !important;
+    }
+
+    /* Plus grid: 5 columns x 6 rows */
+    .plus-grid {
+        left: 15px !important;
+        right: 15px !important;
+        top: 35px !important;
+        bottom: 35px !important;
+    }
+
+    /* Hide 7th row */
+    .plus-row:nth-child(7) {
+        display: none !important;
+    }
+
+    /* Make rows use block display with relative positioning */
+    .plus-row {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+
+    /* Redistribute 6 rows evenly */
+    .plus-row:nth-child(1) { top: 0; }
+    .plus-row:nth-child(2) { top: 20%; }
+    .plus-row:nth-child(3) { top: 40%; }
+    .plus-row:nth-child(4) { top: 60%; }
+    .plus-row:nth-child(5) { top: 80%; }
+    .plus-row:nth-child(6) { top: auto; bottom: 25px; }
+
+    /* Hide all plus signs first, position absolutely */
+    .plus-row .plus {
+        display: none !important;
+        visibility: hidden !important;
+        position: absolute !important;
+    }
+
+    /* Position 5 plus signs across each row (LTR order) */
+    .plus-row .plus:nth-child(1) {
+        display: block !important;
+        visibility: visible !important;
+        left: 0 !important;
+        right: auto !important;
+    }
+
+    .plus-row .plus:nth-child(4) {
+        display: block !important;
+        visibility: visible !important;
+        left: 25% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .plus-row .plus:nth-child(7) {
+        display: block !important;
+        visibility: visible !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .plus-row .plus:nth-child(10) {
+        display: block !important;
+        visibility: visible !important;
+        left: 75% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .plus-row .plus:nth-child(13) {
+        display: block !important;
+        visibility: visible !important;
+        left: auto !important;
+        right: 0 !important;
+    }
+
+    /* Border frame adjustment - hide all borders, rulers provide the lines */
+    .border-frame {
+        left: 0 !important;
+        right: 0 !important;
+        top: 35px;
+        bottom: 35px;
+        border: none !important;
+    }
+
+    /* ========== Inner Page Mobile Styles ========== */
+
+    /* Prevent horizontal scroll */
+    .inner-page {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+
+    /* Inner page: show top and bottom rulers in mobile */
+    .inner-page .ruler-top {
+        display: block !important;
+        left: 15px !important;
+        right: 15px !important;
+        top: 5px !important;
+    }
+
+    .inner-page .ruler-bottom {
+        display: block !important;
+        left: 15px !important;
+        right: 15px !important;
+        bottom: 5px !important;
+    }
+
+    /* Inner page ruler spans: inner page has 16 spans (0-15), show 0, 5, 10, 15 */
+    .inner-page .ruler-top span,
+    .inner-page .ruler-bottom span {
+        display: none !important;
+        visibility: hidden !important;
+        position: absolute !important;
+    }
+
+    .inner-page .ruler-top span:nth-child(1),
+    .inner-page .ruler-bottom span:nth-child(1) {
+        display: block !important;
+        visibility: visible !important;
+        left: 0 !important;
+        right: auto !important;
+    }
+
+    .inner-page .ruler-top span:nth-child(6),
+    .inner-page .ruler-bottom span:nth-child(6) {
+        display: block !important;
+        visibility: visible !important;
+        left: 33.33% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .inner-page .ruler-top span:nth-child(11),
+    .inner-page .ruler-bottom span:nth-child(11) {
+        display: block !important;
+        visibility: visible !important;
+        left: 66.66% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .inner-page .ruler-top span:nth-child(16),
+    .inner-page .ruler-bottom span:nth-child(16) {
+        display: block !important;
+        visibility: visible !important;
+        left: auto !important;
+        right: 0 !important;
+    }
+
+    /* Inner page border frame - horizontal lines only, edge to edge */
+    .inner-page .border-frame {
+        left: 0 !important;
+        right: 0 !important;
+        top: 35px !important;
+        bottom: 35px !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+
+    /* Inner page plus grid positioning */
+    .inner-page .plus-grid {
+        left: 15px !important;
+        right: 15px !important;
+        top: 35px !important;
+        bottom: 35px !important;
+    }
+
+    /* Inner page has 5 rows - redistribute evenly */
+    .inner-page .plus-row {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+
+    .inner-page .plus-row:nth-child(1) { top: 0 !important; }
+    .inner-page .plus-row:nth-child(2) { top: 25% !important; }
+    .inner-page .plus-row:nth-child(3) { top: 50% !important; }
+    .inner-page .plus-row:nth-child(4) { top: 75% !important; }
+    .inner-page .plus-row:nth-child(5) { top: auto !important; bottom: 0 !important; }
+
+    /* Inner page plus signs: has 7 plus signs per row, show 5 */
+    .inner-page .plus-row .plus {
+        display: none !important;
+        visibility: hidden !important;
+        position: absolute !important;
+    }
+
+    .inner-page .plus-row .plus:nth-child(1) {
+        display: block !important;
+        visibility: visible !important;
+        left: 0 !important;
+        right: auto !important;
+    }
+
+    .inner-page .plus-row .plus:nth-child(2) {
+        display: block !important;
+        visibility: visible !important;
+        left: 25% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .inner-page .plus-row .plus:nth-child(4) {
+        display: block !important;
+        visibility: visible !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .inner-page .plus-row .plus:nth-child(6) {
+        display: block !important;
+        visibility: visible !important;
+        left: 75% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+    }
+
+    .inner-page .plus-row .plus:nth-child(7) {
+        display: block !important;
+        visibility: visible !important;
+        left: auto !important;
+        right: 0 !important;
+    }
+
+    /* Page header title */
+    .inner-page .page-header-link {
+        right: 15px !important;
+        top: 8px !important;
+    }
+
+    .inner-page .page-header-title {
+        font-size: 14px;
+        padding: 0 8px;
+    }
+
+    /* Page content - prevent overflow, consistent padding */
+    .inner-page .page-content {
+        padding: 50px 15px 60px 15px !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Page header row - stack vertically */
+    .inner-page .page-header-row {
+        flex-direction: column !important;
+        gap: 20px !important;
+        margin-top: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Page title group */
+    .inner-page .page-title-group {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .inner-page .page-title {
+        font-size: 48px !important;
+        line-height: 1 !important;
+        padding-bottom: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .inner-page .page-title-arrow {
+        font-size: 48px !important;
+        line-height: 1 !important;
+    }
+
+    /* Page intro - full width, consistent alignment */
+    .inner-page .page-intro {
+        padding: 10px 0 !important;
+        font-size: 16px !important;
+        line-height: 24px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+        position: relative !important;
+    }
+
+    .inner-page .page-intro p {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        text-align: right !important;
+    }
+
+    .inner-page .page-intro-background {
+        display: none !important;
+    }
+
+    /* Page images - full width, no overlap, stacked vertically */
+    .inner-page .page-image-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 30px !important;
+        margin: 30px 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: relative !important;
+        height: auto !important;
+    }
+
+    .inner-page .page-image-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+    }
+
+    .inner-page .page-image-wrapper img {
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+    }
+
+    /* Mobile: Remove gradient map, show original image and caption below */
+    .inner-page .page-image-wrapper,
+    .inner-page .page-section-image-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .inner-page .page-image-wrapper .gradient-map-image,
+    .inner-page .page-section-image-wrapper .gradient-map-image {
+        display: none !important;
+    }
+
+    .inner-page .page-image-wrapper .original-image,
+    .inner-page .page-section-image-wrapper .original-image {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        opacity: 1 !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        order: 1 !important;
+    }
+
+    .inner-page .page-image-wrapper .image-caption,
+    .inner-page .page-section-image-wrapper .image-caption {
+        position: relative !important;
+        top: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        opacity: 1 !important;
+        display: block !important;
+        color: #109955 !important;
+        background: none !important;
+        padding: 8px 0 !important;
+        font-size: 14px !important;
+        line-height: 18px !important;
+        text-align: right !important;
+        order: 2 !important;
+        width: 100% !important;
+    }
+
+    .inner-page .page-image-wrapper.page-image-wrapper-2 {
+        margin-top: 0 !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
+    }
+
+    /* Hide all desktop background rectangles (::before and ::after) */
+    .inner-page .page-image-wrapper::before,
+    .inner-page .page-image-wrapper::after,
+    .inner-page .page-section-image-wrapper::before,
+    .inner-page .page-section-image-wrapper::after,
+    .inner-page .page-section-row::before,
+    .inner-page .page-section-row::after,
+    .inner-page .page-section-content::before,
+    .inner-page .page-section-content::after,
+    .inner-page .page-intro-background {
+        display: none !important;
+        content: '' !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+        background: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        z-index: -9999 !important;
+    }
+
+    /* Program details - full width, same alignment as intro */
+    .inner-page .program-details-row {
+        padding: 20px 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        flex-direction: column !important;
+        gap: 0 !important;
+    }
+
+    .inner-page .program-details-title-column,
+    .inner-page .program-details-content-column {
+        width: 100% !important;
+        margin-right: 0 !important;
+    }
+
+    .inner-page .program-details-row p,
+    .inner-page .program-details-row #program-details,
+    .inner-page .program-details-body {
+        font-size: 16px !important;
+        line-height: 24px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: right !important;
+    }
+
+    /* Section rows - stack vertically, no overlap */
+    .inner-page .page-section-row {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        margin: 30px 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: relative !important;
+    }
+
+    .inner-page .page-section-row-cd {
+        margin-bottom: 30px !important;
+    }
+
+    .inner-page .page-section-content {
+        order: 1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        flex: none !important;
+        position: relative !important;
+    }
+
+    .inner-page .page-section-spacer {
+        order: 3 !important;
+        width: 100% !important;
+        flex: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        position: relative !important;
+        pointer-events: auto !important;
+    }
+
+    .inner-page .page-section-spacer .page-side-note {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+    }
+
+    .inner-page .page-section-spacer br {
+        display: none !important;
+    }
+
+    /* Hide the desktop spacer side notes in mobile for CD section */
+    .inner-page .page-section-row-cd .page-section-spacer {
+        display: none !important;
+    }
+
+    /* Show mobile-only side notes */
+    .inner-page .mobile-side-notes {
+        display: block !important;
+        margin-top: 20px !important;
+    }
+
+    .inner-page .mobile-side-notes .page-side-note {
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+        right: auto !important;
+    }
+
+    /* Section images - full width, no absolute positioning */
+    .inner-page .page-section-image-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        z-index: 1 !important;
+    }
+
+    .inner-page .page-section-image-wrapper img {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Original image shown, gradient hidden - handled above in mobile image section */
+
+    .inner-page .page-section-image-wrapper-1 {
+        order: 2 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
+    }
+
+    .inner-page .page-section-image-wrapper-2 {
+        order: 2 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
+    }
+
+    .inner-page .page-section-image-wrapper-3 {
+        order: 2 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
+    }
+
+    .inner-page .page-section-image-wrapper-4 {
+        order: 2 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
+    }
+
+    .inner-page .page-section-image-wrapper-5 {
+        order: 2 !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
+    }
+
+    /* Section subtitle */
+    .inner-page .page-subtitle {
+        font-size: 48px !important;
+        line-height: 1 !important;
+        margin-bottom: 20px !important;
+    }
+
+    .inner-page .page-subtitle-arrow {
+        font-size: 48px !important;
+        line-height: 1 !important;
+    }
+
+    /* Section content text - same width/alignment as intro */
+    .inner-page .page-section-content p {
+        font-size: 16px !important;
+        line-height: 24px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 15px 0 !important;
+        text-align: right !important;
+    }
+
+    .inner-page .page-section-content h4 {
+        font-size: 18px !important;
+        margin-top: 20px !important;
+        width: 100% !important;
+        text-align: right !important;
+    }
+
+    .inner-page .list-p {
+        font-size: 16px !important;
+        line-height: 24px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        text-align: right !important;
+        padding-right: 0 !important;
+    }
+
+    .inner-page .list-p li {
+        margin-bottom: 8px !important;
+    }
+
+    /* Side notes - reset absolute positioning, display in flow */
+    .inner-page .page-side-note {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        font-size: 14px !important;
+        line-height: 20px !important;
+        padding: 10px 0 !important;
+        margin: 15px 0 !important;
+        box-sizing: border-box !important;
+        text-align: right !important;
+        display: block !important;
+    }
+
+    .inner-page .page-section-content .page-side-note {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 15px 0 !important;
+    }
+
+    /* Ensure all text content flows naturally without overlap */
+    .inner-page .page-section-content p,
+    .inner-page .page-section-content h4,
+    .inner-page .page-section-content .list-p {
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    /* ========== Staff Page Mobile Styles ========== */
+
+    /* Head of Department Section */
+    .staff-head-section {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .staff-head-text {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        text-align: right !important;
+        padding: 0 6rem 1rem 1rem !important;
+        margin: 0 !important;
+    }
+
+    .staff-head-title {
+        font-size: 16px !important;
+        line-height: 20px !important;
+    }
+
+    .staff-head-section .staff-head-name {
+        font-size: 18px !important;
+        display: block !important;
+        text-align: right !important;
+    }
+
+    .staff-head-image-wrapper {
+        display: none !important;
+    }
+
+    /* Admin Section */
+    .staff-admin-section {
+        text-align: right !important;
+        top: 22rem !important;
+        left: 20% !important;
+    }
+
+    .staff-admin-title {
+        font-size: 16px !important;
+    }
+
+    .staff-admin-name {
+        font-size: 18px !important;
+    }
+
+    /* Senior Staff Grid - 2 columns */
+    .staff-senior-grid {
+        display: grid !important;
+        grid-template-columns: auto auto !important;
+        gap: 30px 30px !important;
+        padding: 10px 0.5rem 0 0.5rem !important;
+        justify-content: center !important;
+        justify-items: start !important;
+        margin-top: 13rem !important;
+    }
+
+    .staff-senior-row {
+        display: contents !important;
+    }
+
+    .staff-senior-item {
+        text-align: right !important;
+    }
+
+    .staff-senior-name-row {
+        justify-content: flex-start !important;
+    }
+
+    .staff-senior-name {
+        font-size: 18px !important;
+    }
+
+    .staff-senior-desc {
+        font-size: 14px !important;
+    }
+
+    .staff-senior-item-offset {
+        margin: 30px auto 70px auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    /* Lecturers Section */
+    .staff-lecturers-section {
+        margin-top: 0 !important;
+        padding: 0 0.5rem !important;
+    }
+
+    .staff-lecturers-header {
+        flex-direction: column !important;
+        align-items: center !important;
+        margin-bottom: 20px !important;
+        padding-top: 4rem !important;
+    }
+
+    .staff-lecturers-title {
+        font-size: 36px !important;
+        line-height: 40px !important;
+    }
+
+    .staff-lecturers-arrow {
+        font-size: 36px !important;
+        line-height: 40px !important;
+        margin-bottom: 0 !important;
+        margin-top: 10px !important;
+    }
+
+    /* Lecturers List - alternating 2-1-2-1 pattern */
+    .staff-lecturers-list {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .staff-lecturers-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        gap: 10px 0 !important;
+        padding: 8px 0.5rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .staff-lecturer-name {
+        font-size: 16px !important;
+        text-align: center !important;
+        min-width: unset !important;
+        flex: unset !important;
+        width: auto !important;
+    }
+
+    /* Single name rows - center the name */
+    .staff-lecturers-row:nth-child(even) {
+        justify-content: center !important;
+    }
+
+    /* Odd rows (1st, 3rd, 5th...) - show 2 names */
+    .staff-lecturers-row:nth-child(odd) .staff-lecturer-name:nth-child(n+3) {
+        display: none !important;
+    }
+
+    /* Even rows (2nd, 4th, 6th...) - show 1 name */
+    .staff-lecturers-row:nth-child(even) .staff-lecturer-name:nth-child(n+2) {
+        display: none !important;
+    }
+
+    /* ========== Guidelines Page Mobile Styles ========== */
+
+    /* Guidelines page intro */
+    .page-guidelines .page-intro {
+        padding: 10px 0 !important;
+    }
+
+    /* Grade Scale Section */
+    .grade-scale {
+        margin-top: 2rem !important;
+    }
+
+    .grade-row {
+        padding: 1.5rem 0 !important;
+    }
+
+    /* Reset staggered positioning for mobile */
+    .grade-scale > .grade-row:nth-child(3n+1),
+    .grade-scale > .grade-row:nth-child(3n+2),
+    .grade-scale > .grade-row:nth-child(3n) {
+        padding-right: 0 !important;
+    }
+
+    .grade-item {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .grade-range {
+        font-size: 36px !important;
+        line-height: 40px !important;
+    }
+
+    .grade-title {
+        font-size: 16px !important;
+        line-height: 18px !important;
+    }
+
+    .grade-desc {
+        font-size: 16px !important;
+        line-height: 22px !important;
+    }
+
+    /* Guidelines Section (ממוצע ציוני השנה) */
+    .guidelines-section {
+        padding: 1.5rem 0 !important;
+        margin-top: 1rem !important;
+    }
+
+    .guidelines-section-title {
+        font-size: 18px !important;
+        line-height: 20px !important;
+    }
+
+    .guidelines-section-desc {
+        font-size: 16px !important;
+        line-height: 22px !important;
+    }
+
+    /* Guidelines Side Note */
+    .guidelines-side-note {
+        padding: 1rem 0 !important;
+        font-size: 16px !important;
+        line-height: 20px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        flex: none !important;
+    }
+
+    .guidelines-side-note span {
+        display: inline !important;
+    }
+
+    /* Guidelines Images Section - stack vertically */
+    .guidelines-images-section {
+        position: relative !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+
+    .guidelines-image-wrapper {
+        position: relative !important;
+        width: 100% !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        top: auto !important;
+        padding: 0 !important;
+        background: none !important;
+    }
+
+    .guidelines-image-1,
+    .guidelines-image-2 {
+        width: 100% !important;
+        left: auto !important;
+        bottom: auto !important;
+        padding: 0 !important;
+        background: none !important;
+    }
+
+    .guidelines-image-wrapper .gradient-map-image {
+        display: none !important;
+    }
+
+    .guidelines-image-wrapper .original-image {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        opacity: 1 !important;
+    }
+
+    .guidelines-image-wrapper .image-caption {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        opacity: 1 !important;
+        background: none !important;
+        color: #109955 !important;
+        padding: 8px 0 !important;
+        font-size: 14px !important;
+        text-align: right !important;
+    }
+
+    /* Guidelines Transition Section */
+    .guidelines-transition-section {
+        margin-top: 3rem !important;
+        padding: 0 !important;
+    }
+
+    .guidelines-transition-section .page-subtitle {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .guidelines-transition-row {
+        padding: 1rem 0 !important;
+    }
+
+    /* Reset staggered positioning for mobile */
+    .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+2),
+    .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+3),
+    .guidelines-transition-section > .guidelines-transition-row:nth-child(3n+1):not(:first-child),
+    .guidelines-transition-section > .guidelines-transition-row.row-padding-2,
+    .guidelines-transition-section > .guidelines-transition-row.row-padding-3 {
+        padding-right: 0 !important;
+    }
+
+    .guidelines-transition-item {
+        max-width: 100% !important;
+        font-size: 16px !important;
+        line-height: 22px !important;
+    }
+
+    .guidelines-transition-item b {
+        font-size: 18px !important;
+        line-height: 24px !important;
+    }
+
+    .guidelines-transition-subtitle {
+        font-size: 18px !important;
+        line-height: 20px !important;
+    }
+
+    .guidelines-numbered-list li {
+        font-size: 16px !important;
+        line-height: 22px !important;
+    }
+
+    .guidelines-numbered-list li::before {
+        font-size: 16px !important;
+        line-height: 22px !important;
+    }
+
+    .guidelines-side-note-inline {
+        font-size: 16px !important;
+        line-height: 20px !important;
+        width: 100% !important;
+    }
+
+    /* Image Carousel Mobile - show only on mobile */
+    .image-carousel {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1rem !important;
+        margin-top: 2rem !important;
+        padding: 0 !important;
+    }
+
+    .carousel-arrow {
+        display: none !important;
+    }
+
+    .carousel-main {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .carousel-main-image {
+        height: auto !important;
+        aspect-ratio: 16/10 !important;
+    }
+
+    .carousel-main-image > img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .carousel-caption {
+        position: relative !important;
+        font-size: 14px !important;
+        padding: 0.5rem 0 !important;
+        background: none !important;
+        color: #109955 !important;
+        text-align: right !important;
+    }
+
+    .carousel-thumbnails-wrapper {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    .carousel-thumbnails-wrapper::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .carousel-thumbnails {
+        gap: 0.5rem !important;
+    }
+
+    .carousel-thumb {
+        width: 60px !important;
+        height: 42px !important;
+    }
+
+    .carousel-thumb.active {
+        width: 80px !important;
+        height: 56px !important;
+    }
+}
+
+/* ========== Staff Page Styles ========== */
+
+/* Head of Department Section */
+.staff-head-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    flex: 6;
+}
+
+.staff-head-text {
+    text-align: right;
+    position: absolute;
+    top: 5rem;
+    z-index: 2;
+    padding: 0 1.5rem 1rem 1rem;
+    background: #FCFCFB;
+    margin: 0 13rem 0 0;
+}
+
+.staff-head-title {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 23.75px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27.313px;
+    margin: 0 0 0.5rem 0;
+}
+
+.staff-head-name {
+    color: #000;
+    text-align: center;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+}
+
+.staff-head-image-wrapper {
+    position: relative;
+    width: 28%;
+    margin-top: 7.5rem;
+    margin-bottom: 5rem;
+    cursor: pointer;
+    isolation: isolate;
+    opacity: 0;
+}
+
+.staff-head-image-wrapper .gradient-map-image,
+.staff-head-image-wrapper .original-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.staff-head-image-wrapper .gradient-map-image {
+    filter: url(#gradient-map);
+    transition: opacity 0.3s ease;
+}
+
+.staff-head-image-wrapper .original-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Administrative Coordinators Section */
+.staff-admin-section {
+    position: absolute;
+    top: 26rem;
+    left: 29%;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.staff-admin-title {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 23.75px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27.313px;
+    margin: 0 0 0.5rem 0;
+}
+
+.staff-admin-name {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 25px;
+    letter-spacing: 0.01em;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+}
+
+/* Senior Lecturers Grid */
+.staff-senior-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 17rem;
+}
+
+.staff-senior-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 3rem 11rem;
+}
+
+/* Row 2: offset to position between row 1 items */
+.staff-senior-row:nth-child(2) {
+    padding: 1rem 22rem;
+}
+
+.staff-senior-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: right;
+}
+
+.staff-senior-name-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    direction: ltr;
+}
+
+.staff-senior-name {
+    color: #000;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+}
+
+.staff-senior-name-row svg {
+    flex-shrink: 0;
+    transform: rotate(-90deg);
+}
+
+.staff-senior-desc {
+    color: #000;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-top: 0.25rem;
+}
+
+.staff-senior-item-offset {
+    margin-left: -6rem;
+}
+
+/* Lecturers Section */
+.staff-lecturers-section {
+    margin-top: 4rem;
+}
+
+.staff-lecturers-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 0;
+    margin-bottom: 30px;
+}
+
+.staff-lecturers-title {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 72.804px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 76px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0;
+}
+
+.staff-lecturers-arrow {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: flex-end;
+    font-size: 72.804px;
+    line-height: 76px;
+}
+
+.staff-lecturers-arrow svg {
+    width: 0.68em;
+    height: 0.68em;
+    display: block;
+}
+
+.staff-lecturers-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.staff-lecturers-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 7rem;
+    padding: 2rem 0;
+}
+
+
+.staff-lecturer-name {
+    color: #000;
+    text-align: center;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    min-width: 120px;
+}
+
+/* Staff hover image popup */
+.staff-hover-image {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    width: 150px;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    filter: url(#gradient-map);
+    border: none;
+    outline: none;
+    display: block;
+}
+
+.staff-hover-image.visible {
+    opacity: 1;
+}
+
+/* Make hoverable staff names have cursor pointer - only for senior lecturers */
+.staff-head-name[data-image],
+.staff-senior-name[data-image],
+.staff-admin-name[data-image] {
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.staff-head-name[data-image]:hover,
+.staff-senior-name[data-image]:hover,
+.staff-admin-name[data-image]:hover {
+    color: #109955;
+}
+
+/* Change arrow SVG color when hovering names with images - only for senior lecturers */
+.staff-senior-name-row:has(.staff-senior-name[data-image]:hover) svg path {
+    fill: #109955;
+    stroke: #109955;
+}
+
+/* Parallax Section Styles */
+.parallax-container {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    z-index: 1;
+}
+
+.parallax-content {
+    position: relative;
+    z-index: 20;
+    pointer-events: none;
+    background: transparent;
+    will-change: transform;
+    padding-bottom: 23rem;
+}
+
+.parallax-content .guidelines-transition-section {
+    background: transparent;
+    padding: 20px;
+    pointer-events: none;
+}
+
+/* Only text elements with backgrounds should catch pointer events */
+.parallax-content .guidelines-transition-row:last-child .guidelines-transition-subtitle,
+.parallax-content .guidelines-transition-row:last-child .guidelines-transition-item li {
+    pointer-events: auto;
+}
+
+/* Only add background to actual text, not containers */
+.parallax-content .page-subtitle {
+    background: transparent;
+}
+
+.parallax-content .page-subtitle > span {
+    background: transparent;
+    padding: 5px 10px;
+    display: inline;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+.parallax-content .guidelines-transition-row {
+    background: transparent;
+}
+
+.parallax-content .guidelines-transition-item-full {
+    background: transparent;
+}
+
+.parallax-content .guidelines-transition-item-full .guidelines-transition-subtitle,
+.parallax-content .guidelines-transition-item-full p,
+.parallax-content .guidelines-transition-item-full li {
+    background: transparent;
+}
+
+.parallax-content.pinned {
+    position: fixed;
+    top: 60px;
+    left: 60px;
+    right: 60px;
+    background: transparent;
+    z-index: 20;
+}
+
+.parallax-content.pinned .guidelines-transition-section {
+    background: transparent;
+}
+
+.parallax-images {
+    position: relative;
+    margin-top: 0;
+    left: 0;
+    right: 0;
+    z-index: 15;
+    height: 250vh;
+    pointer-events: auto;
+}
+
+/* Spacer element to allow images to fully scroll out before content unsticks */
+.parallax-spacer {
+    height: 0;
+    pointer-events: none;
+}
+
+.parallax-image-wrapper {
+    position: absolute;
+    width: 25%;
+    overflow: hidden;
+}
+
+.parallax-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    filter: url(#gradient-map);
+    transition: filter 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.parallax-image-wrapper:hover .parallax-image {
+    filter: none;
+}
+
+.parallax-image-wrapper .image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 8px 12px;
+    background: #109955;
+    color: #FCFCFB;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: right;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.parallax-image-wrapper:hover .image-caption {
+    opacity: 1;
+}
+
+/* Spread images like homepage - staggered positions */
+.parallax-image-wrapper:nth-child(1) { top: 0%; left: 5%; }
+.parallax-image-wrapper:nth-child(2) { top: 5%; right: 15%; left: auto; width: 21%; }
+.parallax-image-wrapper:nth-child(3) { top: 18%; left: 35%; width: 23%; }
+.parallax-image-wrapper:nth-child(4) { top: 25%; right: 5%; left: auto; width: 28%; }
+.parallax-image-wrapper:nth-child(5) { top: 38%; left: 8%; width: 23%; }
+.parallax-image-wrapper:nth-child(6) { top: 45%; left: 40%; width: 21%; }
+.parallax-image-wrapper:nth-child(7) { top: 52%; right: 10%; left: auto; width: 25%; }
+.parallax-image-wrapper:nth-child(8) { top: 64%; left: 20%; width: 23%; }
+.parallax-image-wrapper:nth-child(9) { top: 72%; right: 25%; left: auto; width: 21%; }
+.parallax-image-wrapper:nth-child(10) { top: 82%; left: 5%; width: 25%; }
+.parallax-image-wrapper:nth-child(11) { top: 90%; left: 40%; width: 23%; }
+.parallax-image-wrapper:nth-child(12) { top: 98%; right: 8%; left: auto; width: 28%; }
+
+/* Guidelines Page Styles */
+.page-guidelines .page-intro {
+    padding: 20px 439px 0 40px;
+}
+
+.grade-scale {
+    margin-top: 4rem;
+}
+
+.grade-row {
+    padding: 2rem 4rem;
+}
+
+/* Staggered positioning for grade rows - cycle of 3 */
+.grade-scale > .grade-row:nth-child(3n+1) {
+    padding-right: 1.3rem;
+}
+
+.grade-scale > .grade-row:nth-child(3n+2) {
+    padding-right: 25rem;
+}
+
+.grade-scale > .grade-row:nth-child(3n) {
+    padding-right: 50rem;
+}
+
+.grade-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 640px;
+}
+
+.grade-range {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+}
+
+.grade-title {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 18px;
+    margin-top: 0.5rem;
+}
+
+.grade-desc {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+    margin: 0.5rem 0 0 0;
+}
+
+/* Guidelines Section (ממוצע ציוני השנה etc.) */
+.guidelines-section {
+    padding: 2rem 1.3rem;
+    margin-top: 2rem;
+}
+
+.guidelines-section-title {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0 0 0.5rem 0;
+}
+
+.guidelines-section-desc {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+    margin: 0;
+}
+
+.guidelines-side-note {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.3rem;
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+/* Guidelines Images Section Container */
+.guidelines-images-section {
+    position: relative;
+    min-height: 28rem;
+}
+
+/* Guidelines Images */
+.guidelines-image-wrapper {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    isolation: isolate;
+}
+
+.guidelines-image-wrapper .gradient-map-image,
+.guidelines-image-wrapper .original-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.guidelines-image-wrapper .gradient-map-image {
+    filter: url(#gradient-map);
+    transition: opacity 0.2s ease-in-out;
+}
+
+.guidelines-image-wrapper .original-image {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    width: calc(100% - 1.5rem);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.guidelines-image-1 {
+    width: 38%;
+    left: 4.5%;
+    bottom: 8rem;
+    z-index: 1;
+    background: #FCFCFB;
+    padding: 1.5rem 0 0 1.5rem;
+}
+
+.guidelines-image-2 {
+    width: 32%;
+    left: 37.4%;
+    bottom: 1.6rem;
+    z-index: 2;
+    background: #FCFCFB;
+    padding: 1.5rem 0 0 1.5rem;
+}
+
+.guidelines-image-wrapper .image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 1.5rem;
+    width: calc(100% - 1.5rem);
+    box-sizing: border-box;
+    background: #109955;
+    color: #FCFCFB;
+    padding: 8px 12px;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Guidelines Transition Section (תנאי המעבר) */
+.guidelines-transition-section {
+    margin-top: 6rem;
+    padding: 0 1.3rem;
+}
+
+.guidelines-transition-section .page-subtitle {
+    margin-bottom: 2rem;
+}
+
+.guidelines-transition-row {
+    padding: 2rem 4rem;
+}
+
+/* Staggered positioning for transition rows - cycle of 3 (offset by 1 for h3.page-subtitle) */
+.guidelines-transition-section > .guidelines-transition-row:nth-child(3n+2) {
+    padding-right: 1.3rem;
+}
+
+.guidelines-transition-section > .guidelines-transition-row:nth-child(3n+3) {
+    padding-right: 25rem;
+}
+
+.guidelines-transition-section > .guidelines-transition-row:nth-child(3n+1):not(:first-child) {
+    padding-right: 50rem;
+}
+
+.guidelines-transition-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 640px;
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+}
+
+.guidelines-transition-item p {
+    margin: 0;
+}
+
+.guidelines-transition-item b {
+    color: #000;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27px;
+}
+
+.guidelines-transition-item b a {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.guidelines-transition-item b a:hover {
+    color: #045B30;
+    text-decoration-color: #045B30;
+}
+
+.guidelines-transition-item b a::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23109955' stroke='%23109955' stroke-width='0.7'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+
+.guidelines-transition-item b a:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23045B30' stroke='%23045B30' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+.guidelines-transition-item-full {
+    flex: 1 1 100%;
+}
+
+.guidelines-transition-subtitle {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0 0 0.75rem 0;
+}
+
+/* Green text and underline styles */
+.green-text {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-weight: 500;
+}
+
+.green-underline {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-weight: 500;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+}
+
+/* Guidelines numbered list */
+.guidelines-numbered-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: list-counter;
+}
+
+.guidelines-numbered-list li {
+    counter-increment: list-counter;
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.guidelines-numbered-list li:last-child {
+    margin-bottom: 0;
+}
+
+.guidelines-numbered-list li::before {
+    content: counter(list-counter) ".";
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    flex-shrink: 0;
+}
+
+/* Override classes for specific row padding positions */
+.guidelines-transition-section > .guidelines-transition-row.row-padding-2 {
+    padding-right: 25rem;
+}
+
+.guidelines-transition-section > .guidelines-transition-row.row-padding-3 {
+    padding-right: 50rem;
+}
+
+/* Inline side note */
+.guidelines-side-note-inline {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    margin: 0;
+    width: 201px;
+}
+
+/* Email links in guidelines */
+.guidelines-transition-item a[href^="mailto:"] {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-weight: 500;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.guidelines-transition-item a[href^="mailto:"]:hover {
+    color: #045B30;
+    text-decoration-color: #045B30;
+}
+
+.guidelines-transition-item a[href^="mailto:"]::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23109955' stroke='%23109955' stroke-width='0.7'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+
+.guidelines-transition-item a[href^="mailto:"]:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23045B30' stroke='%23045B30' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+/* Image Carousel */
+.image-carousel {
+    display: none;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4rem;
+    padding: 2rem 1.3rem;
+    position: relative;
+    z-index: 30;
+    background: #FCFCFB;
+}
+
+.carousel-arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: opacity 0.2s ease;
+}
+
+.carousel-arrow:hover {
+    opacity: 0.7;
+}
+
+.carousel-arrow-prev {
+    align-self: flex-start;
+    margin-top: calc(500px - 67px);
+}
+
+.carousel-arrow-next {
+    align-self: flex-start;
+}
+
+.carousel-main {
+    width: 100%;
+    max-width: 800px;
+}
+
+.carousel-main-image {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background: transparent;
+}
+
+.carousel-main-image > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #109955;
+    color: #FCFCFB;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 24px;
+    padding: 0.75rem 1.5rem;
+    text-align: right;
+}
+
+.carousel-thumbnails-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.carousel-thumbnails {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+    transition: transform 0.4s ease;
+    width: max-content;
+}
+
+.carousel-thumb {
+    width: 80px;
+    height: 56px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.2s ease;
+    opacity: 0.8;
+    flex-shrink: 0;
+}
+
+.carousel-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.3s ease;
+}
+
+.carousel-thumb img.gradient-map-image {
+    filter: url(#gradient-map);
+}
+
+.carousel-thumb:hover {
+    opacity: 1;
+}
+
+.carousel-thumb.active {
+    width: 100px;
+    height: 70px;
+    opacity: 1;
+}
+
+.carousel-thumb.active img {
+    filter: none;
+}
+
+/* ========== Courses Page Styles ========== */
+
+/* Courses Header Row - positioned relative for absolute children */
+.courses-header-row.page-header-row {
+    position: relative;
+}
+
+/* Semester header rows (not the first one with page title) */
+.semester-header-row {
+    margin-top: 4rem;
+    min-height: 200px;
+}
+
+/* Year Column - positioned in middle area */
+.courses-year-column {
+    position: absolute;
+    right: 34.33%;
+    top: 0;
+    padding-top: 28.3px;
+    text-align: right;
+}
+
+/* Semester Column - positioned in left area */
+.courses-semester-column {
+    position: absolute;
+    right: 67.66%;
+    top: 0;
+    padding-top: 28.3px;
+    text-align: right;
+}
+
+/* 3-Column Grid for courses */
+.courses-column {
+    flex: 1;
+    padding: 0 2rem;
+}
+
+.courses-column-right {
+    text-align: right;
+}
+
+.courses-column-middle {
+    text-align: right;
+}
+
+.courses-column-left {
+    text-align: right;
+}
+
+/* Year Section */
+.courses-year-section {
+    margin-top: 0;
+}
+
+/* Course Type Title (for Years 3+4 combined header - right column) */
+.courses-type-title {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0;
+}
+
+.courses-type-subtitle {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    display: block;
+}
+
+/* Year Title */
+.courses-year-title {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0;
+    padding-right: 1rem;
+}
+
+/* Year Subtitle (for course type like קורסי סטודיו / קורסי בחירה) */
+.courses-year-subtitle {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    display: block;
+    padding-right: 1rem;
+}
+
+/* Semester Title */
+.courses-semester-title {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0;
+    padding-right: 1rem;
+}
+
+.courses-semester-number {
+    color: #109955;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    display: block;
+    padding-right: 1rem;
+}
+
+/* Courses Grid */
+.courses-grid {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 2rem;
+    align-items: flex-start;
+}
+
+.courses-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 3rem;
+}
+
+/* Course columns as vertical stacks */
+.courses-grid > .courses-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Short Courses Section Title Row */
+.courses-section-title-row {
+    width: 33.33%;
+    padding: 0 2rem;
+    margin-top: 2rem;
+}
+
+.courses-section-title {
+    color: #109955;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0;
+}
+
+/* Course Item */
+.course-item {
+    cursor: pointer;
+    margin-bottom: 4rem;
+}
+
+/* Course Title */
+.course-title {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 58.243px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 60.8px;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 11%;
+    text-underline-position: from-font;
+    margin: 0 0 0.5rem 0;
+    transition: color 0.2s ease;
+}
+
+.course-item:hover .course-title {
+    color: #109955;
+}
+
+/* Course Points */
+.course-points {
+    color: #000;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 18px;
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Course Lecturers */
+.course-lecturers {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    margin: 0;
+}
+
+/* Course header wrapper - contains title, points, lecturers */
+.course-header {
+    min-height: 240px;
+}
+
+/* Remove min-height when course is open so gap disappears */
+.course-item.open .course-header {
+    min-height: 0;
+}
+
+/* Course Description - Hidden by default with smooth transition */
+.course-description {
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, margin-top 0.4s ease-in-out;
+}
+
+.course-description p {
+    color: #000;
+    text-align: right;
+    font-family: "Narkiss Yair TRIAL", sans-serif;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+    margin: 0;
+}
+
+/* Course Item Open State */
+.course-item.open .course-description {
+    max-height: 1500px;
+    opacity: 1;
+    margin-top: 1rem;
+}
+
+/* Course description image */
+.course-image-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 1rem;
+    overflow: hidden;
+}
+
+.course-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: url(#gradient-map);
+    transition: filter 0.3s ease;
+}
+
+.course-image-wrapper:hover .course-image {
+    filter: none;
+}
+
+.course-image-caption {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 8px 12px;
+    background: #109955;
+    color: #FCFCFB;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: right;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.course-image-wrapper:hover .course-image-caption {
+    opacity: 1;
+}
+
+/* Standalone course image in column (not inside course description) */
+.course-column-image {
+    margin-top: 1.5rem;
+}
+
+/* ============================================
+   PAGE-SPECIFIC COLOR: PROGRAM PAGE (BLUE)
+   Color: #0946E1
+   ============================================ */
+
+/* Background overlays */
+.page-program .ruler-top::after,
+.page-program .ruler-bottom::after,
+.page-program .ruler-left::after,
+.page-program .ruler-right::after {
+    background: #0946E1;
+}
+
+/* Crosshair lines */
+.page-program .crosshair-line {
+    background-color: #0946E1;
+}
+
+.page-program .ruler-nav-tooltip {
+    background: #0946E1;
+}
+
+/* Current page nav link stuck in hover state (no tooltip) */
+.page-program .ruler-right span.ruler-nav:nth-child(2) {
+    color: #0946E1;
+    pointer-events: none;
+    font-size: 18px;
+}
+.page-program .ruler-right span.ruler-nav:nth-child(2)::after {
+    transform: rotate(-90deg);
+    width: 10px;
+    height: 10px;
+    margin-right: 2px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%230946E1' stroke='%230946E1' stroke-width='0.3'/%3E%3C/svg%3E");
+}
+
+/* Page header link hover */
+.page-program .page-header-link:hover .page-header-title {
+    color: #0946E1;
+}
+
+/* Image caption backgrounds */
+.page-program .image-caption {
+    background: #0946E1;
+}
+
+/* Page side notes */
+.page-program .page-section-spacer .page-side-note {
+    color: #0946E1;
+}
+
+.page-program .page-side-note {
+    color: #0946E1;
+}
+
+/* Section headings */
+.page-program .page-section-content h4 {
+    color: #0946E1;
+}
+
+/* Highlight classes - including bold intro highlight */
+.page-program .intro-highlight,
+.page-program .highlight,
+.page-program b .intro-highlight,
+.page-program .page-intro b .intro-highlight {
+    color: #0946E1;
+}
+
+/* Page title */
+.page-program .page-title {
+    color: #0946E1;
+}
+
+/* Page subtitle */
+.page-program .page-subtitle {
+    color: #0946E1;
+}
+
+/* Body h4 */
+.page-program .page-body h4 {
+    color: #0946E1;
+}
+
+/* Links */
+.page-program .page-intro a,
+.page-program .page-body-single a,
+.page-program .page-body a,
+.page-program #program-details b a {
+    color: #0946E1;
+}
+
+/* Link hover state */
+.page-program .page-intro a:hover,
+.page-program .page-body-single a:hover,
+.page-program .page-body a:hover {
+    color: #0635A8;
+    text-decoration-color: #0635A8;
+}
+
+/* Link SVG arrow (::after pseudo-element) - blue version */
+.page-program .page-intro a::after,
+.page-program .page-body-single a::after,
+.page-program .page-body a::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.78491 0.349609V1.72363L2.69409 1.72363L10.947 9.97754L11.1951 10.2246L10.947 10.4717L10.4724 10.9463L10.2253 11.1943L9.97827 10.9463L1.72437 2.69238L1.72437 7.78418H0.350342L0.350342 0.349609L7.78491 0.349609Z' fill='%230946E1' stroke='%230946E1' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+/* Link SVG arrow hover - darker blue */
+.page-program .page-intro a:hover::after,
+.page-program .page-body-single a:hover::after,
+.page-program .page-body a:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.78491 0.349609V1.72363L2.69409 1.72363L10.947 9.97754L11.1951 10.2246L10.947 10.4717L10.4724 10.9463L10.2253 11.1943L9.97827 10.9463L1.72437 2.69238L1.72437 7.78418H0.350342L0.350342 0.349609L7.78491 0.349609Z' fill='%230635A8' stroke='%230635A8' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+/* Intro highlight in bold */
+.page-program .page-body-single b .intro-highlight,
+.page-program #program-details b .intro-highlight {
+    color: #0946E1;
+}
+
+/* Mobile side notes */
+.page-program .mobile-side-notes .page-side-note {
+    color: #0946E1;
+}
+
+/* Stacked notes */
+.page-program .paragraph-with-stacked-notes .stacked-notes .page-side-note {
+    color: #0946E1;
+}
+
+/* List highlights */
+.page-program .list-p {
+    color: #0946E1;
+}
+
+/* List item bullets (+ signs) */
+.page-program .page-section-content li::before,
+.page-program .page-body li::before {
+    color: #0946E1;
+}
+
+/* Mobile responsive overrides for program page */
+@media (max-width: 768px) {
+    .page-program .page-side-note {
+        color: #0946E1 !important;
+    }
+
+    .page-program .page-title {
+        color: #0946E1 !important;
+    }
+
+    .page-program .page-subtitle {
+        color: #0946E1 !important;
+    }
+}
+
+/* Mobile image captions - only at 480px where background is removed */
+@media (max-width: 480px) {
+    .page-program .page-image-wrapper .image-caption,
+    .page-program .page-section-image-wrapper .image-caption {
+        color: #0946E1 !important;
+    }
+}
+
+/* Hide CD section content::after at narrower desktop widths */
+@media (max-width: 1455px) {
+    .page-section-row-cd .page-section-content::after {
+        opacity: 0;
+    }
+}
+
+/* ============================================
+   PAGE-SPECIFIC COLOR: STAFF PAGE (PINK)
+   Color: #F200BA
+   ============================================ */
+
+/* Background overlays */
+.page-staff .ruler-top::after,
+.page-staff .ruler-bottom::after,
+.page-staff .ruler-left::after,
+.page-staff .ruler-right::after {
+    background: #F200BA;
+}
+
+/* Crosshair lines */
+.page-staff .crosshair-line {
+    background-color: #F200BA;
+}
+
+.page-staff .ruler-nav-tooltip {
+    background: #F200BA;
+}
+
+/* Current page nav link stuck in hover state (no tooltip) */
+.page-staff .ruler-right span.ruler-nav:nth-child(3) {
+    color: #F200BA;
+    pointer-events: none;
+    font-size: 18px;
+}
+.page-staff .ruler-right span.ruler-nav:nth-child(3)::after {
+    transform: rotate(-90deg);
+    width: 10px;
+    height: 10px;
+    margin-right: 2px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23F200BA' stroke='%23F200BA' stroke-width='0.3'/%3E%3C/svg%3E");
+}
+
+/* Page header link hover */
+.page-staff .page-header-link:hover .page-header-title {
+    color: #F200BA;
+}
+
+/* Image caption backgrounds */
+.page-staff .image-caption {
+    background: #F200BA;
+}
+
+/* Page title */
+.page-staff .page-title {
+    color: #F200BA;
+}
+
+/* Staff lecturers title */
+.page-staff .staff-lecturers-title {
+    color: #F200BA;
+}
+
+/* Staff name hover - only for senior lecturers */
+.page-staff .staff-head-name[data-image]:hover,
+.page-staff .staff-senior-name[data-image]:hover,
+.page-staff .staff-admin-name[data-image]:hover {
+    color: #F200BA;
+}
+
+/* Staff arrow SVG on hover - only for senior lecturers */
+.page-staff .staff-senior-name-row:has(.staff-senior-name[data-image]:hover) svg path {
+    fill: #F200BA;
+    stroke: #F200BA;
+}
+
+/* Mobile responsive overrides for staff page */
+@media (max-width: 768px) {
+    .page-staff .page-title {
+        color: #F200BA !important;
+    }
+
+    .page-staff .staff-lecturers-title {
+        color: #F200BA !important;
+    }
+
+    .page-staff .page-title-group {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+/* ============================================
+   PAGE-SPECIFIC COLOR: GUIDELINES PAGE (RED)
+   Color: #EF0004
+   ============================================ */
+
+/* Background overlays */
+.page-guidelines .ruler-top::after,
+.page-guidelines .ruler-bottom::after,
+.page-guidelines .ruler-left::after,
+.page-guidelines .ruler-right::after {
+    background: #EF0004;
+}
+
+/* Crosshair lines */
+.page-guidelines .crosshair-line {
+    background-color: #EF0004;
+}
+
+.page-guidelines .ruler-nav-tooltip {
+    background: #EF0004;
+}
+
+/* Current page nav link stuck in hover state (no tooltip) */
+.page-guidelines .ruler-right span.ruler-nav:nth-child(4) {
+    color: #EF0004;
+    pointer-events: none;
+    font-size: 18px;
+}
+.page-guidelines .ruler-right span.ruler-nav:nth-child(4)::after {
+    transform: rotate(-90deg);
+    width: 10px;
+    height: 10px;
+    margin-right: 2px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23EF0004' stroke='%23EF0004' stroke-width='0.3'/%3E%3C/svg%3E");
+}
+
+/* Page header link hover */
+.page-guidelines .page-header-link:hover .page-header-title {
+    color: #EF0004;
+}
+
+/* Image caption backgrounds */
+.page-guidelines .image-caption {
+    background: #EF0004;
+}
+
+/* Page title */
+.page-guidelines .page-title {
+    color: #EF0004;
+}
+
+/* Page subtitle */
+.page-guidelines .page-subtitle {
+    color: #EF0004;
+}
+
+/* Guidelines section title */
+.page-guidelines .guidelines-section-title {
+    color: #EF0004;
+}
+
+/* Grade scale colors */
+.page-guidelines .grade-range {
+    color: #EF0004;
+}
+
+.page-guidelines .grade-title {
+    color: #EF0004;
+}
+
+/* Guidelines side note */
+.page-guidelines .guidelines-side-note {
+    color: #EF0004;
+}
+
+/* Guidelines transition subtitle */
+.page-guidelines .guidelines-transition-subtitle {
+    color: #EF0004;
+}
+
+/* Guidelines image caption */
+.page-guidelines .guidelines-image-wrapper .image-caption {
+    background: #EF0004;
+}
+
+/* Green text and underline classes (override to red) */
+.page-guidelines .green-text {
+    color: #EF0004;
+}
+
+.page-guidelines .green-underline {
+    color: #EF0004;
+}
+
+/* Guidelines numbered list */
+.page-guidelines .guidelines-numbered-list li::before {
+    color: #EF0004;
+}
+
+/* Guidelines side note inline */
+.page-guidelines .guidelines-side-note-inline {
+    color: #EF0004;
+}
+
+/* Guidelines transition item links */
+.page-guidelines .guidelines-transition-item b a {
+    color: #EF0004;
+}
+
+.page-guidelines .guidelines-transition-item b a:hover {
+    color: #B00003;
+    text-decoration-color: #B00003;
+}
+
+.page-guidelines .guidelines-transition-item b a::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23EF0004' stroke='%23EF0004' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+.page-guidelines .guidelines-transition-item b a:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23B00003' stroke='%23B00003' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+/* Email links in guidelines */
+.page-guidelines .guidelines-transition-item a[href^="mailto:"] {
+    color: #EF0004;
+}
+
+.page-guidelines .guidelines-transition-item a[href^="mailto:"]:hover {
+    color: #B00003;
+    text-decoration-color: #B00003;
+}
+
+.page-guidelines .guidelines-transition-item a[href^="mailto:"]::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23EF0004' stroke='%23EF0004' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+.page-guidelines .guidelines-transition-item a[href^="mailto:"]:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.4783 0.349609V1.99316L3.15308 1.99316L15.1951 14.0352L14.947 14.2822L14.283 14.9463L14.0359 15.1943L1.9939 3.15234L1.9939 10.4775H0.350342L0.350342 0.349609L10.4783 0.349609Z' fill='%23B00003' stroke='%23B00003' stroke-width='0.7'/%3E%3C/svg%3E");
+}
+
+/* Parallax image captions */
+.page-guidelines .parallax-image-wrapper .image-caption {
+    background: #EF0004;
+}
+
+/* Mobile responsive overrides for guidelines page */
+@media (max-width: 768px) {
+    .page-guidelines .page-title {
+        color: #EF0004 !important;
+    }
+
+    .page-guidelines .page-subtitle {
+        color: #EF0004 !important;
+    }
+
+    .page-guidelines .guidelines-section-title {
+        color: #EF0004 !important;
+    }
+
+    .page-guidelines .guidelines-side-note {
+        color: #EF0004 !important;
+    }
+
+    .page-guidelines .guidelines-transition-subtitle {
+        color: #EF0004 !important;
+    }
+
+    .page-guidelines .guidelines-image-wrapper .image-caption {
+        color: #EF0004 !important;
+        background: none !important;
+    }
+
+    .page-guidelines .grade-range {
+        color: #EF0004 !important;
+    }
+
+    .page-guidelines .grade-title {
+        color: #EF0004 !important;
+    }
+
+    .page-guidelines .carousel-caption {
+        color: #EF0004 !important;
+    }
+}
+
+/* Hide page-subtitle in page-intro on mobile only */
+@media (max-width: 480px) {
+    .page-guidelines .page-intro .page-subtitle {
+        display: none !important;
+    }
+}
+
+/* ============================================
+   PAGE-SPECIFIC COLOR: COURSES PAGE (ORANGE)
+   Color: #FFAA00
+   ============================================ */
+
+/* Background overlays */
+.page-courses .ruler-top::after,
+.page-courses .ruler-bottom::after,
+.page-courses .ruler-left::after,
+.page-courses .ruler-right::after {
+    background: #FFAA00;
+}
+
+/* Crosshair lines */
+.page-courses .crosshair-line {
+    background-color: #FFAA00;
+}
+
+.page-courses .ruler-nav-tooltip {
+    background: #FFAA00;
+}
+
+/* Current page nav link stuck in hover state (no tooltip) */
+.page-courses .ruler-right span.ruler-nav:nth-child(5) {
+    color: #FFAA00;
+    pointer-events: none;
+    font-size: 18px;
+}
+.page-courses .ruler-right span.ruler-nav:nth-child(5)::after {
+    transform: rotate(-90deg);
+    width: 10px;
+    height: 10px;
+    margin-right: 2px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23FFAA00' stroke='%23FFAA00' stroke-width='0.3'/%3E%3C/svg%3E");
+}
+
+/* Page header link hover */
+.page-courses .page-header-link:hover .page-header-title {
+    color: #FFAA00;
+}
+
+/* Image caption backgrounds */
+.page-courses .image-caption {
+    background: #FFAA00;
+}
+
+/* Page title */
+.page-courses .page-title {
+    color: #FFAA00;
+}
+
+/* Courses year title */
+.page-courses .courses-year-title {
+    color: #FFAA00;
+}
+
+/* Courses year subtitle */
+.page-courses .courses-year-subtitle {
+    color: #FFAA00;
+}
+
+/* Courses semester title */
+.page-courses .courses-semester-title {
+    color: #FFAA00;
+}
+
+/* Courses semester number */
+.page-courses .courses-semester-number {
+    color: #FFAA00;
+}
+
+/* Courses section title */
+.page-courses .courses-section-title {
+    color: #FFAA00;
+}
+
+/* Courses type title (Years 3+4 combined header) */
+.page-courses .courses-type-title {
+    color: #FFAA00;
+}
+
+/* Courses type subtitle */
+.page-courses .courses-type-subtitle {
+    color: #FFAA00;
+}
+
+/* Course title hover */
+.page-courses .course-item:hover .course-title {
+    color: #FFAA00;
+}
+
+/* Course image caption */
+.page-courses .course-image-caption {
+    background: #FFAA00;
+}
+
+/* Mobile responsive overrides for courses page */
+@media (max-width: 768px) {
+    .page-courses .page-title {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .courses-year-title {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .courses-year-subtitle {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .courses-semester-title {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .courses-semester-number {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .courses-section-title {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .courses-type-title {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .courses-type-subtitle {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .course-image-caption {
+        color: #FFAA00 !important;
+        background: none !important;
+    }
+}
+
+/* ========== Courses Page Responsive Styles ========== */
+
+/* Responsive: Courses page at 1350px - switch to column layout */
+@media (max-width: 1350px) and (min-width: 1025px) {
+    .page-courses .page-header-row {
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .page-courses .page-title-group {
+        flex: 0 0 100%;
+        margin-right: 0;
+        padding: 0 2rem;
+    }
+
+    /* Year and semester columns - stay on same row */
+    .page-courses .courses-year-column {
+        position: relative;
+        right: auto;
+        padding: 0 2rem;
+        flex: 0 0 auto;
+    }
+
+    .page-courses .courses-semester-column {
+        position: relative;
+        right: auto;
+        padding: 0 2rem;
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 1rem;
+        align-self: flex-end;
+    }
+
+    /* Reset inner padding on titles to align with column content */
+    .page-courses .courses-year-title,
+    .page-courses .courses-semester-title,
+    .page-courses .courses-semester-number {
+        padding-right: 0;
+    }
+
+    /* Courses grid - 2 columns using CSS Grid */
+    .page-courses .courses-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0 2rem !important;
+    }
+
+    /* Make column containers invisible to layout - courses flow into 2-column grid */
+    .page-courses .courses-grid > .courses-column {
+        display: contents !important;
+    }
+
+    /* Reduce font sizes */
+    .page-courses .courses-year-title,
+    .page-courses .courses-semester-title,
+    .page-courses .courses-semester-number,
+    .page-courses .courses-year-subtitle {
+        font-size: 48px;
+        line-height: 52px;
+    }
+
+    .page-courses .course-title {
+        font-size: 48px;
+        line-height: 52px;
+    }
+
+    .page-courses .courses-section-title-row {
+        width: 100%;
+    }
+
+    .page-courses .semester-header-row {
+        min-height: auto;
+        margin-top: 3rem;
+    }
+
+    /* Reset absolute positioning on header elements */
+    .page-courses .courses-header-row {
+        position: relative;
+    }
+}
+
+/* Responsive: Courses page at 1024px - year and semester stay together */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .page-courses.inner-page .page-header-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .page-courses.inner-page .page-title-group {
+        flex: 0 0 100%;
+        margin-right: 0;
+        padding: 0 2rem;
+    }
+
+    .page-courses.inner-page .courses-year-column {
+        position: relative;
+        right: auto;
+        padding: 0 2rem;
+        flex: 0 0 auto;
+    }
+
+    .page-courses.inner-page .courses-semester-column {
+        position: relative;
+        right: auto;
+        padding: 0 2rem;
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 1rem;
+        align-self: flex-end;
+    }
+
+    /* Courses grid - single column */
+    .page-courses .courses-grid {
+        flex-direction: column;
+    }
+
+    .page-courses .courses-grid > .courses-column {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    /* Reduce font sizes more */
+    .page-courses .courses-year-title,
+    .page-courses .courses-semester-title,
+    .page-courses .courses-semester-number,
+    .page-courses .courses-year-subtitle {
+        font-size: 42px;
+        line-height: 46px;
+        padding-right: 0;
+    }
+
+    .page-courses .course-title {
+        font-size: 42px;
+        line-height: 46px;
+    }
+
+    .page-courses .course-header {
+        min-height: auto;
+    }
+
+    .page-courses .courses-section-title-row {
+        width: 100%;
+    }
+
+    .page-courses .semester-header-row {
+        min-height: auto;
+        margin-top: 3rem;
+    }
+}
+
+/* Responsive: Courses page at 768px - full column layout */
+@media (max-width: 768px) and (min-width: 481px) {
+    .page-courses .page-header-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .page-courses .page-title-group {
+        flex: none;
+        width: 100%;
+        margin-right: 0;
+        padding: 0 2rem;
+    }
+
+    .page-courses .courses-year-column {
+        position: relative;
+        right: auto;
+        padding: 0 2rem;
+    }
+
+    .page-courses .courses-semester-column {
+        position: relative;
+        right: auto;
+        padding: 0 2rem;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 1rem;
+    }
+
+    /* Courses grid - single column */
+    .page-courses .courses-grid {
+        flex-direction: column;
+    }
+
+    .page-courses .courses-grid > .courses-column {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .page-courses .courses-year-title,
+    .page-courses .courses-semester-title,
+    .page-courses .courses-semester-number,
+    .page-courses .courses-year-subtitle {
+        font-size: 42px;
+        line-height: 46px;
+        padding-right: 0;
+    }
+
+    .page-courses .course-title {
+        font-size: 42px;
+        line-height: 46px;
+    }
+
+    .page-courses .course-header {
+        min-height: auto;
+    }
+
+    .page-courses .courses-section-title-row {
+        width: 100%;
+    }
+
+    .page-courses .semester-header-row {
+        min-height: auto;
+        margin-top: 2rem;
+    }
+}
+
+/* Responsive: Courses page mobile - 480px */
+@media (max-width: 480px) {
+    .page-courses .courses-header-row {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .page-courses .page-title-group {
+        margin-right: 0 !important;
+        padding: 0 !important;
+    }
+
+    .page-courses .courses-year-column {
+        position: relative !important;
+        right: auto !important;
+        padding: 0 !important;
+    }
+
+    .page-courses .courses-semester-column {
+        position: relative !important;
+        right: auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: baseline !important;
+        gap: 1rem !important;
+    }
+
+    .page-courses .courses-grid {
+        flex-direction: column !important;
+    }
+
+    .page-courses .courses-grid > .courses-column {
+        flex: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .page-courses .courses-year-title,
+    .page-courses .courses-semester-title,
+    .page-courses .courses-semester-number,
+    .page-courses .courses-year-subtitle {
+        font-size: 32px !important;
+        line-height: 36px !important;
+        padding-right: 0 !important;
+    }
+
+    .page-courses .course-title {
+        font-size: 32px !important;
+        line-height: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+    }
+
+    .page-courses .course-title::after {
+        content: '' !important;
+        display: inline-block !important;
+        width: 14px !important;
+        height: 14px !important;
+        background-image: url("data:image/svg+xml,%3Csvg width='23' height='23' viewBox='0 0 23 23' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z' fill='%23000' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-size: contain !important;
+        background-position: center !important;
+        flex-shrink: 0 !important;
+        transition: transform 0.3s ease !important;
+        transform: rotate(-90deg) !important;
+    }
+
+    .page-courses .course-item.open .course-title::after {
+        transform: rotate(0deg) !important;
+        background-image: url("data:image/svg+xml,%3Csvg width='23' height='23' viewBox='0 0 23 23' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z' fill='%23FFAA00' stroke='%23FFAA00' stroke-width='2'/%3E%3C/svg%3E") !important;
+    }
+
+    /* Disable hover color change on mobile */
+    .page-courses .course-item:hover .course-title {
+        color: #000 !important;
+    }
+
+    /* Title turns orange when course is open (must come after hover to override) */
+    .page-courses .course-item.open .course-title {
+        color: #FFAA00 !important;
+    }
+
+    /* Also handle hover+open combination */
+    .page-courses .course-item.open:hover .course-title {
+        color: #FFAA00 !important;
+    }
+
+    .page-courses .course-header {
+        min-height: auto !important;
+    }
+
+    .page-courses .course-description p {
+        font-size: 16px !important;
+        line-height: 22px !important;
+    }
+
+    .page-courses .course-item {
+        margin-bottom: 2rem !important;
+    }
+
+    .page-courses .courses-section-title-row {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .page-courses .courses-section-title {
+        font-size: 18px !important;
+        line-height: 22px !important;
+    }
+
+    .page-courses .semester-header-row {
+        min-height: auto !important;
+        margin-top: 2rem !important;
+    }
+
+    .page-courses .course-points {
+        font-size: 16px !important;
+    }
+
+    .page-courses .course-lecturers {
+        font-size: 14px !important;
+        line-height: 18px !important;
+    }
+
+    /* Mobile: Remove gradient map from course images, show caption below */
+    .page-courses .course-image-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .page-courses .course-image {
+        filter: none !important;
+        order: 1 !important;
+    }
+
+    .page-courses .course-image-caption {
+        position: relative !important;
+        bottom: auto !important;
+        right: auto !important;
+        left: auto !important;
+        opacity: 1 !important;
+        display: block !important;
+        color: #FFAA00 !important;
+        background: none !important;
+        padding: 8px 0 !important;
+        order: 2 !important;
+    }
+}
+
+/* ==================== LIGHTBOX ==================== */
+
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    cursor: pointer;
+}
+
+.lightbox-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 70%;
+    max-height: 90%;
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.lightbox-overlay.active .lightbox-image {
+    transform: scale(1);
+}
+
+.lightbox-caption {
+    color: #fff;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 1rem;
+    direction: rtl;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10001;
+}
+
+.lightbox-close::before,
+.lightbox-close::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 3px;
+    background: #fff;
+    transition: background 0.2s ease;
+}
+
+.lightbox-close::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.lightbox-close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.lightbox-close:hover::before,
+.lightbox-close:hover::after {
+    background: #109955;
+}
+
+/* Page-specific close button hover colors */
+.page-program .lightbox-close:hover::before,
+.page-program .lightbox-close:hover::after {
+    background: #0946E1;
+}
+
+.page-staff .lightbox-close:hover::before,
+.page-staff .lightbox-close:hover::after {
+    background: #F200BA;
+}
+
+.page-guidelines .lightbox-close:hover::before,
+.page-guidelines .lightbox-close:hover::after {
+    background: #EF0004;
+}
+
+.page-courses .lightbox-close:hover::before,
+.page-courses .lightbox-close:hover::after {
+    background: #FFAA00;
+}
+
+/* Page-specific lightbox caption colors */
+.lightbox-caption {
+    color: #109955; /* Default green for homepage */
+}
+
+.page-program .lightbox-caption {
+    color: #5B8AFF;
+}
+
+.page-staff .lightbox-caption {
+    color: #F200BA;
+}
+
+.page-guidelines .lightbox-caption {
+    color: #EF0004;
+}
+
+.page-courses .lightbox-caption {
+    color: #FFAA00;
+}
+
+/* Make images clickable */
+.content img:not(.lightbox-image) {
+    cursor: pointer;
+}
+
+/* ==================== MOBILE BOTTOM NAV CAROUSEL ==================== */
+
+/* Mobile nav carousel - hidden by default, shown on mobile */
+.mobile-nav-carousel {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    z-index: 10002;
+    overflow: hidden;
+    background: #FCFCFB;
+    border-top: 1px solid #000;
+}
+
+.mobile-nav-track {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 60vw;
+    height: 100%;
+    text-decoration: none;
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 0 20px;
+    box-sizing: border-box;
+    opacity: 0.35;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-nav-item.active {
+    opacity: 1;
+}
+
+.mobile-nav-item svg {
+    flex-shrink: 0;
+}
+
+/* Nav item colors */
+.mobile-nav-item[data-index="0"] {
+    color: #109955;
+}
+.mobile-nav-item[data-index="1"] {
+    color: #0946E1;
+}
+.mobile-nav-item[data-index="2"] {
+    color: #F200BA;
+}
+.mobile-nav-item[data-index="3"] {
+    color: #EF0004;
+}
+.mobile-nav-item[data-index="4"] {
+    color: #FFAA00;
+}
+
+/* Mobile only - show carousel */
+@media (max-width: 480px) {
+    .mobile-nav-carousel {
+        display: block;
+    }
+
+    /* Hide the bottom ruler numbers on mobile */
+    .ruler-bottom span {
+        display: none !important;
+    }
+}
+
+/* ==================== FOOTER ==================== */
+
+.site-footer {
+    margin-top: 8rem;
+    margin-right: -25px;
+    margin-left: -25px;
+    background-color: #109955;
+    padding: 1.125rem 25px 0.75rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding-left: 3.75rem;
+}
+
+.footer-contact-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.footer-contact-link {
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #FCFCFB;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.footer-contact-link::after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 0.5V1.5L2.5 1.5L8.5 7.5L8.75 7.75L8.5 8L8 8.5L7.75 8.75L7.5 8.5L1.5 2.5L1.5 6.5H0.5V0.5H6.5Z' fill='%23FCFCFB' stroke='%23FCFCFB' stroke-width='0.5'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.footer-contact-link:hover {
+    opacity: 0.8;
+}
+
+.footer-contact-link:hover::after {
+    transform: rotate(-90deg);
+}
+
+.footer-branding {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-align: right;
+}
+
+.footer-name-he,
+.footer-name-ar,
+.footer-name-en {
+    font-weight: 700;
+    color: #FCFCFB;
+    line-height: 1;
+}
+
+.footer-name-he {
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 15px;
+}
+
+.footer-name-ar {
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    direction: rtl;
+}
+
+.footer-name-en {
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+}
+
+.footer-copyright {
+    font-family: "Narkiss Block TRIAL", sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: #FCFCFB;
+    opacity: 0.8;
+}
+
+/* Footer background colors per page */
+.page-program .site-footer {
+    background-color: #0946E1;
+}
+
+.page-staff .site-footer {
+    background-color: #F200BA;
+}
+
+.page-guidelines .site-footer {
+    background-color: #EF0004;
+}
+
+.page-courses .site-footer {
+    background-color: #FFAA00;
+}
+
+/* Footer responsive */
+@media (max-width: 768px) {
+    .site-footer {
+        margin-right: 0;
+        margin-left: 0;
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .footer-left {
+        padding-left: 0;
+    }
+
+    .footer-name-he {
+        font-size: 15px;
+    }
+
+    .footer-name-ar {
+        font-size: 14px;
+    }
+
+    .footer-name-en {
+        font-size: 12px;
+    }
+
+    .footer-contact-link {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-footer {
+        display: none;
+    }
+}
+

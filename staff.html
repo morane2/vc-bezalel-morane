@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סגל ההוראה - VC Bezalel</title>
+    <script>
+        const transitionType = sessionStorage.getItem('pageTransition');
+        if (transitionType) {
+            document.documentElement.classList.add('page-transitioning');
+            // For inner-to-inner, don't hide rulers (they're identical)
+            if (transitionType === 'inner-to-inner') {
+                document.documentElement.classList.add('inner-to-inner-transition');
+            }
+        }
+    </script>
+    <style>
+        .page-transitioning .content,
+        .page-transitioning .plus-grid {
+            opacity: 0 !important;
+        }
+        /* Only hide rulers and border-frame for homepage transitions, not inner-to-inner */
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-top,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-left,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-right,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-bottom,
+        .page-transitioning:not(.inner-to-inner-transition) .border-frame {
+            opacity: 0 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="inner-page page-staff">
+    <!-- SVG filter for gradient map effect - PINK version for staff page -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <!-- Pink gradient map: maps dark to #F200BA (pink) and light to #FCFCFB -->
+            <!-- #F200BA = RGB(242, 0, 186) normalized: R=0.949, G=0, B=0.729 -->
+            <filter id="gradient-map" color-interpolation-filters="linearRGB" x="0" y="0" width="100%" height="100%">
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer result="gradientMap">
+                    <feFuncR type="table" tableValues="0.949 0.988" />
+                    <feFuncG type="table" tableValues="0 0.988" />
+                    <feFuncB type="table" tableValues="0.729 0.984" />
+                </feComponentTransfer>
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noise" />
+                <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
+                <feBlend in="gradientMap" in2="monoNoise" mode="overlay" result="noisy" />
+                <feComponentTransfer in="noisy">
+                    <feFuncR type="linear" slope="1" intercept="0" />
+                    <feFuncG type="linear" slope="1" intercept="0" />
+                    <feFuncB type="linear" slope="1" intercept="0" />
+                    <feFuncA type="linear" slope="0.07" intercept="0.93" />
+                </feComponentTransfer>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Rulers (zoomed in version) -->
+    <div class="ruler ruler-top">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-bottom">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-left">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+    <div class="ruler ruler-right">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+
+    <!-- Border frame (outside grid-background for proper z-index) -->
+    <div class="border-frame"></div>
+
+    <!-- Mobile bottom nav carousel -->
+    <div class="mobile-nav-carousel" id="mobile-nav-carousel" data-current="2">
+        <div class="mobile-nav-track">
+            <a href="index.html" class="mobile-nav-item" data-index="0">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>בית</span>
+            </a>
+            <a href="program.html" class="mobile-nav-item" data-index="1">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>תוכנית הלימודים</span>
+            </a>
+            <a href="staff.html" class="mobile-nav-item" data-index="2">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>סגל ההוראה</span>
+            </a>
+            <a href="guidelines.html" class="mobile-nav-item" data-index="3">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>הוראות ונהלים</span>
+            </a>
+            <a href="courses.html" class="mobile-nav-item" data-index="4">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>קורסים</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid-background">
+        <!-- Plus grid (7 columns x 5 rows) -->
+        <div class="plus-grid">
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+        </div>
+    </div>
+
+    <!-- Page header on the ruler -->
+    <a href="index.html" class="page-header-link">
+        <h1 class="page-header-title">המחלקה לתקשורת חזותית</h1>
+    </a>
+
+    <div class="content page-content">
+        <!-- Page header row: title + intro -->
+        <div class="page-header-row">
+            <div class="page-title-group">
+                <h2 class="page-title">סגל<br>ההוראה</h2>
+                <div class="page-title-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="107" height="107" viewBox="0 0 107 107" fill="none" style="transform: rotate(0deg);">
+                        <path
+                            d="M1.64258 35.293L11.5918 35.293L11.5918 88.209L96.3154 3.48535L97.4766 2.32324L104.493 9.33984L103.331 10.501L18.6074 95.2246L71.5234 95.2246L71.5234 105.174L1.64258 105.174L1.64258 35.293Z"
+                            fill="#F200BA" stroke="#F200BA" stroke-width="3.28521" />
+                    </svg>
+                </div>
+            </div>
+
+            
+        <!-- Head of Department -->
+            <div class="staff-head-section">
+                <div class="staff-head-text">
+                    <h3 class="staff-head-title">ראש המחלקה</h3>
+                    <span class="staff-head-name">דנה גז</span>
+                </div>
+                <div class="staff-head-image-wrapper">
+                    <img src="images/19.jpg" alt="דנה גז" class="gradient-map-image">
+                    <img src="images/19.jpg" alt="דנה גז" class="original-image">
+                </div>
+            </div>
+
+            <!-- Administrative Coordinators -->
+            <div class="staff-admin-section">
+                <h3 class="staff-admin-title">רכזות מנהליות</h3>
+                <span class="staff-admin-name">לילך דוידוביץ</span>
+                <span class="staff-admin-name">שירה חזות</span>
+            </div>
+        </div>
+
+        <!-- Senior Lecturers Grid -->
+        <div class="staff-senior-grid">
+            <!-- Row 1: 3 people -->
+            <div class="staff-senior-row">
+                <div class="staff-senior-item">
+                    <div class="staff-senior-name-row">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.2344 0.257812V1.82031H2.92578L16.4219 15.3164L16.2383 15.499L15.5 16.2373L15.3174 16.4209L1.82129 2.9248V11.2334H0.258789V0.257812H11.2344Z" fill="black" stroke="black" stroke-width="0.516667"/>
+                        </svg>
+                        <span class="staff-senior-name">איל זקין</span>
+                    </div>
+                    <span class="staff-senior-desc">רכז אקדמי ורכז פרויקטי גמר</span>
+                </div>
+                <div class="staff-senior-item">
+                    <div class="staff-senior-name-row">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.2344 0.257812V1.82031H2.92578L16.4219 15.3164L16.2383 15.499L15.5 16.2373L15.3174 16.4209L1.82129 2.9248V11.2334H0.258789V0.257812H11.2344Z" fill="black" stroke="black" stroke-width="0.516667"/>
+                        </svg>
+                        <span class="staff-senior-name">נעמי גיגר</span>
+                    </div>
+                    <span class="staff-senior-desc">ראש תחום עיצוב גרפי</span>
+                </div>
+                <div class="staff-senior-item">
+                    <div class="staff-senior-name-row">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.2344 0.257812V1.82031H2.92578L16.4219 15.3164L16.2383 15.499L15.5 16.2373L15.3174 16.4209L1.82129 2.9248V11.2334H0.258789V0.257812H11.2344Z" fill="black" stroke="black" stroke-width="0.516667"/>
+                        </svg>
+                        <span class="staff-senior-name">עמית טריינין</span>
+                    </div>
+                    <span class="staff-senior-desc">ראש תחום איור</span>
+                </div>
+            </div>
+            <!-- Row 2: 2 people -->
+            <div class="staff-senior-row">
+                <div class="staff-senior-item">
+                    <div class="staff-senior-name-row">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.2344 0.257812V1.82031H2.92578L16.4219 15.3164L16.2383 15.499L15.5 16.2373L15.3174 16.4209L1.82129 2.9248V11.2334H0.258789V0.257812H11.2344Z" fill="black" stroke="black" stroke-width="0.516667"/>
+                        </svg>
+                        <span class="staff-senior-name">עידן רוזה</span>
+                    </div>
+                    <span class="staff-senior-desc">ראש תחום משחקים</span>
+                </div>
+                <div class="staff-senior-item">
+                    <div class="staff-senior-name-row">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.2344 0.257812V1.82031H2.92578L16.4219 15.3164L16.2383 15.499L15.5 16.2373L15.3174 16.4209L1.82129 2.9248V11.2334H0.258789V0.257812H11.2344Z" fill="black" stroke="black" stroke-width="0.516667"/>
+                        </svg>
+                        <span class="staff-senior-name">אמיתי גלעד</span>
+                    </div>
+                    <span class="staff-senior-desc">ראש תחום תנועה (מושן)</span>
+                </div>
+            </div>
+            <!-- Row 3: 2 people -->
+            <div class="staff-senior-row">
+                <div class="staff-senior-item">
+                    <div class="staff-senior-name-row">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.2344 0.257812V1.82031H2.92578L16.4219 15.3164L16.2383 15.499L15.5 16.2373L15.3174 16.4209L1.82129 2.9248V11.2334H0.258789V0.257812H11.2344Z" fill="black" stroke="black" stroke-width="0.516667"/>
+                        </svg>
+                        <span class="staff-senior-name">בן לב</span>
+                    </div>
+                    <span class="staff-senior-desc">ראש תחום אינטראקטיב</span>
+                </div>
+                <div class="staff-senior-item">
+                    <div class="staff-senior-name-row">
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.2344 0.257812V1.82031H2.92578L16.4219 15.3164L16.2383 15.499L15.5 16.2373L15.3174 16.4209L1.82129 2.9248V11.2334H0.258789V0.257812H11.2344Z" fill="black" stroke="black" stroke-width="0.516667"/>
+                        </svg>
+                        <span class="staff-senior-name">לימור שנורמכר</span>
+                    </div>
+                    <span class="staff-senior-desc">רכזת אקדמית של השלוחה החרדית</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lecturers Section -->
+        <div class="staff-lecturers-section">
+            <div class="staff-lecturers-header">
+                <h3 class="staff-lecturers-title">מרצים.ות</h3>
+                <div class="staff-lecturers-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 107 107" fill="none">
+                        <path
+                            d="M1.64258 35.293L11.5918 35.293L11.5918 88.209L96.3154 3.48535L97.4766 2.32324L104.493 9.33984L103.331 10.501L18.6074 95.2246L71.5234 95.2246L71.5234 105.174L1.64258 105.174L1.64258 35.293Z"
+                            fill="#F200BA" stroke="#F200BA" stroke-width="3.28521" />
+                    </svg>
+                </div>
+            </div>
+            <div class="staff-lecturers-list">
+                <!-- Row 1: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">הלל אבט</span>
+                    <span class="staff-lecturer-name">סוניה אוליטסקי</span>
+                    <span class="staff-lecturer-name">חובב אופנהיים</span>
+                    <span class="staff-lecturer-name">גבריאל אייש</span>
+                    <span class="staff-lecturer-name">טלי אילון</span>
+                    <span class="staff-lecturer-name">גסטון איצקוביץ</span>
+                </div>
+                <!-- Row 2: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">איתן אלוא</span>
+                    <span class="staff-lecturer-name">דניאל אליאס</span>
+                    <span class="staff-lecturer-name">שמרית אלקנתי</span>
+                    <span class="staff-lecturer-name">שמעון אנגל</span>
+                    <span class="staff-lecturer-name">זאב אנגלמאיר</span>
+                </div>
+                <!-- Row 3: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">אריאל אסאו</span>
+                    <span class="staff-lecturer-name">אסף ארד</span>
+                    <span class="staff-lecturer-name">דידי ארז</span>
+                    <span class="staff-lecturer-name">ירמי אריאלי</span>
+                    <span class="staff-lecturer-name">ג׳ודית אשר</span>
+                    <span class="staff-lecturer-name">שרון אתגר</span>
+                </div>
+                <!-- Row 4: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">אלי בבג׳נוב</span>
+                    <span class="staff-lecturer-name">מיכל בוננו</span>
+                    <span class="staff-lecturer-name">יעל בורשטיין</span>
+                    <span class="staff-lecturer-name">מיכל ביבר</span>
+                    <span class="staff-lecturer-name">ארנסטו ביכובסקי-רז</span>
+                </div>
+                <!-- Row 5: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">דני ביקון</span>
+                    <span class="staff-lecturer-name">רותם ביקסנשפנר</span>
+                    <span class="staff-lecturer-name">מתן בן כנען</span>
+                    <span class="staff-lecturer-name">שחר בר</span>
+                    <span class="staff-lecturer-name">אורית ברגמן</span>
+                    <span class="staff-lecturer-name">ליאור ברודר</span>
+                </div>
+                <!-- Row 6: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">ארז גביש</span>
+                    <span class="staff-lecturer-name">ענת גוטברג</span>
+                    <span class="staff-lecturer-name">דנה גז</span>
+                    <span class="staff-lecturer-name">נעמי גיגר</span>
+                    <span class="staff-lecturer-name">נעמי גלבך</span>
+                </div>
+                <!-- Row 7: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">אמיתי גלעד</span>
+                    <span class="staff-lecturer-name">תום גן־אור</span>
+                    <span class="staff-lecturer-name">קרן גפני</span>
+                    <span class="staff-lecturer-name">דניאל גרומר</span>
+                    <span class="staff-lecturer-name">ענבל גרי</span>
+                    <span class="staff-lecturer-name">גיא דהאן</span>
+                </div>
+                <!-- Row 8: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">ערן היללי</span>
+                    <span class="staff-lecturer-name">מיכל הר-גב</span>
+                    <span class="staff-lecturer-name">טל הרדה</span>
+                    <span class="staff-lecturer-name">יגאל הרמן</span>
+                    <span class="staff-lecturer-name">עדנה הררי־ליבראטי</span>
+                </div>
+                <!-- Row 9: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">חן וינר</span>
+                    <span class="staff-lecturer-name">עידן ועקנין</span>
+                    <span class="staff-lecturer-name">עדה ורדי</span>
+                    <span class="staff-lecturer-name">ענת ורשבסקי</span>
+                    <span class="staff-lecturer-name">קרן זלץ</span>
+                    <span class="staff-lecturer-name">איל זקין</span>
+                </div>
+                <!-- Row 10: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">יהודה חפשי</span>
+                    <span class="staff-lecturer-name">נעמה טוביאס</span>
+                    <span class="staff-lecturer-name">אלכס טוביס</span>
+                    <span class="staff-lecturer-name">סטס טוצ׳ינסקי</span>
+                    <span class="staff-lecturer-name">עמית טריינין</span>
+                </div>
+                <!-- Row 11: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">אסף כהן</span>
+                    <span class="staff-lecturer-name">ניל כהן</span>
+                    <span class="staff-lecturer-name">בן לב</span>
+                    <span class="staff-lecturer-name">קובי לוי</span>
+                    <span class="staff-lecturer-name">מעין לויצקי</span>
+                    <span class="staff-lecturer-name">רוני לוית</span>
+                </div>
+                <!-- Row 12: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">איתן מג׳אר</span>
+                    <span class="staff-lecturer-name">אלי מגזינר</span>
+                    <span class="staff-lecturer-name">פרופ׳ רותו מודן</span>
+                    <span class="staff-lecturer-name">רונאל מור</span>
+                    <span class="staff-lecturer-name">דני מירב</span>
+                </div>
+                <!-- Row 13: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">אורן משה</span>
+                    <span class="staff-lecturer-name">הילה נועם</span>
+                    <span class="staff-lecturer-name">איתי ניב</span>
+                    <span class="staff-lecturer-name">רן סגל</span>
+                    <span class="staff-lecturer-name">מאיר סדן</span>
+                    <span class="staff-lecturer-name">מיכל סהר</span>
+                </div>
+                <!-- Row 14: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">אורי סוכרי</span>
+                    <span class="staff-lecturer-name">עדלי סטוק</span>
+                    <span class="staff-lecturer-name">פרופ׳ מרב סלומון</span>
+                    <span class="staff-lecturer-name">גלעד סליקטר</span>
+                    <span class="staff-lecturer-name">אלמוג סלע</span>
+                </div>
+                <!-- Row 15: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">יוליה סמלנסקי</span>
+                    <span class="staff-lecturer-name">עילי עובדיה</span>
+                    <span class="staff-lecturer-name">דן עוזרי</span>
+                    <span class="staff-lecturer-name">רננה עיר־שי</span>
+                    <span class="staff-lecturer-name">ארי עמית</span>
+                    <span class="staff-lecturer-name">עידן עם-שלם</span>
+                </div>
+                <!-- Row 16: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">שי ענבר</span>
+                    <span class="staff-lecturer-name">נואל ערפאת</span>
+                    <span class="staff-lecturer-name">דוד פולונסקי</span>
+                    <span class="staff-lecturer-name">סיוון פיטרמן</span>
+                    <span class="staff-lecturer-name">אדם פיינברג</span>
+                </div>
+                <!-- Row 17: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">רותם פיש</span>
+                    <span class="staff-lecturer-name">עומר צדוק</span>
+                    <span class="staff-lecturer-name">תמיר צדוק</span>
+                    <span class="staff-lecturer-name">מעין צוריאל</span>
+                    <span class="staff-lecturer-name">עינת צרפתי</span>
+                    <span class="staff-lecturer-name">יהונתן קינן</span>
+                </div>
+                <!-- Row 18: 5 names -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">פרופ׳ ענת קציר</span>
+                    <span class="staff-lecturer-name">יהלי קרן</span>
+                    <span class="staff-lecturer-name">יסמין רובינוביץ</span>
+                    <span class="staff-lecturer-name">עידן רוזה</span>
+                    <span class="staff-lecturer-name">גדעון רימר</span>
+                </div>
+                <!-- Row 19: 6 names -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">גיא שגיא</span>
+                    <span class="staff-lecturer-name">טבע שולט</span>
+                    <span class="staff-lecturer-name">פרופ׳ עדי שטרן</span>
+                    <span class="staff-lecturer-name">הראל שניאק</span>
+                    <span class="staff-lecturer-name">נעם שכטר</span>
+                    <span class="staff-lecturer-name">יואל שמחוביץ</span>
+                </div>
+                <!-- Row 20: 4 names (remaining) -->
+                <div class="staff-lecturers-row staff-lecturers-row-5">
+                    <span class="staff-lecturer-name">נטי שמיע־עופר</span>
+                    <span class="staff-lecturer-name">יונתן שמיר</span>
+                    <span class="staff-lecturer-name">לימור שנורמכר</span>
+                    <span class="staff-lecturer-name">גל שריר</span>
+                    <span class="staff-lecturer-name">ניר שקד</span>
+                </div>
+                <!-- Row 21: 1 name (remaining) -->
+                <div class="staff-lecturers-row">
+                    <span class="staff-lecturer-name">איתמר תורן</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-contact-section">
+                        <a href="mailto:vc@bezalel.ac.il" class="footer-contact-link">צרו קשר</a>
+                        <a href="https://www.instagram.com/vc_bezalel/" target="_blank" class="footer-contact-link">עקבו אחרינו</a>
+                    </div>
+                    <div class="footer-copyright">© 2025 בצלאל אקדמיה לאמנות ועיצוב ירושלים</div>
+                </div>
+                <div class="footer-branding">
+                    <span class="footer-name-he">בצלאל אקדמיה לאמנות ועיצוב ירושלים</span>
+                    <span class="footer-name-ar">أكاديمية بتسلئيل للفنون والتصميم القدس</span>
+                    <span class="footer-name-en">Bezalel Academy of Arts and Design Jerusalem</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Crosshair guide lines -->
+    <div class="crosshair-line horizontal" id="crosshair-h"></div>
+    <div class="crosshair-line vertical" id="crosshair-v"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

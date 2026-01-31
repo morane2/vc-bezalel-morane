@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הוראות ונהלים - VC Bezalel</title>
+    <script>
+        const transitionType = sessionStorage.getItem('pageTransition');
+        if (transitionType) {
+            document.documentElement.classList.add('page-transitioning');
+            // For inner-to-inner, don't hide rulers (they're identical)
+            if (transitionType === 'inner-to-inner') {
+                document.documentElement.classList.add('inner-to-inner-transition');
+            }
+        }
+    </script>
+    <style>
+        .page-transitioning .content,
+        .page-transitioning .plus-grid {
+            opacity: 0 !important;
+        }
+        /* Only hide rulers and border-frame for homepage transitions, not inner-to-inner */
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-top,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-left,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-right,
+        .page-transitioning:not(.inner-to-inner-transition) .ruler-bottom,
+        .page-transitioning:not(.inner-to-inner-transition) .border-frame {
+            opacity: 0 !important;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="inner-page page-guidelines">
+    <!-- SVG filter for gradient map effect - RED version for guidelines page -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <!-- Red gradient map: maps dark to #EF0004 (red) and light to #FCFCFB -->
+            <!-- #EF0004 = RGB(239, 0, 4) normalized: R=0.937, G=0, B=0.016 -->
+            <filter id="gradient-map" color-interpolation-filters="linearRGB" x="0" y="0" width="100%" height="100%">
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer result="gradientMap">
+                    <feFuncR type="table" tableValues="0.937 0.988" />
+                    <feFuncG type="table" tableValues="0 0.988" />
+                    <feFuncB type="table" tableValues="0.016 0.984" />
+                </feComponentTransfer>
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" result="noise" />
+                <feColorMatrix in="noise" type="saturate" values="0" result="monoNoise" />
+                <feBlend in="gradientMap" in2="monoNoise" mode="overlay" result="noisy" />
+                <feComponentTransfer in="noisy">
+                    <feFuncR type="linear" slope="1" intercept="0" />
+                    <feFuncG type="linear" slope="1" intercept="0" />
+                    <feFuncB type="linear" slope="1" intercept="0" />
+                    <feFuncA type="linear" slope="0.07" intercept="0.93" />
+                </feComponentTransfer>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Rulers (zoomed in version) -->
+    <div class="ruler ruler-top">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-bottom">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+    </div>
+    <div class="ruler ruler-left">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+    <div class="ruler ruler-right">
+        <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+    </div>
+
+    <!-- Border frame (outside grid-background for proper z-index) -->
+    <div class="border-frame"></div>
+
+    <!-- Mobile bottom nav carousel -->
+    <div class="mobile-nav-carousel" id="mobile-nav-carousel" data-current="3">
+        <div class="mobile-nav-track">
+            <a href="index.html" class="mobile-nav-item" data-index="0">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>בית</span>
+            </a>
+            <a href="program.html" class="mobile-nav-item" data-index="1">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>תוכנית הלימודים</span>
+            </a>
+            <a href="staff.html" class="mobile-nav-item" data-index="2">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>סגל ההוראה</span>
+            </a>
+            <a href="guidelines.html" class="mobile-nav-item" data-index="3">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>הוראות ונהלים</span>
+            </a>
+            <a href="courses.html" class="mobile-nav-item" data-index="4">
+                <svg width="14" height="14" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.2401 0.349609V2.46875H3.96466L22.2654 20.7695L22.0174 21.0166L21.0174 22.0166L20.7703 22.2646L2.46954 3.96387V15.2393H0.350403V0.349609H15.2401Z" fill="currentColor" stroke="currentColor" stroke-width="0.7"/>
+                </svg>
+                <span>קורסים</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid-background">
+        <!-- Plus grid (7 columns x 5 rows) -->
+        <div class="plus-grid">
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+            <div class="plus-row"><span class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span><span class="plus">+</span><span class="plus">+</span><span
+                    class="plus">+</span></div>
+        </div>
+    </div>
+
+    <!-- Page header on the ruler -->
+    <a href="index.html" class="page-header-link">
+        <h1 class="page-header-title">המחלקה לתקשורת חזותית</h1>
+    </a>
+
+    <div class="content page-content">
+        <!-- Page header row: title + intro -->
+        <div class="page-header-row">
+            <div class="page-title-group">
+                <h2 class="page-title">הוראות<br>ונהלים</h2>
+                <div class="page-title-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="107" height="107" viewBox="0 0 107 107" fill="none" style="transform: rotate(0deg);">
+                        <path
+                            d="M1.64258 35.293L11.5918 35.293L11.5918 88.209L96.3154 3.48535L97.4766 2.32324L104.493 9.33984L103.331 10.501L18.6074 95.2246L71.5234 95.2246L71.5234 105.174L1.64258 105.174L1.64258 35.293Z"
+                            fill="#EF0004" stroke="#EF0004" stroke-width="3.28521" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="page-intro">
+                <div class="page-intro-background"></div>
+                <h3 class="page-subtitle">
+                    <span>ציונים /<br>הערכות</span>
+                    <div class="page-subtitle-arrow">
+                        <svg width="77" height="77" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.17725 25.2988L8.31006 25.2988L8.31006 63.2305L69.0425 2.49707L69.8755 1.66504L70.7085 2.49707L74.0728 5.86133L74.9048 6.69434L74.0728 7.52734L13.3394 68.2598L51.271 68.2598L51.271 75.3926L1.17725 75.3926L1.17725 25.2988Z" fill="#EF0004" stroke="#EF0004" stroke-width="2.35498"></path>
+                        </svg>
+                    </div>
+                </h3>
+                <p><b>סולם הציונים של המחלקה מתאר את רכישת תוצאות הלמידה של הקורס כפי שהעריך.ה המרצה.</b><br>
+                מפתח הציונים הוא כדלקמן</p>
+            </div>
+        </div>
+
+        <!-- Grading Scale -->
+        <div class="grade-scale">
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">95-100</span>
+                    <span class="grade-title">מעולה (הצטיינות יתרה)</span>
+                    <p class="grade-desc">עשייה יצירתית יוצאת דופן, מקורית, ראויה לפרסים ופרסום, שמאתגרת את המוסכמות, מוכיחה רכישה פנומנלית של כל תוצאות הלמידה של הקורס ומגשימה את חזון המחלקה.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">90-94</span>
+                    <span class="grade-title">מצוין</span>
+                    <p class="grade-desc">מכלול עשייה יוצא דופן. עבודות בקורס שהיוו הישגים נדירים.<br>ציון שיוענק לסטודנטים.ות שהוכיחו את עצמם במהלך הקורס בכל ההיבטים: נוכחות, מעורבות, השתתפות, רצינות, אחריות ומעל לכל — רכישת תוצאות הלמידה של הקורס דרך עשייה יצירתית איכותית ביותר.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">85-89</span>
+                    <span class="grade-title">טוב מאד</span>
+                    <p class="grade-desc">מכלול עשייה עקבי, מבוסס, איכותי ומבטיח, בכל ההיבטים, תוך רכישת כל תוצאות הלמידה ועמידה בהגדרות המרצה להצלחה בקורס.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">80-84</span>
+                    <span class="grade-title">טוב</span>
+                    <p class="grade-desc">מכלול עשייה טוב וראוי, עומד בכל דרישות הקורס, תוך רכישת כל תוצאות הלמידה, אם כי אינו יוצא מגדר הרגיל.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">75-79</span>
+                    <span class="grade-title">כמעט טוב</span>
+                    <p class="grade-desc">מכלול עשייה סביר, אך טעון שיפור. מעט נמוך מהממוצע, או שניכר כי אחת או יותר מתוצאות הלמידה בקורס לא נרכשו ברמה טובה.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">70-74</span>
+                    <span class="grade-title">בינוני</span>
+                    <p class="grade-desc">מכלול עשייה בינוני, נמוך מהממוצע, חוסר עקביות באיכות העבודות. ניכר כי אחת או יותר מתוצאות הלמידה בקורס לא נרכשו ברמה שמניחה את הדעת.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">65-69</span>
+                    <span class="grade-title">חלש</span>
+                    <p class="grade-desc">מכלול עבודה חלש. ניכר קושי בתהליכים, חשיבה, ביצוע ואיכות העבודות. חולשה ברכישת רוב תוצאות הלמידה שהוגדרו בקורס, ועם זאת אפשר להבחין בלמידה מספקת להמשך של לימודים ועשייה בתחום הקורס.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">55-64</span>
+                    <span class="grade-title">מספיק בקושי</span>
+                    <p class="grade-desc">מכלול עשייה חלש מאוד, על סף כישלון בקורס. הישגים גרועים, היקף עבודה זעום, היעדרויות, אי השתתפות וכיו"ב, שמספיק בקושי על מנת לעבור את הקורס.</p>
+                </div>
+            </div>
+            <div class="grade-row">
+                <div class="grade-item">
+                    <span class="grade-range">40-54</span>
+                    <span class="grade-title">בלתי מספיק (נכשל)</span>
+                    <p class="grade-desc">הישגים שאינם מספיקים. עבודות ו/או התנהלות שאינם עוברים את רף המינימום הנדרש. הסטודנט.ית נכשל.ה ברכישת תוצרי הלמידה בקורס.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Average Section -->
+        <div class="guidelines-section">
+            <h3 class="guidelines-section-title">ממוצע ציוני השנה</h3>
+            <p class="guidelines-section-desc">ממוצע הציונים השנתי יחושב כדלהלן:<br>שקלול ממוצע כל ציוני הקורסים הנלמדים במחלקה (ללא תרבות חזותית וחומרית).</p>
+        </div>
+
+        <!-- Side Note and Images Container -->
+        <div class="guidelines-images-section">
+            <!-- Side Note -->
+            <div class="guidelines-side-note">
+                <span>+ המונח ׳מכלול עשייה׳</span>
+                <span>מכוון לסך כל הפרמטרים</span>
+                <span>הנשקלים במתן הציונים:</span>
+                <span>הישגים קריאטיביים,</span>
+                <span>עקביות, תהליך, נוכחות,</span>
+                <span>מעורבות, השתתפות,</span>
+                <span>רצינות, אחריות.</span>
+            </div>
+
+            <!-- Guidelines Images -->
+            <div class="guidelines-image-wrapper guidelines-image-1">
+                <img src="images/3.jpg" alt="" class="gradient-map-image">
+                <img src="images/3.jpg" alt="" class="original-image">
+                <div class="image-caption">'מה שנגזר החוצה מְעַלַּק, כתב ספרדי רהוט', פרויקט הגמר של אלה יהודאי, 2020</div>
+            </div>
+            <div class="guidelines-image-wrapper guidelines-image-2">
+                <img src="images/9.jpg" alt="" class="gradient-map-image">
+                <img src="images/9.jpg" alt="" class="original-image">
+                <div class="image-caption">צילום: יובל נאור</div>
+            </div>
+        </div>
+
+        <!-- תנאי המעבר Section -->
+        <div class="guidelines-transition-section">
+            <h3 class="page-subtitle">
+                <span>תנאי המעבר<br>משנה לשנה</span>
+                <div class="page-subtitle-arrow">
+                    <svg width="77" height="77" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.17725 25.2988L8.31006 25.2988L8.31006 63.2305L69.0425 2.49707L69.8755 1.66504L70.7085 2.49707L74.0728 5.86133L74.9048 6.69434L74.0728 7.52734L13.3394 68.2598L51.271 68.2598L51.271 75.3926L1.17725 75.3926L1.17725 25.2988Z" fill="#EF0004" stroke="#EF0004" stroke-width="2.35498"></path>
+                    </svg>
+                </div>
+            </h3>
+
+            <!-- Row 1 -->
+            <div class="guidelines-transition-row">
+                <div class="guidelines-transition-item guidelines-transition-item-full">
+                    <p><b>הקורסים בשנים א׳ ו־ב׳ הינם במסגרת לימודי החובה. על הסטודנטים.ות להיות נוכחים.ות בכל השיעורים, לעמוד בדרישות <a href="staff.html">המרצים.ות</a> והמנחים.ות ולקבל ציון ״עובר״ (55 ומעלה) בכל הקורסים, כתנאי מעבר לשנה הבאה.</b><br>כל סטודנט.ית רשאי.ת להיעדר עד <span class="green-text">20 אחוזים</span> מהקורס (כ־3 מפגשים בסמסטר, בהתאם למשך הקורס, ו/או איחורים מצטברים). בהיעדרויות מעבר למכסה, הסטודנט.ית לא ת.יקבל ציון בקורס. היעדרות חריגה תאושר רק במקרי מילואים, אבל ואשפוז. במקרים אלו יש להמציא את האישורים המתאימים למשרד המחלקה. מקרים חריגים של היעדרות ממושכת יידונו <span class="green-text">בוועדת ההוראה</span>, ויוכרעו ע״פ החלטת ראש המחלקה.</p>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="guidelines-transition-row">
+                <div class="guidelines-transition-item guidelines-transition-item-full">
+                    <h3 class="guidelines-transition-subtitle">תנאי המעבר משנה א׳ לשנה ב׳</h3>
+                    <p>ציון "עובר" (55 ומעלה) בכל הקורסים הנלמדים בשני הסמסטרים במחלקה במהלך השנה. על הסטודנט.ית לעבור בציון חיובי את כל הקורסים בכדי להמשיך לשנת הלימודים הבאה. סטודנט.ית שנכשל.ה בקורס, עניינו.ה יועלה בפני ראש המחלקה ובהתאם לשיקולו ניתן יהיה להעלות את עניינו.ה לוועדת ההוראה המחלקתית. זו תבחן את זכאותו.ה לחזור על הקורס, או להשלים קורס אחר במקומו. ועדת ההוראה המחלקתית רשאית להזמין פורטפוליו ו/או קבלת חוות דעת מן המרצים.ות.</p>
+                </div>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="guidelines-transition-row">
+                <div class="guidelines-transition-item guidelines-transition-item-full">
+                    <h3 class="guidelines-transition-subtitle">תנאי המעבר לשנה ג׳ ולשנה ד׳</h3>
+                    <p>על הסטודנט.ית להשיג ציון "עובר" (55 ומעלה) בכל קורסי החובה והבחירה ולצבור מינימום של 24 נ״ז.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- פרויקט גמר Section with Parallax -->
+        <div class="parallax-container" id="final-project-parallax">
+            <div class="parallax-content">
+                <div class="guidelines-transition-section">
+                    <h3 class="page-subtitle">
+                        <span>פרויקט<br>גמר</span>
+                        <div class="page-subtitle-arrow">
+                            <svg width="77" height="77" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1.17725 25.2988L8.31006 25.2988L8.31006 63.2305L69.0425 2.49707L69.8755 1.66504L70.7085 2.49707L74.0728 5.86133L74.9048 6.69434L74.0728 7.52734L13.3394 68.2598L51.271 68.2598L51.271 75.3926L1.17725 75.3926L1.17725 25.2988Z" fill="#EF0004" stroke="#EF0004" stroke-width="2.35498"></path>
+                            </svg>
+                        </div>
+                    </h3>
+
+                    <!-- Row 1 - זכאות -->
+                    <div class="guidelines-transition-row">
+                        <div class="guidelines-transition-item guidelines-transition-item-full">
+                            <h3 class="guidelines-transition-subtitle">זכאות</h3>
+                            <p>הזכות להגשת פרויקט הגמר מותנית בסיום כל חובות הסטודנט.ית במחלקה וקבלת ציונים חיוביים בכלל קורסי החובה והבחירה, ציון ״עובר״ (מעל 55).</p>
+                        </div>
+                    </div>
+
+                    <!-- Row 2 - הגשה -->
+                    <div class="guidelines-transition-row">
+                        <div class="guidelines-transition-item guidelines-transition-item-full">
+                            <h3 class="guidelines-transition-subtitle">הגשה</h3>
+                            <ol class="guidelines-numbered-list">
+                                <li>הפרויקט יוצג במרחב שייועד לכך על ידי המחלקה ובמקום שיוקצה לו. אין קשר בין החלל בו תוצג עבודת הסטודנט.ית בהגשות לבין החלל שיוקצה לה בתערוכת הגמר.</li>
+                                <li>אין המחלקה משתתפת במימון פרויקט הגמר האישי של הסטודנט.ית. סטודנט.ית שמתקשה לממן את עבודתו.ה, ייוועץ במנחה כיצד להקטין עלויות מבלי לפגוע בהישגי הפרויקט. מקרים של צרכי מימון מיוחדים או קשיי מימון יובאו לידיעת ראש המחלקה.</li>
+                                <li>ככלל, אין המחלקה מתירה מימון מגורם חיצוני (ספונסר), בין אם ציבורי או מסחרי. מקרים מיוחדים יובאו להחלטת ראש המחלקה.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Row 3 - הערות -->
+                    <div class="guidelines-transition-row">
+                        <div class="guidelines-transition-item guidelines-transition-item-full">
+                            <h3 class="guidelines-transition-subtitle">הערות</h3>
+                            <ol class="guidelines-numbered-list">
+                                <li>סטודנט.ית אשר מקבל.ת ציון נכשל (פחות מ־55 נקודות) אינו.ה רשאי.ת, על פי תקנון האקדמיה, להציג בתערוכת הבוגרים והבוגרות.</li>
+                                <li>דחייה בהגשת פרויקט הגמר מחייבת את אישור ראש המחלקה או ועדת ההוראה המחלקתית.</li>
+                                <li>סטודנט.ית שנכשל.ה פעמיים בפרויקט הגמר, אינו.ה רשאי.ת להגיש יותר, ואינו.ה זכאי.ת לתואר אקדמי בתקשורת חזותית.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parallax Images Layer -->
+            <div class="parallax-images">
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/1.webp" alt="" class="parallax-image">
+                    <div class="image-caption">רעיה קבנובסקי, שטעטל</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/2.webp" alt="" class="parallax-image">
+                    <div class="image-caption">ליאור קימל, ליברטו: גופן קלאסי עכשווי</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/3.webp" alt="" class="parallax-image">
+                    <div class="image-caption">שיראל מימון מרי אהבה וקנין, ויהי חושך | אור אחר</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/4.webp" alt="" class="parallax-image">
+                    <div class="image-caption">שחר עמרני, שלושה כלבים</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/5.webp" alt="" class="parallax-image">
+                    <div class="image-caption">ורוניקה פומזן, ורוניקה</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/6.webp" alt="" class="parallax-image">
+                    <div class="image-caption">הדר אדלשטיין, חלמתי שאני יולדת את החתול שלי</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/7.webp" alt="" class="parallax-image">
+                    <div class="image-caption">יסכה זיתון, הקלטות של אמהות</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/8.webp" alt="" class="parallax-image">
+                    <div class="image-caption">יובל גרף, הדס חיימוביץ׳, Mindful Solutionism</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/9.webp" alt="" class="parallax-image">
+                    <div class="image-caption">נועה פיזנטי, בין המילים</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/10.webp" alt="" class="parallax-image">
+                    <div class="image-caption">נועה ישראלי, לימבוטופיה</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/11.webp" alt="" class="parallax-image">
+                    <div class="image-caption">שיר שקד, אמא</div>
+                </div>
+                <div class="parallax-image-wrapper">
+                    <img src="final-project-images/12.webp" alt="" class="parallax-image">
+                    <div class="image-caption">טל רוזנברג, ניתאי מזיג, אדיטור</div>
+                </div>
+            </div>
+
+            <!-- Spacer to allow images to fully scroll out -->
+            <div class="parallax-spacer"></div>
+        </div>
+
+        <!-- Image Carousel -->
+        <div class="image-carousel">
+            <!-- Previous Arrow (right arrow in RTL) -->
+            <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous image">
+                <svg width="72" height="67" viewBox="0 0 72 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M45.1538 57.6599L41.2336 53.7398L58.7476 36.2257L1.17783 36.2258L1.17714 35.0484L1.17714 31.8719L1.17783 30.6946L58.7476 30.6946L41.2336 13.1806L45.1538 9.2604L69.3536 33.4602L45.1538 57.6599Z" fill="#EF0004" stroke="#EF0004" stroke-width="2.35498"/>
+                </svg>
+            </button>
+
+            <!-- Main Image Display -->
+            <div class="carousel-main">
+                <div class="carousel-main-image">
+                    <img src="final-project-images/6.webp" alt="" class="carousel-active-image">
+                    <div class="carousel-caption">תיאור התמונה יופיע כאן :)</div>
+                </div>
+
+                <!-- Thumbnail Navigation -->
+                <div class="carousel-thumbnails-wrapper">
+                    <div class="carousel-thumbnails">
+                        <div class="carousel-thumb" data-index="0">
+                            <img src="final-project-images/1.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="1">
+                            <img src="final-project-images/2.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="2">
+                            <img src="final-project-images/3.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="3">
+                            <img src="final-project-images/4.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="4">
+                            <img src="final-project-images/5.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb active" data-index="5">
+                            <img src="final-project-images/6.webp" alt="">
+                        </div>
+                        <div class="carousel-thumb" data-index="6">
+                            <img src="final-project-images/7.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="7">
+                            <img src="final-project-images/8.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="8">
+                            <img src="final-project-images/9.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="9">
+                            <img src="final-project-images/10.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="10">
+                            <img src="final-project-images/11.webp" alt="" class="gradient-map-image">
+                        </div>
+                        <div class="carousel-thumb" data-index="11">
+                            <img src="final-project-images/12.webp" alt="" class="gradient-map-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Arrow (left arrow in RTL) -->
+            <button class="carousel-arrow carousel-arrow-next" aria-label="Next image">
+                <svg width="72" height="67" viewBox="0 0 72 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25.8645 9.25727L29.7847 13.1774L12.2707 30.6914H69.8405L69.8412 31.8688V35.0453L69.8405 36.2226H12.2707L29.7847 53.7366L25.8645 57.6568L1.66475 33.457L25.8645 9.25727Z" fill="#EF0004" stroke="#EF0004" stroke-width="2.35498"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- נהלי עבודה Section -->
+        <div class="guidelines-transition-section">
+            <h3 class="page-subtitle">
+                <span>נהלי<br>עבודה</span>
+                <div class="page-subtitle-arrow">
+                    <svg width="77" height="77" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.17725 25.2988L8.31006 25.2988L8.31006 63.2305L69.0425 2.49707L69.8755 1.66504L70.7085 2.49707L74.0728 5.86133L74.9048 6.69434L74.0728 7.52734L13.3394 68.2598L51.271 68.2598L51.271 75.3926L1.17725 75.3926L1.17725 25.2988Z" fill="#EF0004" stroke="#EF0004" stroke-width="2.35498"></path>
+                    </svg>
+                </div>
+            </h3>
+
+            <!-- Row 1 - תשלום עבור חומרים -->
+            <div class="guidelines-transition-row row-padding-2">
+                <div class="guidelines-transition-item guidelines-transition-item-full">
+                    <h3 class="guidelines-transition-subtitle">תשלום עבור חומרים וכללי עבודה בסדנאות</h3>
+                    <p>גובה התשלום עבור שימוש בציוד המצוי בסדנאות המחלקה ייקבע בתחילת שנת הלימודים ויחושב לפי סכום שווה לכל הסטודנטים.ות. התשלום נועד לכיסוי הוצאות ישירות (עלות חומרים כגון נייר, טונר וכו׳) ועקיפות (תיקוני תוכנה וחומרה כתוצאה מנזק הנגרם תוך כדי שימוש). החיוב עבור עבודה בסדנאות השונות באקדמיה, ובהן מרכז ההדפסות וסדנאת ההדפס, יעשה בהתאם לאופי העבודה של כל סטודנט.ית ועל פי היקפה. סטודנטים.ות רשאים.יות לבצע עבודותיהם.ן בלשכות שירות ובתי דפוס פרטיים וחיצוניים, בתנאים המקובלים אצלם.</p>
+                    <p>חישוב סכומי התשלום עבור שימוש בציוד המצוי בסדנאות נקבע במטרה לכסות עלויות שימוש ואחזקה בלבד. הציוד נרכש למען הסטודנטים.ות ונועד לרווחתם.ן. הסכומים הנגבים עבור ביצוע עבודות למיניהן נמוכים אפוא במידה ניכרת מהמחירים הנגבים בלשכות שירות חיצוניות. גובה התשלום עבור שימוש בחומרים בקורס סדנת הדפס יפורסם בתחילת שנת הלימודים.</p>
+                </div>
+            </div>
+
+            <!-- Row 2 - משרד המחלקה -->
+            <div class="guidelines-transition-row row-padding-3">
+                <div class="guidelines-transition-item guidelines-transition-item-full">
+                    <h3 class="guidelines-transition-subtitle">משרד המחלקה</h3>
+                    <p>מועדי קבלת סטודנטים.ות במשרד המחלקה ושעות המענה הטלפוני יפורסמו על דלת המשרד.<br>ניתן לשלוח שאלות, בקשות, הודעות ועדכונים בדוא״ל: <a href="mailto:vc@bezalel.ac.il">vc@bezalel.ac.il</a><br><a href="mailto:vc2@bezalel.ac.il">vc2@bezalel.ac.il</a></p>
+                </div>
+            </div>
+
+            <!-- Side note -->
+            <div class="guidelines-transition-row row-padding-3">
+                <p class="guidelines-side-note-inline">באחריות הסטודנט.ית לעקוב באופן שוטף אחר כל הודעות המשרד במייל (הודעות על ביטולי שיעור, הנחיות מרשויות האקדמיה השונות, ועוד). על הסטודנטים.ות לעדכן באתר בצלאל את פרטי ההתקשרות שלהם.ן.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-contact-section">
+                        <a href="mailto:vc@bezalel.ac.il" class="footer-contact-link">צרו קשר</a>
+                        <a href="https://www.instagram.com/vc_bezalel/" target="_blank" class="footer-contact-link">עקבו אחרינו</a>
+                    </div>
+                    <div class="footer-copyright">© 2025 בצלאל אקדמיה לאמנות ועיצוב ירושלים</div>
+                </div>
+                <div class="footer-branding">
+                    <span class="footer-name-he">בצלאל אקדמיה לאמנות ועיצוב ירושלים</span>
+                    <span class="footer-name-ar">أكاديمية بتسلئيل للفنون والتصميم القدس</span>
+                    <span class="footer-name-en">Bezalel Academy of Arts and Design Jerusalem</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Crosshair guide lines -->
+    <div class="crosshair-line horizontal" id="crosshair-h"></div>
+    <div class="crosshair-line vertical" id="crosshair-v"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
