@@ -653,6 +653,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // Run enter animation on page load
     animatePageEnter();
 
+    // Mobile title scaling - JavaScript fallback for Safari compatibility
+    // Safari doesn't support length/length division in CSS calc, so we handle it in JS for mobile
+    function updateMobileTitleScale() {
+        const title = document.querySelector('.title');
+        if (!title) return;
+
+        const vw = window.innerWidth;
+
+        // Only apply JS scaling on mobile (480px and below)
+        if (vw <= 480) {
+            // Scale from 0.22 at 320px to 0.30 at 480px
+            const minVw = 320;
+            const maxVw = 480;
+            const minScale = 0.22;
+            const maxScale = 0.30;
+
+            const ratio = Math.max(0, Math.min(1, (vw - minVw) / (maxVw - minVw)));
+            const scale = minScale + ratio * (maxScale - minScale);
+
+            title.style.transform = `scale(${scale})`;
+        } else {
+            // Above 480px, let CSS handle it (remove any inline style)
+            title.style.transform = '';
+        }
+    }
+
+    // Run on load and resize
+    updateMobileTitleScale();
+    window.addEventListener('resize', updateMobileTitleScale);
+
     // Right ruler navigation (0-4)
     const rightRulerSpans = document.querySelectorAll('.ruler-right span');
     const navPages = [
