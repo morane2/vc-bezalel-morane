@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     lightboxImage.src = imageSrc;
                     lightboxCaption.textContent = imageCaptions[imageSrc] || '';
                     lightboxOverlay.classList.add('active');
+                    document.body.classList.add('fullscreen-active');
                     document.body.style.overflow = 'hidden';
                 }
             });
@@ -190,6 +191,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, { passive: false });
 
+        // Handle touch events for mobile scrolling (anywhere on screen)
+        let touchStartY = 0;
+        let touchCurrentY = 0;
+        let isTouching = false;
+
+        document.addEventListener('touchstart', (e) => {
+            if (!document.body.classList.contains('inner-page')) {
+                touchStartY = e.touches[0].clientY;
+                touchCurrentY = touchStartY;
+                isTouching = true;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!document.body.classList.contains('inner-page') && isTouching) {
+                touchCurrentY = e.touches[0].clientY;
+                const deltaY = touchStartY - touchCurrentY;
+                touchStartY = touchCurrentY; // Update for continuous scrolling
+
+                scrollY += deltaY;
+
+                // Allow infinite scrolling
+                const totalHeight = totalSets * screenWithGap;
+                if (scrollY < 0) {
+                    scrollY += totalHeight;
+                    screens.forEach(screen => {
+                        screen.position += totalSets;
+                    });
+                }
+
+                updateScreenPositions();
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', () => {
+            isTouching = false;
+        });
+
         // Initialize
         initScreens();
     }
@@ -228,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 lightboxImage.src = imgSrc;
                 lightboxCaption.textContent = captionText;
                 lightboxOverlay.classList.add('active');
+                document.body.classList.add('fullscreen-active');
                 document.body.style.overflow = 'hidden';
             }
         });
@@ -1144,12 +1185,14 @@ document.addEventListener('DOMContentLoaded', () => {
         lightboxImage.src = imgSrc;
         lightboxCaption.textContent = caption || '';
         lightboxOverlay.classList.add('active');
+        document.body.classList.add('fullscreen-active'); // For hiding mobile nav
         document.body.style.overflow = 'hidden'; // Prevent scrolling
     }
 
     // Function to close lightbox
     function closeLightbox() {
         lightboxOverlay.classList.remove('active');
+        document.body.classList.remove('fullscreen-active'); // Show mobile nav again
         document.body.style.overflow = ''; // Restore scrolling
     }
 

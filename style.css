@@ -1561,18 +1561,26 @@ body {
 
 @media (max-width: 480px) {
     /* Title styling for mobile - scale is applied via JavaScript for Safari compatibility */
+    /* pointer-events: none allows scrolling images behind the title */
     .title {
         position: fixed;
         top: 100px;
         right: 15px !important;
+        pointer-events: none;
     }
 
     /* Nav links for mobile */
+    /* pointer-events: none on container, auto on links themselves */
     .nav-links {
         position: fixed;
         top: 340px !important;
         right: 15px !important;
         margin: 0 !important;
+        pointer-events: none;
+    }
+
+    .nav-link {
+        pointer-events: auto;
     }
 
     .nav-link {
@@ -5950,10 +5958,20 @@ body {
     color: #FFAA00;
 }
 
-/* Mobile only - show carousel */
+/* Mobile only - show carousel only on inner pages (not homepage) */
 @media (max-width: 480px) {
-    .mobile-nav-carousel {
+    .inner-page .mobile-nav-carousel {
         display: block;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.25s ease 0.1s, visibility 0.25s ease 0.1s;
+    }
+
+    /* Hide carousel during fullscreen image preview */
+    body.fullscreen-active .mobile-nav-carousel {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: opacity 0.15s ease, visibility 0.15s ease;
     }
 
     /* Hide the bottom ruler numbers on mobile */
