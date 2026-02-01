@@ -1329,7 +1329,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = mobileNavCarousel.querySelectorAll('.mobile-nav-item');
         const currentIndex = parseInt(mobileNavCarousel.dataset.current) || 0;
         const totalItems = items.length;
-        const itemWidth = 60; // vw
+        const itemWidth = 50; // vw - smaller so adjacent items peek more
 
         // Mark current item as active
         items[currentIndex]?.classList.add('active');
@@ -1371,13 +1371,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initial position
         positionTrack(currentIndex);
 
-        // Touch/swipe handling
+        // Touch/swipe handling - on the carousel container for better touch area
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
         let baseOffset = 0;
 
-        track.addEventListener('touchstart', (e) => {
+        mobileNavCarousel.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             currentX = startX;
             isDragging = true;
@@ -1387,22 +1387,24 @@ document.addEventListener('DOMContentLoaded', () => {
             baseOffset = (currentIndex * itemWidth) - centerOffset;
         }, { passive: true });
 
-        track.addEventListener('touchmove', (e) => {
+        mobileNavCarousel.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
+            // Prevent vertical scrolling when dragging carousel
+            e.preventDefault();
             currentX = e.touches[0].clientX;
             const diff = startX - currentX;
             // Convert pixel difference to vw (content follows finger)
             const diffVw = (diff / window.innerWidth) * 100;
             const offset = baseOffset - diffVw;
             track.style.transform = `translateX(${offset}vw)`;
-        }, { passive: true });
+        }, { passive: false }); // passive: false to allow preventDefault
 
-        track.addEventListener('touchend', () => {
+        mobileNavCarousel.addEventListener('touchend', () => {
             if (!isDragging) return;
             isDragging = false;
 
             const diff = startX - currentX;
-            const threshold = window.innerWidth * 0.15; // 15% of screen width
+            const threshold = window.innerWidth * 0.12; // 12% of screen width (easier to trigger)
 
             // RTL: swiping right (diff < 0) goes to higher index (next page)
             // swiping left (diff > 0) goes to lower index (previous page)
