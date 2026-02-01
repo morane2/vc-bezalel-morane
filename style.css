@@ -95,7 +95,7 @@ body {
     position: absolute;
     top: -50px;
     left: 45px;
-    width: clamp(26%, calc(26% + (1220px - 100vw) * 0.025), 45%);
+    width: clamp(34%, calc(34% + (1220px - 100vw) * 0.033), 59%);
     pointer-events: auto;
     z-index: 15;
     cursor: pointer;
@@ -148,7 +148,7 @@ body {
     bottom: 1px;
     left: auto;
     right: 50px;
-    width: clamp(20%, calc(20% + (1220px - 100vw) * 0.024), 38%);
+    width: clamp(26.2%, calc(26.2% + (1220px - 100vw) * 0.031), 49.7%);
 }
 
 .homepage-screen .image-wrapper-2 .image-caption {
@@ -160,7 +160,7 @@ body {
     left: calc(24% - 35px);
     right: auto;
     bottom: auto;
-    width: clamp(20%, calc(20% + (1220px - 100vw) * 0.024), 38%);
+    width: clamp(26.2%, calc(26.2% + (1220px - 100vw) * 0.031), 49.7%);
 }
 
 .homepage-screen .image-wrapper-3 .image-caption {
@@ -555,7 +555,7 @@ body {
     line-height: 209.699px;
     margin: 0;
     position: absolute;
-    top: 12px;
+    top: 80px;
     right: -10px;
     pointer-events: none;
     transform-origin: top right;
@@ -597,6 +597,7 @@ body {
     position: relative;
     z-index: 12;
     pointer-events: none;
+    margin-top: 68px; /* Match title position change from 12px to 80px */
 }
 
 .nav-link {
@@ -926,10 +927,11 @@ body {
     width: 35%;
     right: 37%;
     z-index: 2;
+    margin-bottom: 14rem;
 }
 
 .page-section-row-cd {
-    margin-bottom: 35rem;
+    margin-bottom: 40rem;
 }
 
 .page-section-image-wrapper-5 {
@@ -1501,7 +1503,7 @@ body {
 @media (max-width: 1220px) {
     .title {
         right: clamp(20px, calc(-10px + (1220px - 100vw) * 0.08), 40px);
-        top: calc(12px + (1220px - 100vw) * 0.05);
+        top: calc(80px + (1220px - 100vw) * 0.05);
         --scale: clamp(0.35, (100vw - 320px) / (1220px - 320px), 1);
     }
 
@@ -1523,7 +1525,7 @@ body {
     .nav-links {
         transform: none;
         position: absolute;
-        top: 320px;
+        top: 388px;
         right: calc(80px + (100vw - 480px) * 0.15);
         margin: 0;
         align-items: flex-start;
@@ -2285,21 +2287,21 @@ body {
 
     /* Images on mobile - bigger sizes, staggered vertically to prevent overlap */
     .homepage-screen .image-wrapper {
-        width: 50% !important;
+        width: 57.5% !important;
         top: -6% !important;
         left: auto !important;
         right: 3% !important;
         bottom: auto !important;
     }
     .homepage-screen .image-wrapper-2 {
-        width: 46% !important;
+        width: 53% !important;
         top: 38% !important;
         bottom: auto !important;
         left: -5% !important;
         right: auto !important;
     }
     .homepage-screen .image-wrapper-3 {
-        width: 42% !important;
+        width: 48% !important;
         top: 72% !important;
         bottom: auto !important;
         left: 50% !important;
@@ -5790,6 +5792,17 @@ body {
 
 .lightbox-overlay.active .lightbox-image {
     transform: scale(1);
+}
+
+/* Mobile: larger lightbox images */
+@media (max-width: 480px) {
+    .lightbox-content {
+        max-width: 95% !important;
+        max-height: 95% !important;
+    }
+    .lightbox-image {
+        max-height: 90vh;
+    }
 }
 
 .lightbox-caption {
