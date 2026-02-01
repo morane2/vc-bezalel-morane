@@ -134,7 +134,7 @@ body {
     color: #fff;
     font-family: "Narkiss Block TRIAL", sans-serif;
     font-weight: 700;
-    --caption-scale: clamp(0.7, calc((100vw - 320px) / 900), 1);
+    --caption-scale: clamp(0.7, (100vw - 320px) / (1220px - 320px), 1);
     font-size: calc(14px * var(--caption-scale));
     padding: calc(8px * var(--caption-scale)) calc(12px * var(--caption-scale));
     text-align: right;
@@ -560,7 +560,7 @@ body {
     pointer-events: none;
     transform-origin: top right;
     /* Scale smoothly from 100% at 1220px to 25% at 320px */
-    --scale: clamp(0.25, calc((100vw - 320px) / 900), 1);
+    --scale: clamp(0.25, (100vw - 320px) / (1220px - 320px), 1);
     transform: scale(var(--scale));
     z-index: 12;
 }
@@ -1502,12 +1502,12 @@ body {
     .title {
         right: clamp(20px, calc(-10px + (1220px - 100vw) * 0.08), 40px);
         top: calc(12px + (1220px - 100vw) * 0.05);
-        --scale: clamp(0.35, calc((100vw - 320px) / 900), 1);
+        --scale: clamp(0.35, (100vw - 320px) / (1220px - 320px), 1);
     }
 
     /* Scale nav-links together with title */
     .nav-links {
-        --scale: clamp(0.35, calc((100vw - 320px) / 900), 1);
+        --scale: clamp(0.35, (100vw - 320px) / (1220px - 320px), 1);
         transform: scale(var(--scale));
         transform-origin: top right;
     }
@@ -1562,7 +1562,7 @@ body {
 @media (max-width: 480px) {
     /* Title styling for mobile */
     .title {
-        --scale: clamp(0.22, calc((100vw - 320px) * 0.0005 + 0.22), 0.30);
+        --scale: clamp(0.22, (100vw - 320px) / (480px - 320px) * 0.08 + 0.22, 0.30);
         top: 100px;
         right: 15px !important;
     }
@@ -5884,7 +5884,7 @@ body {
 .mobile-nav-carousel {
     display: none;
     position: fixed;
-    bottom: 0;
+    bottom: 35px;
     left: 0;
     right: 0;
     height: 40px;
