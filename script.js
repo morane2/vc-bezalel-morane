@@ -191,24 +191,67 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, { passive: false });
 
-        // Handle touch events for mobile scrolling (anywhere on screen)
+        // Handle touch events for mobile scrolling (anywhere on screen) with momentum
         let touchStartY = 0;
         let touchCurrentY = 0;
         let isTouching = false;
+        let lastTouchTime = 0;
+        let velocity = 0;
+        let momentumAnimationId = null;
+
+        function applyMomentum() {
+            if (Math.abs(velocity) < 0.5) {
+                velocity = 0;
+                return;
+            }
+
+            scrollY += velocity;
+            velocity *= 0.95; // Friction - gradually slow down
+
+            // Allow infinite scrolling
+            const totalHeight = totalSets * screenWithGap;
+            if (scrollY < 0) {
+                scrollY += totalHeight;
+                screens.forEach(screen => {
+                    screen.position += totalSets;
+                });
+            }
+
+            updateScreenPositions();
+            momentumAnimationId = requestAnimationFrame(applyMomentum);
+        }
 
         document.addEventListener('touchstart', (e) => {
             if (!document.body.classList.contains('inner-page')) {
+                // Stop any ongoing momentum
+                if (momentumAnimationId) {
+                    cancelAnimationFrame(momentumAnimationId);
+                    momentumAnimationId = null;
+                }
+                velocity = 0;
+
                 touchStartY = e.touches[0].clientY;
                 touchCurrentY = touchStartY;
+                lastTouchTime = Date.now();
                 isTouching = true;
             }
         }, { passive: true });
 
         document.addEventListener('touchmove', (e) => {
             if (!document.body.classList.contains('inner-page') && isTouching) {
+                const now = Date.now();
+                const timeDelta = now - lastTouchTime;
+
                 touchCurrentY = e.touches[0].clientY;
                 const deltaY = touchStartY - touchCurrentY;
-                touchStartY = touchCurrentY; // Update for continuous scrolling
+
+                // Calculate velocity (pixels per frame, roughly)
+                if (timeDelta > 0) {
+                    velocity = deltaY / Math.max(timeDelta / 16, 1); // Normalize to ~60fps
+                }
+
+                touchStartY = touchCurrentY;
+                lastTouchTime = now;
 
                 scrollY += deltaY;
 
@@ -227,7 +270,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: false });
 
         document.addEventListener('touchend', () => {
-            isTouching = false;
+            if (isTouching && !document.body.classList.contains('inner-page')) {
+                isTouching = false;
+                // Start momentum scrolling if velocity is significant
+                if (Math.abs(velocity) > 1) {
+                    momentumAnimationId = requestAnimationFrame(applyMomentum);
+                }
+            }
         });
 
         // Initialize
