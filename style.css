@@ -559,6 +559,8 @@ body {
     right: -10px;
     pointer-events: none;
     transform-origin: top right;
+    /* Fallback for Safari (which rejects length/length division in calc) */
+    transform: scale(0.5);
     /* Scale smoothly from 100% at 1220px to 25% at 320px */
     --scale: clamp(0.25, (100vw - 320px) / (1220px - 320px), 1);
     transform: scale(var(--scale));
@@ -1502,11 +1504,16 @@ body {
     .title {
         right: clamp(20px, calc(-10px + (1220px - 100vw) * 0.08), 40px);
         top: calc(12px + (1220px - 100vw) * 0.05);
+        /* Fallback for Safari */
+        transform: scale(0.6);
         --scale: clamp(0.35, (100vw - 320px) / (1220px - 320px), 1);
+        transform: scale(var(--scale));
     }
 
     /* Scale nav-links together with title */
     .nav-links {
+        /* Fallback for Safari */
+        transform: scale(0.6);
         --scale: clamp(0.35, (100vw - 320px) / (1220px - 320px), 1);
         transform: scale(var(--scale));
         transform-origin: top right;
@@ -1562,7 +1569,10 @@ body {
 @media (max-width: 480px) {
     /* Title styling for mobile */
     .title {
+        /* Fallback for Safari mobile */
+        transform: scale(0.26);
         --scale: clamp(0.22, (100vw - 320px) / (480px - 320px) * 0.08 + 0.22, 0.30);
+        transform: scale(var(--scale));
         top: 100px;
         right: 15px !important;
     }
