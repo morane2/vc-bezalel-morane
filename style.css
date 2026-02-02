@@ -156,8 +156,8 @@ body {
 }
 
 .homepage-screen .image-wrapper-3 {
-    top: calc(70% - 35px);
-    left: calc(24% - 35px);
+    top: calc(68% - 35px);
+    left: calc(17% - 35px);
     right: auto;
     bottom: auto;
     width: clamp(26.2%, calc(26.2% + (1220px - 100vw) * 0.031), 49.7%);
@@ -6007,7 +6007,7 @@ body {
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 1.5rem;
 }
 
@@ -6064,6 +6064,12 @@ body {
     flex-direction: column;
     gap: 0.2rem;
     text-align: right;
+    justify-content: center;
+}
+
+.footer-logo {
+    height: 45px;
+    width: auto;
 }
 
 .footer-name-he,
